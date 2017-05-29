@@ -9,7 +9,7 @@ class ComposerStaticInit9af7bac6676022f0a351cad49ab5be33
     public static $prefixLengthsPsr4 = array (
         'I' => 
         array (
-            'ImageCropFocusPoint\\' => 20,
+            'ImageFocus\\' => 11,
         ),
         'C' => 
         array (
@@ -18,7 +18,7 @@ class ComposerStaticInit9af7bac6676022f0a351cad49ab5be33
     );
 
     public static $prefixDirsPsr4 = array (
-        'ImageCropFocusPoint\\' => 
+        'ImageFocus\\' => 
         array (
             0 => __DIR__ . '/../..' . '/resources',
         ),
