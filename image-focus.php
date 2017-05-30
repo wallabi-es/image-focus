@@ -1,4 +1,6 @@
 <?php
+use ImageFocus\ImageFocus;
+
 /*
 Plugin Name: Image Focus: Image crop by focuspoint
 Plugin URI: https://github.com/dannyvanholten/image-focus
