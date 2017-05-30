@@ -1,7 +1,5 @@
 (function ($, window, document, undefined)
 {
-
-
 	// Create the defaults once
 	var pluginName = "wpImageFocus",
 		defaults = {};
@@ -11,11 +9,6 @@
 	{
 		this.element = element;
 
-		// jQuery has an extend method that merges the
-		// contents of two or more objects, storing the
-		// result in the first object. The first object
-		// is generally empty because we don't want to alter
-		// the default options for future instances of the plugin
 		this.options = $.extend({}, defaults, options);
 
 		this._defaults = defaults;
@@ -33,11 +26,15 @@
 	 *  Add button to media library image popup
 	 */
 	Plugin.prototype = {
-		init: function(){
-			this.addButtonToMediaPopupInterval();
+		init: function ()
+		{
+			this.addFocusPoint();
+
+			//Call function to move the Focus Point and send an Ajax request
+			$('.' + cssClass.img).on('click', this.moveFocusPoint);
 		},
 
-		addButtonToMediaPopupInterval: function ()
+		intervalWpImageFocus: function ()
 		{
 			var self = this;
 			setInterval(function ()
@@ -50,17 +47,6 @@
 					}
 				}
 			}, 500);
-		},
-
-		/**
-		 *
-		 */
-		initFocusPoint: function ()
-		{
-			this.addFocusPoint();
-
-			//Call function to move the Focus Point and send an Ajax request
-			$('.' + cssClass.img).on('click', this.moveFocusPoint);
 		},
 
 		/**
@@ -115,16 +101,32 @@
 
 	// A really lightweight plugin wrapper around the constructor,
 	// preventing against multiple instantiations
-	$.fn[pluginName] = function ( options ) {
-		return this.each(function () {
+	$.fn[pluginName] = function (options)
+	{
+		return this.each(function ()
+		{
 			if (!$.data(this, "plugin_" + pluginName)) {
 				$.data(this, "plugin_" + pluginName,
-					new Plugin( this, options ));
+					new Plugin(this, options));
 			}
 		});
 	};
 })(jQuery, window, document);
 
-jQuery(document).on('ready',function(){
-	jQuery(document).wpImageFocus();
-});
+(function ($, window, document, undefined)
+{
+	$(document).on('ready', function ()
+	{
+		setInterval(function ()
+		{
+			var $detailImage = $('.attachment-details .details-image');
+			if ($detailImage.length && !$('.wp-image-focus').length) {
+				try {
+					$detailImage.wpImageFocus();
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		}, 500);
+	});
+})(jQuery, window, document);
