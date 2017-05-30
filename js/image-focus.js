@@ -1,4 +1,4 @@
-(function ($, window, document, undefined)
+(function ($)
 {
 	// Create the defaults once
 	var pluginName = "wpImageFocus",
@@ -96,9 +96,9 @@
 			}
 		});
 	};
-})(jQuery, window, document);
+})(jQuery);
 
-(function ($, window, document, undefined)
+(function ($, window, document)
 {
 	$(document).on('ready', function ()
 	{
