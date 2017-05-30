@@ -20,8 +20,8 @@ class Crop
     /**
      * Crop the image
      */
-    private function cropImage()
+    public function cropImage()
     {
-       td('hoi');
+       td(get_image_size());
     }
 }
