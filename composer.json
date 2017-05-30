@@ -8,6 +8,10 @@
       "name": "Danny van Holten",
       "email": "info@dannyvanholten.com",
       "homepage": "http://www.dannyvanholten.com/"
+    },
+    {
+      "name": "Harwin Borger",
+      "homepage": "https://github.com/harwinborger"
     }
   ],
   "autoload": {

@@ -2,8 +2,8 @@
   "name": "WP Image Focus",
   "homepage": "https://github.com/DannyvanHolten/image-focus",
   "authors": [
-    "Harwin Borger",
-    "Danny van Holten"
+    "Danny van Holten",
+    "Harwin Borger"
   ],
   "description": "Wordpress plugin to crop images",
   "main": "",
