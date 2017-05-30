@@ -2,7 +2,14 @@
 {
 	// Create the defaults once
 	var pluginName = "wpImageFocus",
-		defaults = {};
+		defaults = {},
+		css = {
+			wpImageFocus: {
+				self: 'wp-image-focus',
+				img: 'wp-image-focus__img',
+				point: 'wp-image-focus__point'
+			}
+		};
 
 	// The actual plugin constructor
 	function Plugin(element, options)
@@ -17,11 +24,6 @@
 		this.init();
 	}
 
-	var cssClass = {
-		img: 'wp-image-focus__img',
-		point: 'wp-image-focus__point'
-	};
-
 	/**
 	 *  Add button to media library image popup
 	 */
@@ -31,7 +33,7 @@
 			this.addFocusPoint();
 
 			//Call function to move the Focus Point and send an Ajax request
-			$('.' + cssClass.img).on('click', this.moveFocusPoint);
+			$('.' + css.wpImageFocus.img).on('click', this.moveFocusPoint);
 		},
 
 		/**
@@ -44,13 +46,13 @@
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
 
 			//Add class to thumbnail image
-			$thumbnail.addClass(cssClass.img);
+			$thumbnail.addClass(css.wpImageFocus.img);
 
 			//Add a wrapper around image
-			$thumbnail.wrap('<div class="wp-image-focus"></div>');
-			$wpImageFocus = $('.wp-image-focus');
+			$thumbnail.wrap('<div class="' + css.wpImageFocus.self + '"></div>');
+			$wpImageFocus = $('.' + css.wpImageFocus.self);
 
-			$wpImageFocus.append('<div class="' + cssClass.point + '"></div>');
+			$wpImageFocus.append('<div class="' + css.wpImageFocus.point + '"></div>');
 		},
 
 		/**
@@ -72,12 +74,10 @@
 			//Calculate CSS Percentages
 			var percentageX = (offsetX / imageW) * 100;
 			var percentageY = (offsetY / imageH) * 100;
-			//var backgroundPosition = percentageX.toFixed(0) + '% ' + percentageY.toFixed(0) + '%';
-			//var backgroundPositionCSS = 'background-position: ' + backgroundPosition + ';';
 
-			//window.alert('FocusX:' + focusX.toFixed(2) + ', FocusY:' + focusY.toFixed(2) + ' (For CSS version: ' + backgroundPositionCSS + ')');
+			console.log('FocusX:' + focusX.toFixed(2) + ', FocusY:' + focusY.toFixed(2));
 
-			$('.' + cssClass.point).css({
+			$('.' + css.wpImageFocus.point).css({
 				left: percentageX + '%',
 				top: percentageY + '%'
 			})
