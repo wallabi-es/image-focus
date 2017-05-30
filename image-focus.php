@@ -2,7 +2,7 @@
 /*
 Plugin Name: Image Focus: Image crop by focuspoint
 Plugin URI: https://github.com/dannyvanholten/image-focus
-Description: Image Crop plugin with which you can crop your images by focuspoint.
+Description: Image Crop plugin for WordPress with which you can crop your images by focuspoint.
 Version: 0.1
 Author: Danny van Holten
 Author URI: http://www.dannyvanholten.com/
