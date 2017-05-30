@@ -2,6 +2,7 @@
 	display: inline-block;
 	border: 1px solid #f90;
 	position: relative;
+	overflow: hidden;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
