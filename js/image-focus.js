@@ -34,21 +34,6 @@
 			$('.' + cssClass.img).on('click', this.moveFocusPoint);
 		},
 
-		intervalWpImageFocus: function ()
-		{
-			var self = this;
-			setInterval(function ()
-			{
-				if ($('.attachment-details .details-image').length && !$('.wp-image-focus').length) {
-					try {
-						self.initFocusPoint();
-					} catch (e) {
-						console.log(e);
-					}
-				}
-			}, 500);
-		},
-
 		/**
 		 * Add focus point
 		 */
