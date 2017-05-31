@@ -1,6 +1,4 @@
 <?php
-use ImageFocus\ImageFocus;
-
 /*
 Plugin Name: Image Focus
 Plugin URI: https://github.com/dannyvanholten/image-focus
@@ -10,6 +8,8 @@ Author: Danny van Holten, Harwin Borger
 Author URI: http://www.dannyvanholten.com/
 Copyright: Danny van Holten, Harwin Borger
 */
+
+use ImageFocus\ImageFocus;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,4 +27,4 @@ define('IMAGEFOCUS_RESOURCES', __DIR__ . '/resources/');
 require_once __DIR__ . '/vendor/autoload.php';
 
 // Initiate the field!
-new ImageFocus\ImageFocus();
+new ImageFocus();
