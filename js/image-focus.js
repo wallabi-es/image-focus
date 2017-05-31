@@ -8,7 +8,8 @@
 				self: 'image-focus',
 				wrapper: 'image-focus__wrapper',
 				img: 'image-focus__img',
-				point: 'image-focus__point'
+				point: 'image-focus__point',
+				clickarea: 'image-focus__clickarea'
 			}
 		};
 
@@ -34,7 +35,7 @@
 			this.addFocusPoint();
 
 			//Call function to move the Focus Point and send an Ajax request
-			$('.' + css.imageFocus.img).on('click', this.moveFocusPoint);
+			$('.' + css.imageFocus.clickarea).on('click', this.moveFocusPoint);
 		},
 
 		/**
@@ -54,6 +55,7 @@
 			$imageFocusWrapper = $('.' + css.imageFocus.wrapper);
 
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.point + '"></div>');
+			$imageFocusWrapper.append('<div class="' + css.imageFocus.clickarea + '"></div>');
 		},
 
 		/**
@@ -69,7 +71,7 @@
 			//Calculate FocusPoint coordinates
 			var offsetX = e.pageX - $(this).offset().left;
 			var offsetY = e.pageY - $(this).offset().top;
-			
+
 			//Calculate CSS Percentages
 			var percentageX = (offsetX / imageW) * 100;
 			var percentageY = (offsetY / imageH) * 100;
