@@ -31,10 +31,10 @@ class ImageFocus
 //            ['jquery']); // @todo activate for feature thumbnail crop previews
 
         wp_enqueue_script('image-focus-js',
-            plugins_url('js/image-focus.js', dirname(__FILE__)), ['jquery', 'jquery-focuspoint', 'wp-api']);
+            plugins_url('js/image-focus.js', dirname(__FILE__)), ['jquery']);
 
         wp_register_style('image-focus-css', plugins_url('css/image-focus.css', dirname(__FILE__)));
-        wp_enqueue_style('wp-image-focus');
+        wp_enqueue_style('image-focus-css');
     }
 
     /**
