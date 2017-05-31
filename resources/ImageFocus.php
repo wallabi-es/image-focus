@@ -11,10 +11,6 @@ class ImageFocus
 
         new Crop();
     }
-	public function __construct()
-	{
-		$this->addHooks();
-	}
 
 	/**
 	 * Make sure all hooks are being executed.
