@@ -19,7 +19,8 @@ module.exports = function (grunt)
 
 		js: {
 			plugins: [
-				'<%= dir.js %>/**/*.js'
+				'<%= dir.js %>/**/*.js',
+				'!<%= dir.js %>/**/*.min.js'
 			]
 		},
 
