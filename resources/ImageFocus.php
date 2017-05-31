@@ -24,7 +24,7 @@ class ImageFocus
     /**
      * Enqueues all necessary CSS and Scripts
      */
-    private function loadScripts()
+    public function loadScripts()
     {
         wp_enqueue_script('wp-api');
 
