@@ -63,8 +63,6 @@
 		 */
 		moveFocusPoint: function (e)
 		{
-			console.log('move focus point');
-
 			var imageW = $(this).width();
 			var imageH = $(this).height();
 
