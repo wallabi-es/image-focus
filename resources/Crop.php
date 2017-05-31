@@ -16,8 +16,8 @@ class Crop
      */
     private function addHooks()
     {
-        add_action('admin_init', [$this, 'getImageSizes'], 100);
-        add_action('admin_init', [$this, 'cropImage'], 110);
+        add_action('admin_init', [$this, 'getImageSizes'], 30);
+        add_action('admin_init', [$this, 'cropImage'], 31);
     }
 
     /**
@@ -26,12 +26,9 @@ class Crop
     public function cropImage()
     {
         $imageId = 5;
-        $left = (float)25.000;
-        $top = (float)25.000;
-        // Get all image sizes
+        $position = [(float)10.000, (float)50.000]; // horizontal, vertical
 
         // Get the source of the target image
-
         $image = $this->getImageSrc($imageId);
 
         foreach ($this->imageSizes as $imageSize) {
@@ -41,13 +38,14 @@ class Crop
                 continue;
             }
 
+            $cropDetails = $this->calculatePosition($position, $imageSize, $image);
+
             // Crop the image
-            wp_crop_image(
-                $imageId,
-                $left,
-                $top,
-                100,
-                100,
+            wp_crop_image($imageId,
+                $cropDetails['src_x'],
+                $cropDetails['src_y'],
+                $cropDetails['src_w'],
+                $cropDetails['src_h'],
                 $imageSize['width'],
                 $imageSize['height'],
                 false,
@@ -57,12 +55,73 @@ class Crop
     }
 
     /**
+     * Calculate the starting position
+     *
+     * @param $position
+     * @param $imageSize
+     * @param $image
+     * @return mixed
+     */
+    protected function calculatePosition($position, $imageSize, $image)
+    {
+
+        // Define the ratios for the cropped image, the original image and the difference between the two
+        $cropRatio = $imageSize['width'] / $imageSize['height'];
+        $imageRatio = $image[1] / $image[2];
+        $ratio = $cropRatio / $imageRatio;
+        $p = 0;
+
+        // Check if we need a vertical crop
+        if ($ratio > 1) {
+            $p = 1;
+            $ratio = $imageRatio / $cropRatio;
+        }
+
+        // Check the start & ending positions of the croup
+        $i = $p + 1;
+        $center = $position[$p] / 100 * $image[$i];
+        $start = $center - $image[$i] * $ratio / 2;
+        $end = $center + $image[$i] * $ratio / 2;
+
+        // Correction for starting to early
+        if ($start < 0) {
+            $end = $end - $start;
+            $start = $start - $start;
+        }
+
+        // Correction for starting to late
+        if ($end > $image[$i]) {
+            $start = $start + $image[$i] - $end;
+            $end = $end + $image[$i] - $end;
+        }
+
+        // Return values for vertical crop
+        if ($p = 1) {
+            return [
+                'src_x' => 0,
+                'src_y' => $start,
+                'src_w' => $image[1],
+                'src_h' => $end - $start,
+            ];
+        }
+
+        // Return values for horizontal crop
+        return [
+            'src_x' => $start,
+            'src_y' => 0,
+            'src_w' => $end - $start,
+            'src_h' => $image[2]
+        ];
+
+    }
+
+    /**
      * Return the src array of the attachment image containing url, width & height
      *
      * @param $imageId
      * @return array|false
      */
-    protected function getImageSrc($imageId)
+    private function getImageSrc($imageId)
     {
         return wp_get_attachment_image_src($imageId, 'full');
     }
@@ -91,7 +150,9 @@ class Crop
 
         // Get all the custom set image Sizes
         foreach ($_wp_additional_image_sizes as $key => $imageSize) {
-            $this->imageSizes[$key] = $imageSize;
+            if ($imageSize['crop']) {
+                $this->imageSizes[$key] = $imageSize;
+            }
         }
 
         return $this;
@@ -104,7 +165,7 @@ class Crop
      * @param $imageSize
      * @return mixed
      */
-    protected function getFilePath($imageUri, $imageSize)
+    private function getFilePath($imageUri, $imageSize)
     {
         // Get the path to the WordPress upload directory
         $uploadDir = wp_upload_dir()['path'] . '/';
@@ -130,7 +191,7 @@ class Crop
      *
      * @param $file
      */
-    protected function removeOldFile($file)
+    private function removeOldFile($file)
     {
         if (file_exists($file)) {
             unlink($file);

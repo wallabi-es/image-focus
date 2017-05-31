@@ -25,4 +25,4 @@ define('IMAGEFOCUS_RESOURCES', __DIR__ . '/resources/');
 require_once __DIR__ . '/vendor/autoload.php';
 
 // Initiate the field!
-new ImageFocus();
+new WPImageFocus();
