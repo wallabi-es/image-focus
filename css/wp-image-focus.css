@@ -1,0 +1,38 @@
+.wp-image-focus{
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.wp-image-focus__point{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	border-radius: 50%;
+	border: 2px solid #fff;
+	width: 100px;
+	height: 100px;
+	transform: translate(-50%,-50%);
+	background: rgba(0,0,0,0.5);
+}
+
+.wp-image-focus__point::before{
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 5px;
+	height: 5px;
+	background-color: #fff;
+	transform: translate(-50%,-50%);
+	border-radius: 50%;
+}
+
+/* OVERWRITE WORDPRESS STYLING */
+.edit-attachment-frame .attachment-media-view .details-image.wp-image-focus__img{
+	margin-bottom: 0;
+}
