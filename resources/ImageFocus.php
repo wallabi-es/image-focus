@@ -24,16 +24,16 @@ class ImageFocus
      */
     public function loadScripts()
     {
-        wp_enqueue_script('wp-api');
+//        wp_enqueue_script('wp-api'); // @todo activate for backbone integration
+//
+//        wp_enqueue_script('jquery-focuspoint',
+//            plugins_url('bower_components/jquery-focuspoint/js/jquery.focuspoint.min.js', dirname(__FILE__)),
+//            ['jquery']); // @todo activate for feature thumbnail crop previews
 
-        wp_enqueue_script('jquery-focuspoint',
-            plugins_url('bower_components/jquery-focuspoint/js/jquery.focuspoint.min.js', dirname(__FILE__)),
-            ['jquery']);
-
-        wp_enqueue_script('wp-image-focus-js',
+        wp_enqueue_script('image-focus-js',
             plugins_url('js/image-focus.js', dirname(__FILE__)), ['jquery', 'jquery-focuspoint', 'wp-api']);
 
-        wp_register_style('wp-image-focus', plugins_url('css/wp-image-focus.css', dirname(__FILE__)));
+        wp_register_style('image-focus-css', plugins_url('css/image-focus.css', dirname(__FILE__)));
         wp_enqueue_style('wp-image-focus');
     }
 
