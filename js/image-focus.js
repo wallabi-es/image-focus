@@ -1,13 +1,13 @@
 (function ($, window, document)
 {
 	// Create the defaults once
-	var pluginName = "wpImageFocus",
+	var pluginName = "imageFocus",
 		defaults = {},
 		css = {
-			wpImageFocus: {
-				self: 'wp-image-focus',
-				img: 'wp-image-focus__img',
-				point: 'wp-image-focus__point'
+			imageFocus: {
+				self: 'image-focus',
+				img: 'image-focus__img',
+				point: 'image-focus__point'
 			}
 		};
 
@@ -33,7 +33,7 @@
 			this.addFocusPoint();
 
 			//Call function to move the Focus Point and send an Ajax request
-			$('.' + css.wpImageFocus.img).on('click', this.moveFocusPoint);
+			$('.' + css.imageFocus.img).on('click', this.moveFocusPoint);
 		},
 
 		/**
@@ -42,17 +42,17 @@
 		addFocusPoint: function ()
 		{
 			console.log('add focuspoint');
-			var $wpImageFocus,
+			var $imageFocus,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
 
 			//Add class to thumbnail image
-			$thumbnail.addClass(css.wpImageFocus.img);
+			$thumbnail.addClass(css.imageFocus.img);
 
 			//Add a wrapper around image
-			$thumbnail.wrap('<div class="' + css.wpImageFocus.self + '"></div>');
-			$wpImageFocus = $('.' + css.wpImageFocus.self);
+			$thumbnail.wrap('<div class="' + css.imageFocus.self + '"></div>');
+			$imageFocus = $('.' + css.imageFocus.self);
 
-			$wpImageFocus.append('<div class="' + css.wpImageFocus.point + '"></div>');
+			$imageFocus.append('<div class="' + css.imageFocus.point + '"></div>');
 		},
 
 		/**
@@ -77,7 +77,7 @@
 
 			console.log('FocusX:' + focusX.toFixed(2) + ', FocusY:' + focusY.toFixed(2));
 
-			$('.' + css.wpImageFocus.point).css({
+			$('.' + css.wpimageFocus.point).css({
 				left: percentageX + '%',
 				top: percentageY + '%'
 			})
@@ -105,9 +105,9 @@
 		setInterval(function ()
 		{
 			var $detailImage = $('.attachment-details .details-image');
-			if ($detailImage.length && !$('.wp-image-focus').length) {
+			if ($detailImage.length && !$('.image-focus').length) {
 				try {
-					$detailImage.wpImageFocus();
+					$detailImage.imageFocus();
 				} catch (e) {
 					console.log(e);
 				}
