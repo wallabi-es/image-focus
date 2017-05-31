@@ -1,15 +1,17 @@
 .image-focus {
-	position: relative;
 
-	display: inline-block;
-	overflow: hidden;
+	display: block;
+	text-align: center;
 
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 
 	/* ELEMENTS */
+	&__wrapper{
+		position: relative;
+		overflow: hidden;
+		display: inline-block;
+	}
+
 	&__point {
 		position: absolute;
 		top: 50%;

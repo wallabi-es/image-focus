@@ -6,6 +6,7 @@
 		css = {
 			imageFocus: {
 				self: 'image-focus',
+				wrapper: 'image-focus__wrapper',
 				img: 'image-focus__img',
 				point: 'image-focus__point'
 			}
@@ -42,17 +43,17 @@
 		addFocusPoint: function ()
 		{
 			console.log('add focuspoint');
-			var $imageFocus,
+			var $imageFocusWrapper,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
 
 			//Add class to thumbnail image
 			$thumbnail.addClass(css.imageFocus.img);
 
 			//Add a wrapper around image
-			$thumbnail.wrap('<div class="' + css.imageFocus.self + '"></div>');
-			$imageFocus = $('.' + css.imageFocus.self);
+			$thumbnail.wrap('<div class="' + css.imageFocus.self + '"><div class="' + css.imageFocus.wrapper + '"></div></div>');
+			$imageFocusWrapper = $('.' + css.imageFocus.wrapper);
 
-			$imageFocus.append('<div class="' + css.imageFocus.point + '"></div>');
+			$imageFocusWrapper.append('<div class="' + css.imageFocus.point + '"></div>');
 		},
 
 		/**
