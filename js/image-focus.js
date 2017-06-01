@@ -4,11 +4,11 @@
 	var pluginName = "imageFocus",
 		defaults = {},
 		image = {
+			attachmentId: false,
 			focus: {
 				x: 50,
 				y: 50
-			},
-			attachmentId: false
+			}
 		},
 		css = {
 			imageFocus: {
@@ -88,7 +88,7 @@
 			var percentageX = (offsetX / imageW) * 100;
 			var percentageY = (offsetY / imageH) * 100;
 
-			//Write calculation back to variable
+			//Write calculations back to image object
 			image.focus.x = percentageX;
 			image.focus.y = percentageY;
 
