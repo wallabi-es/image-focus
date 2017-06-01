@@ -120,7 +120,7 @@
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					image: JSON.stringify(image)
+					image: image
 				},
 				dataType: 'json'
 			});

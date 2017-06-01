@@ -38,20 +38,22 @@ class ImageFocus
     public function initializeCrop()
     {
         // Check if we've got all the data
-        if (null === $_POST['percentageX'] || null === $_POST['percentageY']) {
+        $image = $_POST['image'];
+
+        if (null === $image['focus']['x'] || null === $image['focus']['y']) {
             die(
-            json_encode(
-                [
-                    'success' => false,
-                ]
-            )
+                json_encode(
+                    [
+                        'success' => false,
+                    ]
+                )
             );
         }
 
         $crop = new Crop();
-        $crop->cropImage(5, $_POST['percentageX'], $_POST['percentageY']);
+        $crop->cropImage($image['attachmentId'], $image['focus']['x'], $image['focus']['y']);
 
-        // Return succes
+        // Return success
         die(
         json_encode(
             [
