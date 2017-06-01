@@ -1,5 +1,7 @@
 (function ($, window, document)
 {
+	"use strict";
+
 	// Create the defaults once
 	var pluginName = "imageFocus",
 		defaults = {},
@@ -16,7 +18,8 @@
 				wrapper: 'image-focus__wrapper',
 				img: 'image-focus__img',
 				point: 'image-focus__point',
-				clickarea: 'image-focus__clickarea'
+				clickarea: 'image-focus__clickarea',
+				button: 'image-focus__button'
 			}
 		};
 
@@ -41,12 +44,16 @@
 		{
 			this.setImageData();
 			this.addFocusPoint();
+			this.addCropButton();
 
 			//Call function to move the Focus Point and send an Ajax request
 			$('.' + css.imageFocus.clickarea).on('click', this.moveFocusPoint);
+
+			//Set action to button for ajax call
+			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
 		},
 
-		setImageData: function()
+		setImageData: function ()
 		{
 			image.attachmentId = $(this.element).data('id');
 		},
@@ -98,14 +105,22 @@
 				left: percentageX + '%',
 				top: percentageY + '%'
 			});
+		},
 
+		addCropButton: function ()
+		{
+			var button = '<button type="button" class="button crop-attachment ' + css.imageFocus.button + '">Crop image with Image Focus</button>';
+			$(this.element).find('.attachment-actions').append(button);
+		},
+
+		sendImageCropDataByAjax: function ()
+		{
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					percentageX: percentageX,
-					percentageY: percentageY
+					image: JSON.stringify(image)
 				},
 				dataType: 'json'
 			});
