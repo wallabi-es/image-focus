@@ -38,7 +38,7 @@ class FocusPoint
     private function focusPointL10n()
     {
         return [
-            'cropButton' => __('Crop image by focus point', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButton' => __('Crop image', IMAGEFOCUS_TEXTDOMAIN),
         ];
     }
 
