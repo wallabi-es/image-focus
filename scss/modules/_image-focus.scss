@@ -1,15 +1,15 @@
 .image-focus {
-
 	display: block;
-	text-align: center;
 
 	user-select: none;
+	text-align: center;
 
 	/* ELEMENTS */
 	&__wrapper {
 		position: relative;
-		overflow: hidden;
+
 		display: inline-block;
+		overflow: hidden;
 	}
 
 	&__clickarea {
@@ -20,6 +20,7 @@
 
 		width: 100%;
 		height: 100%;
+
 		background: rgba(255,255,255,0); //Transparent layer
 	}
 
