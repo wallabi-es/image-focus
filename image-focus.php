@@ -1,13 +1,15 @@
 <?php
 /*
-Plugin Name: Image Focus: Image crop by focuspoint
+Plugin Name: Image Focus
 Plugin URI: https://github.com/dannyvanholten/image-focus
-Description: Image Crop plugin with which you can crop your images by focuspoint.
+Description: Crop your images precisely by setting a focuspoint.
 Version: 0.1
-Author: Danny van Holten
+Author: Danny van Holten, Harwin Borger
 Author URI: http://www.dannyvanholten.com/
-Copyright: Danny van Holten
+Copyright: Danny van Holten, Harwin Borger
 */
+
+use ImageFocus\ImageFocus;
 
 if (!defined('ABSPATH')) {
     exit;
