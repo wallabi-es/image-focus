@@ -66,7 +66,7 @@ module.exports = function (grunt)
 				options: {
 					cleancss: true,
 					outputStyle: 'compressed',
-					//sourceComments: 'map',
+					sourceComments: 'map',
 					sourceMap: true
 				}
 			}
