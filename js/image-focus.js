@@ -98,6 +98,17 @@
 				left: percentageX + '%',
 				top: percentageY + '%'
 			});
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'initialize-crop',
+					percentageX: percentageX,
+					percentageY: percentageY
+				},
+				dataType: 'json'
+			});
 		}
 	};
 
