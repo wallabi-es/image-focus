@@ -8,28 +8,23 @@ class Crop
 
     public function __construct()
     {
-        $this->addHooks();
-    }
-
-    /**
-     * Make sure all hooks are being executed.
-     */
-    private function addHooks()
-    {
-        add_action('admin_init', [$this, 'getImageSizes'], 30);
-        add_action('admin_init', [$this, 'cropImage'], 31);
+        $this->getImageSizes();
     }
 
     /**
      * Crop the image on base of the focus point
+     *
+     * @param $imageId
+     * @param $percentageX
+     * @param $percentageY
      */
-    public function cropImage()
+    public function cropImage($imageId, $focusX, $focusY)
     {
-        $imageId = 5;
-        $position = [(float)10.000, (float)50.000]; // horizontal, vertical
-
         // Get the source of the target image
         $image = $this->getImageSrc($imageId);
+
+        // Get the focuspoint value
+        $position = [(float)$focusX, (float)$focusY];
 
         foreach ($this->imageSizes as $imageSize) {
 
@@ -37,6 +32,12 @@ class Crop
             if ($imageSize['width'] >= $image[1] || $imageSize['height'] >= $image[2]) {
                 continue;
             }
+
+            // Get the filepath of the image
+            $filePath = $this->getFilePath($image[0], $imageSize);
+
+            // Remove the file to make sure we can upload the cropped image.
+            $this->removeOldFile($filePath);
 
             $cropDetails = $this->calculatePosition($position, $imageSize, $image);
 
@@ -49,7 +50,7 @@ class Crop
                 $imageSize['width'],
                 $imageSize['height'],
                 false,
-                $this->getFilePath($image[0], $imageSize)
+                $filePath
             );
         }
     }
@@ -96,7 +97,7 @@ class Crop
         }
 
         // Return values for vertical crop
-        if ($p = 1) {
+        if ($p === 1) {
             return [
                 'src_x' => 0,
                 'src_y' => $start,
@@ -179,9 +180,6 @@ class Crop
 
         // Create the file path
         $filePath = $uploadDir . $fileName;
-
-        // Remove the file to make sure we can upload the cropped image.
-        $this->removeOldFile($filePath);
 
         return $filePath;
     }
