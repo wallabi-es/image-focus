@@ -41,12 +41,13 @@
 		{
 			this.setImageData();
 			this.addFocusPoint();
+			this.addCropButton();
 
 			//Call function to move the Focus Point and send an Ajax request
 			$('.' + css.imageFocus.clickarea).on('click', this.moveFocusPoint);
 		},
 
-		setImageData: function()
+		setImageData: function ()
 		{
 			image.attachmentId = $(this.element).data('id');
 		},
@@ -98,14 +99,23 @@
 				left: percentageX + '%',
 				top: percentageY + '%'
 			});
+		},
 
+		addCropButton: function ()
+		{
+			$button = $('image-focus__button');
+
+			$button.on('click', this.sendImageCropDataByAjax());
+
+		},
+
+		sendImageCropDataByAjax: function(){
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					percentageX: percentageX,
-					percentageY: percentageY
+					image: JSON.stringify(image)
 				},
 				dataType: 'json'
 			});
