@@ -106,7 +106,7 @@
 
 		addCropButton: function ()
 		{
-			var button = '<button type="button" class="button crop-attachment ' + css.imageFocus.button + '">Crop image with Image Focus</button>';
+			var button = '<button type="button" class="button crop-attachment ' + css.imageFocus.button + '">focusPointl10n.cropButton</button>';
 			$(this.element).find('.attachment-actions').append(button);
 		},
 
