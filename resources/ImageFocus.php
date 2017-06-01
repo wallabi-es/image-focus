@@ -7,6 +7,8 @@ class ImageFocus
     public function __construct()
     {
         $this->addHooks();
+
+        new Crop();
     }
 
     /**
