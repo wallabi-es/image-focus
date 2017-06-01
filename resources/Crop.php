@@ -4,28 +4,76 @@ namespace ImageFocus;
 
 class Crop
 {
-    public $imageSizes = [];
-
-    public function __construct()
-    {
-        $this->getImageSizes();
-    }
+    private $attachment = [];
+    private $imageSizes = [];
+    private $focusPoint = [];
 
     /**
      * Crop the image on base of the focus point
      *
-     * @param $imageId
-     * @param $percentageX
-     * @param $percentageY
+     * @param $attachmentId
+     * @param $focusPointX
+     * @param $focusPointY
      */
-    public function cropImage($imageId, $focusX, $focusY)
+    public function crop($attachmentId, $focusPointX, $focusPointY)
     {
-        // Get the source of the target image
-        $image = $this->getImageSrc($imageId);
+        // Set all the cropping data
+        $this->setCropData($attachmentId, $focusPointX, $focusPointY);
+        $this->cropImage();
+    }
 
-        // Get the focuspoint value
-        $position = [(float)$focusX, (float)$focusY];
+    /**
+     * Set all crop data
+     *
+     * @param $attachmentId
+     * @param $focusPointX
+     * @param $focusPointY
+     */
+    private function setCropData($attachmentId, $focusPointX, $focusPointY)
+    {
+        $this->getImageSizes();
+        $this->getAttachment($attachmentId);
+        $this->setFocuspoint($focusPointX, $focusPointY);
+    }
 
+    /**
+     *  Return the src array of the attachment image containing url, width & height
+     *
+     * @param $attachmentId
+     * @return $this
+     */
+    private function getAttachment($attachmentId)
+    {
+        $attachment = wp_get_attachment_image_src($attachmentId, 'full');
+
+        $this->attachment = [
+            'src'    => $attachment[0],
+            'width'  => $attachment[1],
+            'height' => $attachment[2]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Set the focuspoint for the crop
+     *
+     * @param $focusPointX
+     * @param $focusPointY
+     * @return $this
+     */
+    private function setFocusPoint($focusPointX, $focusPointY)
+    {
+        $this->focusPoint = [
+            'x' => (float)$focusPointX,
+            'y' => (float)$focusPointY
+        ];
+
+        return $this;
+    }
+
+    private function cropImage()
+    {
         foreach ($this->imageSizes as $imageSize) {
 
             // Stop this iteration if the image is too small to be cropped for this size
@@ -63,7 +111,7 @@ class Crop
      * @param $image
      * @return mixed
      */
-    protected function calculatePosition($position, $imageSize, $image)
+    private function calculatePosition($position, $imageSize, $image)
     {
 
         // Define the ratios for the cropped image, the original image and the difference between the two
@@ -114,17 +162,6 @@ class Crop
             'src_h' => $image[2]
         ];
 
-    }
-
-    /**
-     * Return the src array of the attachment image containing url, width & height
-     *
-     * @param $imageId
-     * @return array|false
-     */
-    private function getImageSrc($imageId)
-    {
-        return wp_get_attachment_image_src($imageId, 'full');
     }
 
     /**

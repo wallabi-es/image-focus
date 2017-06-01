@@ -49,7 +49,7 @@ class ImageFocus
         }
 
         $crop = new Crop();
-        $crop->cropImage(5, $_POST['percentageX'], $_POST['percentageY']);
+        $crop->crop(5, $_POST['percentageX'], $_POST['percentageY']);
 
         // Return succes
         die(
