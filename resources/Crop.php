@@ -17,7 +17,6 @@ class Crop
     private function addHooks()
     {
         add_action('admin_init', [$this, 'getImageSizes'], 30);
-        add_action('admin_init', [$this, 'cropImage'], 31);
     }
 
     /**

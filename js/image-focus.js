@@ -51,7 +51,8 @@
 			$thumbnail.addClass(css.imageFocus.img);
 
 			//Add a wrapper around image
-			$thumbnail.wrap('<div class="' + css.imageFocus.self + '"><div class="' + css.imageFocus.wrapper + '"></div></div>');
+			$thumbnail.wrap(
+				'<div class="' + css.imageFocus.self + '"><div class="' + css.imageFocus.wrapper + '"></div></div>');
 			$imageFocusWrapper = $('.' + css.imageFocus.wrapper);
 
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.point + '"></div>');
@@ -79,6 +80,17 @@
 			$('.' + css.imageFocus.point).css({
 				left: percentageX + '%',
 				top: percentageY + '%'
+			});
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'initialize-crop',
+					percentageX: percentageX,
+					percentageY: percentageY
+				},
+				dataType: 'json'
 			});
 		}
 	};
