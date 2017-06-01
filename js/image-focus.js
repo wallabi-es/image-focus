@@ -3,6 +3,13 @@
 	// Create the defaults once
 	var pluginName = "imageFocus",
 		defaults = {},
+		image = {
+			attachmentId: false,
+			focus: {
+				x: 50,
+				y: 50
+			}
+		},
 		css = {
 			imageFocus: {
 				self: 'image-focus',
@@ -32,10 +39,16 @@
 	Plugin.prototype = {
 		init: function ()
 		{
+			this.setImageData();
 			this.addFocusPoint();
 
 			//Call function to move the Focus Point and send an Ajax request
 			$('.' + css.imageFocus.clickarea).on('click', this.moveFocusPoint);
+		},
+
+		setImageData: function()
+		{
+			image.attachmentId = $(this.element).data('id');
 		},
 
 		/**
@@ -74,6 +87,10 @@
 			//Calculate CSS Percentages
 			var percentageX = (offsetX / imageW) * 100;
 			var percentageY = (offsetY / imageH) * 100;
+
+			//Write calculations back to image object
+			image.focus.x = percentageX;
+			image.focus.y = percentageY;
 
 			console.log('percentageX:' + percentageX.toFixed(2) + ', percentageY:' + percentageY.toFixed(2));
 
@@ -115,10 +132,12 @@
 	{
 		setInterval(function ()
 		{
-			var $detailImage = $('.attachment-details .details-image');
+			var $attachmentDetails = $('.attachment-details');
+			var $detailImage = $attachmentDetails.find('.details-image');
+
 			if ($detailImage.length && !$('.image-focus').length) {
 				try {
-					$detailImage.imageFocus();
+					$attachmentDetails.imageFocus();
 				} catch (e) {
 					console.log(e);
 				}
