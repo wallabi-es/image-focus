@@ -160,78 +160,60 @@ class Crop
      *
      * @param $imageSize
      * @param $imageFilePath
+     * @return array
      */
     private function cropImage($imageSize, $imageFilePath)
     {
-        $cropDetails = $this->calculatePosition($imageSize);
+        // Gather all dimension
+        $dimensions = ['x' => [], 'y' => []];
+        $directions = ['x' => 'width', 'y' => 'height'];
+
+        // Define the correction the image needs to keep the same ratio after the cropping has taken place
+        $cropCorrection = [
+            'x' => $imageSize['ratio'] / $this->attachment['ratio'],
+            'y' => $this->attachment['ratio'] / $imageSize['ratio']
+        ];
+
+        // Check all the cropping values
+        foreach ($dimensions as $axis => $dimension) {
+
+            // Get the center position
+            $dimensions[$axis]['center'] = $this->focusPoint[$axis] / 100 * $this->attachment[$directions[$axis]];
+            // Get the starting position and let's correct the crop ratio
+            $dimensions[$axis]['start'] = $dimensions[$axis]['center'] - $this->attachment[$directions[$axis]] * $cropCorrection[$axis] / 2;
+            // Get the ending position and let's correct the crop ratio
+            $dimensions[$axis]['end'] = $dimensions[$axis]['center'] + $this->attachment[$directions[$axis]] * $cropCorrection[$axis] / 2;
+
+            // Is the start position lower than 0? That's not possible so let's correct it
+            if ($dimensions[$axis]['start'] < 0) {
+                // Adjust the ending, but don't make it higher than the image itself
+                $dimensions[$axis]['end'] = min($dimensions[$axis]['end'] - $dimensions[$axis]['start'],
+                    $this->attachment[$directions[$axis]]);
+                // Adjust the start, but don't make it lower than 0
+                $dimensions[$axis]['start'] = max($dimensions[$axis]['start'] - $dimensions[$axis]['start'], 0);
+            }
+
+            // Is the start position higher than the total image size? That's not possible so let's correct it
+            if ($dimensions[$axis]['end'] > $this->attachment[$directions[$axis]]) {
+                // Adjust the start, but don't make it lower than 0
+                $dimensions[$axis]['start'] = max($dimensions[$axis]['start'] + $this->attachment[$directions[$axis]] - $dimensions[$axis]['end'],
+                    0);
+                // Adjust the ending, but don't make it higher than the image itself
+                $dimensions[$axis]['end'] = min($dimensions[$axis]['end'] + $this->attachment[$directions[$axis]] - $dimensions[$axis]['end'],
+                    $this->attachment[$directions[$axis]]);
+            }
+        }
 
         // Excecute the WordPress image crop function
         wp_crop_image($this->attachment['id'],
-            $cropDetails['src_x'],
-            $cropDetails['src_y'],
-            $cropDetails['src_w'],
-            $cropDetails['src_h'],
+            $dimensions['x']['start'],
+            $dimensions['y']['start'],
+            $dimensions['x']['end'] - $dimensions['x']['start'],
+            $dimensions['y']['end'] - $dimensions['y']['start'],
             $imageSize['width'],
             $imageSize['height'],
             false,
             $imageFilePath
         );
-    }
-
-    /**
-     * Calculate the all of the positions neccesary to crop the image
-     *
-     * @param $imageSize
-     * @return mixed
-     */
-    private function calculatePosition($imageSize)
-    {
-        // Define the ratios for the cropped image, the original image and the difference between the two
-        $cropCorrection = $imageSize['ratio'] / $this->attachment['ratio'];
-        $cropDirection = 'horizontal';
-
-        // Check if the target ratio is wider then the attachment ratio
-        if ($cropCorrection > 1) {
-            $p = 1;
-            $cropDirection = 'vertical';
-            $cropCorrection = $this->attachment['ratio'] / $imageSize['ratio'];
-        }
-
-        // Check the start & ending positions of the croup
-        $i = $p + 1;
-        $center = $this->focusPoint[$p] / 100 * $this->attachment[$i];
-        $start = $center - $this->attachment[$i] * $cropCorrection / 2;
-        $end = $center + $this->attachment[$i] * $cropCorrection / 2;
-
-        // Correction for starting to early
-        if ($start < 0) {
-            $end = $end - $start;
-            $start = $start - $start;
-        }
-
-        // Correction for starting to late
-        if ($end > $this->attachment[$i]) {
-            $start = $start + $this->attachment[$i] - $end;
-            $end = $end + $this->attachment[$i] - $end;
-        }
-
-        // Return values for vertical crop
-        if ($p === 1) {
-            return [
-                'src_x' => 0,
-                'src_y' => $start,
-                'src_w' => $this->attachment[1],
-                'src_h' => $end - $start,
-            ];
-        }
-
-        // Return values for horizontal crop
-        return [
-            'src_x' => $start,
-            'src_y' => 0,
-            'src_w' => $end - $start,
-            'src_h' => $this->attachment[2]
-        ];
-
     }
 }

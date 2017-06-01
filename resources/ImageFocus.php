@@ -40,27 +40,15 @@ class ImageFocus
         // Check if we've got all the data
         $image = $_POST['image'];
 
-        if (null === $image['focus'] || null === $image['focus']) {
-            die(
-                json_encode(
-                    [
-                        'success' => false,
-                    ]
-                )
-            );
+        if (null === $image['focus']) {
+            die(json_encode(['success' => false]));
         }
 
         $crop = new Crop();
         $crop->crop($image['attachmentId'], $image['focus']);
 
         // Return success
-        die(
-        json_encode(
-            [
-                'success' => true,
-            ]
-        )
-        );
+        die(json_encode(['success' => true,]));
     }
 
     /**
