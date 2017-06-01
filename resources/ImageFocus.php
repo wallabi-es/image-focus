@@ -33,7 +33,7 @@ class ImageFocus
         wp_enqueue_script('image-focus-js',
             plugins_url('js/focuspoint.min.js', IMAGEFOCUS_ASSETS), ['jquery']);
 
-        wp_register_style('image-focus-css', plugins_url('css/style.min.css', dirname(__FILE__)));
+        wp_register_style('image-focus-css', plugins_url('css/style.min.css', IMAGEFOCUS_ASSETS));
         wp_enqueue_style('image-focus-css');
     }
 
