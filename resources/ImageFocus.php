@@ -7,6 +7,8 @@ class ImageFocus
     public function __construct()
     {
         $this->addHooks();
+
+        new Crop();
     }
 
     /**
@@ -16,6 +18,7 @@ class ImageFocus
     {
         add_action('admin_init', [$this, 'loadTextDomain']);
         add_action('admin_post_thumbnail_html', [$this, 'addFocusFeatureImageEditorLink'], 10, 2);
+        add_action('wp_ajax_initialize-crop', [$this, 'initializeCrop']);
         add_action('admin_enqueue_scripts', [$this, 'loadScripts']);
     }
 
@@ -35,6 +38,30 @@ class ImageFocus
 
         wp_register_style('image-focus-css', plugins_url('css/style.min.css', dirname(__FILE__)));
         wp_enqueue_style('image-focus-css');
+    }
+
+    public function initializeCrop() {
+        // Check if we've got all the data
+        if (null === $_POST['percentageX'] || $_POST['percentageY']) {
+            die(
+            json_encode(
+                [
+                    'success' => false,
+                ]
+            )
+            );
+        }
+
+        die($_POST);
+
+        // Return succes
+        die(
+        json_encode(
+            [
+                'success' => true,
+            ]
+        )
+        );
     }
 
     /**
