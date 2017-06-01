@@ -46,13 +46,8 @@ module.exports = function (grunt)
 			},
 			dist: {
 				files: {
-					'<%= dir.js %>/growl.min.js': [
-						'<%= dir.js %>/growl/*.js',
-						'!<%= dir.js %>/growl/*.min.js'
-					],
-					'<%= dir.js %>/jquery-initialize.min.js': [
-						'<%= dir.js %>/jquery-initialize/*.js',
-						'!<%= dir.js %>/jquery-initialize/*.min.js'
+					'<%= dir.js %>/focuspoint.min.js': [
+						'<%= dir.js %>/focuspoint/*.js'
 					]
 				}
 			}
