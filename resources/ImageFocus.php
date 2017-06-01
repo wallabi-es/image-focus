@@ -40,9 +40,10 @@ class ImageFocus
         wp_enqueue_style('image-focus-css');
     }
 
-    public function initializeCrop() {
+    public function initializeCrop()
+    {
         // Check if we've got all the data
-        if (null === $_POST['percentageX'] || $_POST['percentageY']) {
+        if (null === $_POST['percentageX'] || null === $_POST['percentageY']) {
             die(
             json_encode(
                 [
@@ -52,7 +53,8 @@ class ImageFocus
             );
         }
 
-        die($_POST);
+        $crop = new Crop();
+        $crop->cropImage(5, $_POST['percentageX'], $_POST['percentageY']);
 
         // Return succes
         die(
