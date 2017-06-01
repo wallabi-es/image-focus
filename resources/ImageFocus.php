@@ -7,8 +7,6 @@ class ImageFocus
     public function __construct()
     {
         $this->addHooks();
-
-        new Crop();
     }
 
     /**
@@ -33,16 +31,14 @@ class ImageFocus
 //            plugins_url('bower_components/jquery-focuspoint/js/jquery.focuspoint.min.js', dirname(__FILE__)),
 //            ['jquery']); // @todo activate for feature thumbnail crop previews
 
-        wp_enqueue_script('image-focus-js',
-            plugins_url('js/image-focus.js', dirname(__FILE__)), ['jquery']);
-
-        wp_register_style('image-focus-css', plugins_url('css/style.min.css', dirname(__FILE__)));
-        wp_enqueue_style('image-focus-css');
+        wp_enqueue_script('image-focus-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery']);
+        wp_enqueue_style('image-focus-css', IMAGEFOCUS_ASSETS . 'css/style.min.css');
     }
 
-    public function initializeCrop() {
+    public function initializeCrop()
+    {
         // Check if we've got all the data
-        if (null === $_POST['percentageX'] || $_POST['percentageY']) {
+        if (null === $_POST['percentageX'] || null === $_POST['percentageY']) {
             die(
             json_encode(
                 [
@@ -52,7 +48,8 @@ class ImageFocus
             );
         }
 
-        die($_POST);
+        $crop = new Crop();
+        $crop->cropImage(5, $_POST['percentageX'], $_POST['percentageY']);
 
         // Return succes
         die(
