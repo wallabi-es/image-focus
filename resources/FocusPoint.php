@@ -33,26 +33,16 @@ class FocusPoint
     public function initializeCrop()
     {
         // Check if we've got all the data
-        if (null === $_POST['percentageX'] || null === $_POST['percentageY']) {
-            die(
-            json_encode(
-                [
-                    'success' => false,
-                ]
-            )
-            );
+        $image = $_POST['image'];
+
+        if (null === $image['focus']) {
+            die(json_encode(['success' => false]));
         }
 
         $crop = new Crop();
-        $crop->cropImage(5, $_POST['percentageX'], $_POST['percentageY']);
+        $crop->crop($image['attachmentId'], $image['focus']);
 
-        // Return succes
-        die(
-        json_encode(
-            [
-                'success' => true,
-            ]
-        )
-        );
+        // Return success
+        die(json_encode(['success' => true,]));
     }
 }
