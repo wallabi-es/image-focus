@@ -134,11 +134,11 @@ class Crop
         $uploadDir = wp_upload_dir()['path'] . '/';
 
         // Get the attachment name
-        $attachmentName = pathinfo($this->attachment['src'])['filename'];
-        $croppedAttachmentName = $attachmentName . '-' . $imageSize['width'] . 'x' . $imageSize['height'];
+        $attachment = pathinfo($this->attachment['src'])['filename'];
+        $croppedAttachment = $attachment . '-' . $imageSize['width'] . 'x' . $imageSize['height'];
 
         // Add the image size to the the name of the attachment
-        $fileName = str_replace($attachmentName, $croppedAttachmentName, basename($this->attachment['src']));
+        $fileName = str_replace($attachment, $croppedAttachment, basename($this->attachment['src']));
 
         return $uploadDir . $fileName;
     }
