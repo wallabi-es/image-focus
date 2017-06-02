@@ -63,7 +63,6 @@
 		 */
 		addFocusPoint: function ()
 		{
-			console.log('add focuspoint');
 			var $imageFocusWrapper,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
 
@@ -99,8 +98,6 @@
 			image.focus.x = percentageX;
 			image.focus.y = percentageY;
 
-			console.log('percentageX:' + percentageX.toFixed(2) + ', percentageY:' + percentageY.toFixed(2));
-
 			$('.' + css.imageFocus.point).css({
 				left: percentageX + '%',
 				top: percentageY + '%'
@@ -120,7 +117,7 @@
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					image: JSON.stringify(image)
+					image: image
 				},
 				dataType: 'json'
 			});

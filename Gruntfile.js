@@ -122,7 +122,7 @@ module.exports = function (grunt)
 
 			sass: {
 				files: [
-					'<%= dir.scss %>/**/*.{scss,sass}',
+					'<%= dir.scss %>/**/*.{scss,sass}'
 				],
 				tasks: ['sass', 'postcss:css']
 			},
