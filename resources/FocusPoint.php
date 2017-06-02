@@ -23,8 +23,23 @@ class FocusPoint
      */
     public function loadScripts()
     {
-        wp_enqueue_script('image-focus-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery']);
+        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery']);
+        wp_localize_script('focuspoint-js', 'focusPointL10n', $this->focusPointL10n());
+        wp_enqueue_script('focuspoint-js');
+
         wp_enqueue_style('image-focus-css', IMAGEFOCUS_ASSETS . 'css/style.min.css');
+    }
+
+    /**
+     * Return all the translation strings necessary for the javascript
+     *
+     * @return array
+     */
+    private function focusPointL10n()
+    {
+        return [
+            'cropButton' => __('Crop image', IMAGEFOCUS_TEXTDOMAIN),
+        ];
     }
 
     /**
