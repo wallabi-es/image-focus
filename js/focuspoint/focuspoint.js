@@ -69,11 +69,6 @@
 			//Events
 			this.moveFocusPointActions();
 
-			$('.' + css.imageFocus.clickarea).on('click', function ()
-			{
-				Plugin.prototype.highlightCropButton();
-			});
-
 			//Set action to button for ajax call
 			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
 
@@ -130,6 +125,7 @@
 
 			$focusPoint.on('mouseup', function ()
 			{
+				Plugin.prototype.highlightCropButton();
 				focusPointState.move = false;
 			});
 
@@ -155,6 +151,18 @@
 			//Calculate and set percentages
 			image.focus.x = (offsetX / image.dimension.width) * 100;
 			image.focus.y = (offsetY / image.dimension.height) * 100;
+
+			if(image.focus.x < 0 ){
+				image.focus.x = 0;
+			}else if(image.focus.x > 100){
+				image.focus.x = 100;
+			}
+
+			if(image.focus.y < 0){
+				image.focus.y = 0;
+			} else if(image.focus.y > 100){
+				image.focus.y = 100;
+			}
 
 			$('.' + css.imageFocus.point).css({
 				left: image.focus.x + '%',
