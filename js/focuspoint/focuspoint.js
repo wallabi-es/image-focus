@@ -63,7 +63,6 @@
 		 */
 		addFocusPoint: function ()
 		{
-			console.log('add focuspoint');
 			var $imageFocusWrapper,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
 
@@ -98,8 +97,6 @@
 			//Write calculations back to image object
 			image.focus.x = percentageX;
 			image.focus.y = percentageY;
-
-			console.log('percentageX:' + percentageX.toFixed(2) + ', percentageY:' + percentageY.toFixed(2));
 
 			$('.' + css.imageFocus.point).css({
 				left: percentageX + '%',
