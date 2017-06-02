@@ -14,7 +14,7 @@
 
 	&__clickarea {
 		position: absolute;
-		z-index: 99;
+		z-index: 100;
 		top: 0;
 		left: 0;
 
@@ -26,6 +26,7 @@
 
 	&__point {
 		position: absolute;
+		z-index: 200;
 		top: 50%;
 		left: 50%;
 
@@ -35,8 +36,21 @@
 		border: 2px solid #fff;
 		border-radius: 50%;
 		background: rgba(0, 0, 0, .5);
+		cursor: move;
 
-		transform: translate(-50%, -50%);
+		transform: translate3d(-50%, -50%,0);
+		transform-style: preserve-3d; //Smooth movements
+		backface-visibility: hidden; //Smooth movements
+		will-change: left, top;
+
+		&:hover {
+			&::before{
+				width: 10px;
+				height: 10px;
+				background-color: #f90;
+				border: 5px solid #fff;
+			}
+		}
 
 		&::before {
 			content: '';

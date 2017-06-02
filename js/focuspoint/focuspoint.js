@@ -7,6 +7,14 @@
 		defaults = {},
 		image = {
 			attachmentId: false,
+			dimension: {
+				width: false,
+				height: false
+			},
+			position: {
+				x: false,
+				y: false
+			},
 			focus: {
 				x: 50,
 				y: 50
@@ -26,6 +34,9 @@
 				primary: 'button-primary',
 				disabled: 'button-disabled'
 			}
+		},
+		focusPointState = {
+			move: false
 		},
 		ajaxState = {
 			crop: false
@@ -50,30 +61,44 @@
 	Plugin.prototype = {
 		init: function ()
 		{
-			this.setImageData();
-			this.addFocusPoint();
+			this.setImageMetaData();
+			this.addImageElements();
+			this.setImageDimensionData(); //Should be set after addImageElements;
 			this.addCropButton();
 
-			//Call function to move the Focus Point and send an Ajax request
-			$('.' + css.imageFocus.clickarea).on('click', function (event)
+			//Events
+			this.moveFocusPointActions();
+
+			$('.' + css.imageFocus.clickarea).on('click', function ()
 			{
-				Plugin.prototype.moveFocusPoint(event, this);
 				Plugin.prototype.highlightCropButton();
 			});
 
 			//Set action to button for ajax call
 			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
+
+			//Set image dimension dataon window resize
+			$(window).on('resize', this.setImageDimensionData);
 		},
 
-		setImageData: function ()
+		setImageMetaData: function ()
 		{
 			image.attachmentId = $(this.element).data('id');
+		},
+
+		setImageDimensionData: function ()
+		{
+			var $image = $('.' + css.imageFocus.img);
+			image.dimension.width = $image.width();
+			image.dimension.height = $image.height();
+			image.position.x = $image.offset().left;
+			image.position.y = $image.offset().top;
 		},
 
 		/**
 		 * Add focus point
 		 */
-		addFocusPoint: function ()
+		addImageElements: function ()
 		{
 			var $imageFocusWrapper,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
@@ -90,31 +115,56 @@
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.clickarea + '"></div>');
 		},
 
-		/**
-		 * Move focus point on img click
-		 */
-		moveFocusPoint: function (event, object)
+
+		moveFocusPointActions: function ()
 		{
-			var imageW = $(object).width();
-			var imageH = $(object).height();
-			//Calculate FocusPoint coordinates
-			var offsetX = event.pageX - $(object).offset().left;
+			var $focusPoint = $('.' + css.imageFocus.point);
 
-			var offsetY = event.pageY - $(object).offset().top;
-			//Calculate CSS Percentages
-			var percentageX = (offsetX / imageW) * 100;
+			$focusPoint.on('mousedown', function ()
+			{
+				focusPointState.move = true;
 
-			var percentageY = (offsetY / imageH) * 100;
-			//Write calculations back to image object
-			image.focus.x = percentageX;
+				//Set current dimension data in case position and size of image are changed because of content changes
+				Plugin.prototype.setImageDimensionData();
+			});
 
-			image.focus.y = percentageY;
+			$focusPoint.on('mouseup', function ()
+			{
+				focusPointState.move = false;
+			});
 
-			$('.' + css.imageFocus.point).css({
-				left: percentageX + '%',
-				top: percentageY + '%'
+			$(window).on('mousemove', function (event)
+			{
+				Plugin.prototype.moveFocusPoint(event);
 			});
 		},
+
+		/**
+		 * Set focus point on move
+		 */
+		moveFocusPoint: function (event)
+		{
+			if (focusPointState.move === false) {
+				return false;
+			}
+
+			//Calculate FocusPoint coordinates
+			var offsetX = event.pageX - image.position.x;
+			var offsetY = event.pageY - image.position.y;
+
+			//Calculate and set percentages
+			image.focus.x = (offsetX / image.dimension.width) * 100;
+			image.focus.y = (offsetY / image.dimension.height) * 100;
+
+			$('.' + css.imageFocus.point).css({
+				left: image.focus.x + '%',
+				top: image.focus.y + '%'
+			});
+		},
+
+		/**
+		 *  Button functions
+		 */
 
 		addCropButton: function ()
 		{
@@ -130,7 +180,8 @@
 			$cropButton.addClass(css.button.primary);
 		},
 
-		activateCropButton: function(){
+		activateCropButton: function ()
+		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.disabled);
 			$cropButton.removeClass(css.button.primary);
@@ -153,8 +204,9 @@
 					image: image
 				},
 				dataType: 'json',
-				beforeSend: function(){
-					if(ajaxState.crop === true){
+				beforeSend: function ()
+				{
+					if (ajaxState.crop === true) {
 						return false;
 					}
 
@@ -167,10 +219,10 @@
 			{
 				var $cropButton = $('.' + css.imageFocus.button);
 
-				if(data.success === false){
+				if (data.success === false) {
 					Plugin.prototype.activateCropButton();
 					$cropButton.text('Please try again');
-				}else{
+				} else {
 					$cropButton.text('Done!');
 				}
 
