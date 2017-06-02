@@ -20,6 +20,11 @@
 				point: 'image-focus__point',
 				clickarea: 'image-focus__clickarea',
 				button: 'image-focus__button'
+			},
+			button:{
+				self: 'button',
+				primary: 'button-primary',
+				disabled: 'button-disabled'
 			}
 		};
 
@@ -42,12 +47,17 @@
 	Plugin.prototype = {
 		init: function ()
 		{
+			var self = this;
 			this.setImageData();
 			this.addFocusPoint();
 			this.addCropButton();
 
 			//Call function to move the Focus Point and send an Ajax request
-			$('.' + css.imageFocus.clickarea).on('click', this.moveFocusPoint);
+			$('.' + css.imageFocus.clickarea).on('click', function (event)
+			{
+				self.moveFocusPoint(event, this);
+				self.highlightCropButton();
+			});
 
 			//Set action to button for ajax call
 			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
@@ -81,21 +91,21 @@
 		/**
 		 * Move focus point on img click
 		 */
-		moveFocusPoint: function (e)
+		moveFocusPoint: function (event, object)
 		{
-			var imageW = $(this).width();
-			var imageH = $(this).height();
-
+			var imageW = $(object).width();
+			var imageH = $(object).height();
 			//Calculate FocusPoint coordinates
-			var offsetX = e.pageX - $(this).offset().left;
-			var offsetY = e.pageY - $(this).offset().top;
+			var offsetX = event.pageX - $(object).offset().left;
 
+			var offsetY = event.pageY - $(object).offset().top;
 			//Calculate CSS Percentages
 			var percentageX = (offsetX / imageW) * 100;
-			var percentageY = (offsetY / imageH) * 100;
 
+			var percentageY = (offsetY / imageH) * 100;
 			//Write calculations back to image object
 			image.focus.x = percentageX;
+
 			image.focus.y = percentageY;
 
 			$('.' + css.imageFocus.point).css({
@@ -106,8 +116,21 @@
 
 		addCropButton: function ()
 		{
-			var button = '<button type="button" class="button crop-attachment ' + css.imageFocus.button + '">'+focusPointL10n.cropButton+'</button>';
+			var button = '<button type="button" class="' + css.button.self + ' ' + css.button.disabled + ' crop-attachment ' + css.imageFocus.button + '">' + focusPointL10n.cropButton + '</button>';
 			$(this.element).find('.attachment-actions').append(button);
+		},
+
+		highlightCropButton: function ()
+		{
+			var $cropButton = $('.' + css.imageFocus.button);
+			$cropButton.removeClass(css.button.disabled);
+			$cropButton.addClass(css.button.primary);
+		},
+
+		disableCropButton: function(){
+			var $cropButton = $('.' + css.imageFocus.button);
+			$cropButton.removeClass(css.button.primary);
+			$cropButton.addClass(css.button.disabled);
 		},
 
 		sendImageCropDataByAjax: function ()
