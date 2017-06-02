@@ -5,9 +5,9 @@
 	// Create the defaults once
 	var pluginName = "imageFocus",
 		defaults = {},
-		image = {
-			attachmentId: false,
-			focus: {
+		attachment = {
+			id: false,
+			focusPoint: {
 				x: 50,
 				y: 50
 			}
@@ -55,7 +55,7 @@
 
 		setImageData: function ()
 		{
-			image.attachmentId = $(this.element).data('id');
+			attachment.id = $(this.element).data('id');
 		},
 
 		/**
@@ -95,8 +95,8 @@
 			var percentageY = (offsetY / imageH) * 100;
 
 			//Write calculations back to image object
-			image.focus.x = percentageX;
-			image.focus.y = percentageY;
+			attachment.focusPoint.x = percentageX;
+			attachment.focusPoint.y = percentageY;
 
 			$('.' + css.imageFocus.point).css({
 				left: percentageX + '%',
@@ -117,7 +117,7 @@
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					image: image
+					attachment: attachment
 				},
 				dataType: 'json'
 			});
