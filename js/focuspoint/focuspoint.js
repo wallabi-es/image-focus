@@ -126,6 +126,7 @@
 		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.disabled);
+			$cropButton.text(focusPointL10n.cropButton);
 			$cropButton.addClass(css.button.primary);
 		},
 
@@ -157,13 +158,20 @@
 						return false;
 					}
 
+					var $cropButton = $('.' + css.imageFocus.button);
+					$cropButton.text('Cropping...');
 					Plugin.prototype.disableCropButton();
 					ajaxState.crop = true;
 				}
 			}).done(function (data)
 			{
+				var $cropButton = $('.' + css.imageFocus.button);
+
 				if(data.success === false){
 					Plugin.prototype.activateCropButton();
+					$cropButton.text('Please try again');
+				}else{
+					$cropButton.text('Done!');
 				}
 
 				ajaxState.crop = false;
