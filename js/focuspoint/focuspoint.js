@@ -21,11 +21,14 @@
 				clickarea: 'image-focus__clickarea',
 				button: 'image-focus__button'
 			},
-			button:{
+			button: {
 				self: 'button',
 				primary: 'button-primary',
 				disabled: 'button-disabled'
 			}
+		},
+		ajaxState = {
+			crop: false
 		};
 
 	// The actual plugin constructor
@@ -47,7 +50,6 @@
 	Plugin.prototype = {
 		init: function ()
 		{
-			var self = this;
 			this.setImageData();
 			this.addFocusPoint();
 			this.addCropButton();
@@ -55,8 +57,8 @@
 			//Call function to move the Focus Point and send an Ajax request
 			$('.' + css.imageFocus.clickarea).on('click', function (event)
 			{
-				self.moveFocusPoint(event, this);
-				self.highlightCropButton();
+				Plugin.prototype.moveFocusPoint(event, this);
+				Plugin.prototype.highlightCropButton();
 			});
 
 			//Set action to button for ajax call
@@ -124,10 +126,18 @@
 		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.disabled);
+			$cropButton.text(focusPointL10n.cropButton);
 			$cropButton.addClass(css.button.primary);
 		},
 
-		disableCropButton: function(){
+		activateCropButton: function(){
+			var $cropButton = $('.' + css.imageFocus.button);
+			$cropButton.removeClass(css.button.disabled);
+			$cropButton.removeClass(css.button.primary);
+		},
+
+		disableCropButton: function ()
+		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.primary);
 			$cropButton.addClass(css.button.disabled);
@@ -142,7 +152,29 @@
 					action: 'initialize-crop',
 					attachment: attachment
 				},
-				dataType: 'json'
+				dataType: 'json',
+				beforeSend: function(){
+					if(ajaxState.crop === true){
+						return false;
+					}
+
+					var $cropButton = $('.' + css.imageFocus.button);
+					$cropButton.text('Cropping...');
+					Plugin.prototype.disableCropButton();
+					ajaxState.crop = true;
+				}
+			}).done(function (data)
+			{
+				var $cropButton = $('.' + css.imageFocus.button);
+
+				if(data.success === false){
+					Plugin.prototype.activateCropButton();
+					$cropButton.text('Please try again');
+				}else{
+					$cropButton.text('Done!');
+				}
+
+				ajaxState.crop = false;
 			});
 		}
 	};
