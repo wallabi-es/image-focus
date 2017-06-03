@@ -2,7 +2,7 @@
 
 namespace ImageFocus;
 
-class Crop
+class CropService
 {
     private $attachment = [];
     private $imageSizes = [];
@@ -32,6 +32,7 @@ class Crop
         $this->getImageSizes();
         $this->getAttachment($attachmentId);
         $this->setFocusPoint($focusPoint);
+        $this->saveFocusPointToDB();
     }
 
     /**
@@ -102,6 +103,14 @@ class Crop
         return $this;
     }
 
+    /**
+     * Put the focuspoint in the post meta of the attachment post
+     */
+    private function saveFocusPointToDB()
+    {
+        update_post_meta($this->attachment['id'], 'focus_point', $this->focusPoint);
+    }
+
     private function cropAttachment()
     {
         // Loop trough all the image sizes connected to this attachment
@@ -130,7 +139,6 @@ class Crop
     private function getImageFilePath($imageSize)
     {
         // Get the path to the WordPress upload directory
-        // @todo: Support folder structure
         $uploadDir = wp_upload_dir()['path'] . '/';
 
         // Get the attachment name
