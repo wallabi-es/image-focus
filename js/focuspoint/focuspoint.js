@@ -121,11 +121,12 @@
 
 				//Set current dimension data in case position and size of image are changed because of content changes
 				Plugin.prototype.setImageDimensionData();
+				//Highlight crop button
+				Plugin.prototype.highlightCropButton();
 			});
 
 			$focusPoint.on('mouseup', function ()
 			{
-				Plugin.prototype.highlightCropButton();
 				focusPointState.move = false;
 			});
 
@@ -152,16 +153,20 @@
 			image.focus.x = (offsetX / image.dimension.width) * 100;
 			image.focus.y = (offsetY / image.dimension.height) * 100;
 
-			if(image.focus.x < 0 ){
+			if (image.focus.x < 0) {
 				image.focus.x = 0;
-			}else if(image.focus.x > 100){
-				image.focus.x = 100;
+			} else {
+				if (image.focus.x > 100) {
+					image.focus.x = 100;
+				}
 			}
 
-			if(image.focus.y < 0){
+			if (image.focus.y < 0) {
 				image.focus.y = 0;
-			} else if(image.focus.y > 100){
-				image.focus.y = 100;
+			} else {
+				if (image.focus.y > 100) {
+					image.focus.y = 100;
+				}
 			}
 
 			$('.' + css.imageFocus.point).css({
