@@ -43,19 +43,25 @@ class FocusPoint
         ];
     }
 
-
+    /**
+     * Get the focuspoint of the attachment from the post meta
+     */
     public function getFocusPoint()
     {
         $attachment = $_POST['attachment'];
 
-        if (null === $attachment['focusPoint']) {
+        // Get the post meta
+        $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
+
+        // Return false
+        if (null === $attachment['id'] || !is_array($attachment['focusPoint'])) {
             die(json_encode(['success' => false]));
         }
 
         // Return success
         die(json_encode([
             'success'    => true,
-            'focusPoint' => get_post_meta($attachment['id'], 'focus_point', true)
+            'focusPoint' => $attachment['focusPoint']
         ]));
     }
 
@@ -67,6 +73,7 @@ class FocusPoint
         // Check if we've got all the data
         $attachment = $_POST['attachment'];
 
+        // Return false
         if (null === $attachment['focusPoint']) {
             die(json_encode(['success' => false]));
         }
