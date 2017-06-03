@@ -50,7 +50,7 @@
 	Plugin.prototype = {
 		init: function ()
 		{
-			this.setImageData();
+			this.getAttachmentData();
 			this.addFocusPoint();
 			this.addCropButton();
 
@@ -65,9 +65,39 @@
 			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
 		},
 
-		setImageData: function ()
+		getAttachmentData: function ()
 		{
 			attachment.id = $(this.element).data('id');
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'get-focuspoint',
+					attachment: attachment
+				},
+				dataType: 'json'
+			}).done(function (data)
+			{
+				// Reset the focuspoint
+				attachment.focusPoint = {
+					x: 50,
+					y: 50
+				};
+
+				// If we have database data use that
+				if (data.success === true) {
+					attachment.focusPoint = data.focusPoint
+				}
+
+				// Move the focuspoint and show it
+				$('.' + css.imageFocus.point).css({
+					display: 'block',
+					left: attachment.focusPoint.x + '%',
+					top: attachment.focusPoint.y + '%'
+				});
+
+			});
 		},
 
 		/**
