@@ -5,8 +5,8 @@
 	// Create the defaults once
 	var pluginName = "imageFocus",
 		defaults = {},
-		image = {
-			attachmentId: false,
+		attachment = {
+			id: false,
 			dimension: {
 				width: false,
 				height: false
@@ -15,7 +15,7 @@
 				x: false,
 				y: false
 			},
-			focus: {
+			focusPoint: {
 				x: 50,
 				y: 50
 			}
@@ -78,16 +78,16 @@
 
 		setImageMetaData: function ()
 		{
-			image.attachmentId = $(this.element).data('id');
+			attachment.id = $(this.element).data('id');
 		},
 
 		setImageDimensionData: function ()
 		{
 			var $image = $('.' + css.imageFocus.img);
-			image.dimension.width = $image.width();
-			image.dimension.height = $image.height();
-			image.position.x = $image.offset().left;
-			image.position.y = $image.offset().top;
+			attachment.dimension.width = $image.width();
+			attachment.dimension.height = $image.height();
+			attachment.position.x = $image.offset().left;
+			attachment.position.y = $image.offset().top;
 		},
 
 		/**
@@ -146,32 +146,32 @@
 			}
 
 			//Calculate FocusPoint coordinates
-			var offsetX = event.pageX - image.position.x;
-			var offsetY = event.pageY - image.position.y;
+			var offsetX = event.pageX - attachment.position.x;
+			var offsetY = event.pageY - attachment.position.y;
 
 			//Calculate and set percentages
-			image.focus.x = (offsetX / image.dimension.width) * 100;
-			image.focus.y = (offsetY / image.dimension.height) * 100;
+			attachment.focusPoint.x = (offsetX / attachment.dimension.width) * 100;
+			attachment.focusPoint.y = (offsetY / attachment.dimension.height) * 100;
 
-			if (image.focus.x < 0) {
-				image.focus.x = 0;
+			if (attachment.focusPoint.x < 0) {
+				attachment.focusPoint.x = 0;
 			} else {
-				if (image.focus.x > 100) {
-					image.focus.x = 100;
+				if (attachment.focusPoint.x > 100) {
+					attachment.focusPoint.x = 100;
 				}
 			}
 
-			if (image.focus.y < 0) {
-				image.focus.y = 0;
+			if (attachment.focusPoint.y < 0) {
+				attachment.focusPoint.y = 0;
 			} else {
-				if (image.focus.y > 100) {
-					image.focus.y = 100;
+				if (attachment.focusPoint.y > 100) {
+					attachment.focusPoint.y = 100;
 				}
 			}
 
 			$('.' + css.imageFocus.point).css({
-				left: image.focus.x + '%',
-				top: image.focus.y + '%'
+				left: attachment.focusPoint.x + '%',
+				top: attachment.focusPoint.y + '%'
 			});
 		},
 
@@ -214,7 +214,7 @@
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					image: image
+					attachment: attachment
 				},
 				dataType: 'json',
 				beforeSend: function ()
