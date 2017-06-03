@@ -48,14 +48,14 @@ class FocusPoint
     public function initializeCrop()
     {
         // Check if we've got all the data
-        $image = $_POST['image'];
+        $attachment = $_POST['attachment'];
 
-        if (null === $image['focus']) {
+        if (null === $attachment['focus']) {
             die(json_encode(['success' => false]));
         }
 
         $crop = new Crop();
-        $crop->crop($image['attachmentId'], $image['focus']);
+        $crop->crop($attachment['id'], $attachment['focus']);
 
         // Return success
         die(json_encode(['success' => true,]));
