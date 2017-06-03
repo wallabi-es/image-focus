@@ -54,7 +54,7 @@ class FocusPoint
             die(json_encode(['success' => false]));
         }
 
-        $crop = new Crop();
+        $crop = new CropService();
         $crop->crop($image['attachmentId'], $image['focus']);
 
         // Return success
