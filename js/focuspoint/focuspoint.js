@@ -21,7 +21,7 @@
 				clickarea: 'image-focus__clickarea',
 				button: 'image-focus__button'
 			},
-			button:{
+			button: {
 				self: 'button',
 				primary: 'button-primary',
 				disabled: 'button-disabled'
@@ -48,7 +48,7 @@
 		init: function ()
 		{
 			var self = this;
-			this.setImageData();
+			this.getAttachmentData();
 			this.addFocusPoint();
 			this.addCropButton();
 
@@ -63,9 +63,25 @@
 			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
 		},
 
-		setImageData: function ()
+		getAttachmentData: function ()
 		{
 			attachment.id = $(this.element).data('id');
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'get-focuspoint',
+					attachment: attachment
+				},
+				dataType: 'json'
+			}).done(function (data)
+			{
+				console.log(data);
+				if (data.success === true) {
+					attachment.focusPoint = data.focusPoint
+				}
+			});
 		},
 
 		/**
@@ -127,7 +143,8 @@
 			$cropButton.addClass(css.button.primary);
 		},
 
-		disableCropButton: function(){
+		disableCropButton: function ()
+		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.primary);
 			$cropButton.addClass(css.button.disabled);
