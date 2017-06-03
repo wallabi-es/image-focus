@@ -15,6 +15,7 @@ class FocusPoint
     private function addHooks()
     {
         add_action('wp_ajax_initialize-crop', [$this, 'initializeCrop']);
+        add_action('wp_ajax_get-focuspoint', [$this, 'getFocusPoint']);
         add_action('admin_enqueue_scripts', [$this, 'loadScripts']);
     }
 
@@ -43,6 +44,28 @@ class FocusPoint
     }
 
     /**
+     * Get the focuspoint of the attachment from the post meta
+     */
+    public function getFocusPoint()
+    {
+        $attachment = $_POST['attachment'];
+
+        // Get the post meta
+        $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
+
+        // Return false
+        if (null === $attachment['id'] || !is_array($attachment['focusPoint'])) {
+            die(json_encode(['success' => false]));
+        }
+
+        // Return success
+        die(json_encode([
+            'success'    => true,
+            'focusPoint' => $attachment['focusPoint']
+        ]));
+    }
+
+    /**
      * Initialize a new crop
      */
     public function initializeCrop()
@@ -50,6 +73,7 @@ class FocusPoint
         // Check if we've got all the data
         $attachment = $_POST['attachment'];
 
+        // Return false
         if (null === $attachment['focusPoint']) {
             die(json_encode(['success' => false]));
         }

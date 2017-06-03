@@ -30,25 +30,28 @@
 		top: 50%;
 		left: 50%;
 
+		display: none;
 		width: 100px;
 		height: 100px;
 
 		border: 2px solid #fff;
 		border-radius: 50%;
 		background: rgba(0, 0, 0, .5);
+
 		cursor: move;
 
 		transform: translate3d(-50%, -50%,0);
+
 		transform-style: preserve-3d; //Smooth movements
 		backface-visibility: hidden; //Smooth movements
 		will-change: left, top;
-
 		&:hover {
-			&::before{
+			&::before {
 				width: 10px;
 				height: 10px;
-				background-color: #f90;
+
 				border: 5px solid #fff;
+				background-color: #f90;
 			}
 		}
 
