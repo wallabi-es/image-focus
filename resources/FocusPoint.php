@@ -50,12 +50,12 @@ class FocusPoint
         // Check if we've got all the data
         $attachment = $_POST['attachment'];
 
-        if (null === $attachment['focus']) {
+        if (null === $attachment['focusPoint']) {
             die(json_encode(['success' => false]));
         }
 
-        $crop = new Crop();
-        $crop->crop($attachment['id'], $attachment['focus']);
+        $crop = new CropService();
+        $crop->crop($attachment['id'], $attachment['focusPoint']);
 
         // Return success
         die(json_encode(['success' => true,]));

@@ -2,7 +2,7 @@
 
 namespace ImageFocus;
 
-class Crop
+class CropService
 {
     private $attachment = [];
     private $imageSizes = [];

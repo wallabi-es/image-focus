@@ -95,14 +95,15 @@
 		{
 			var imageW = $(object).width();
 			var imageH = $(object).height();
+
 			//Calculate FocusPoint coordinates
 			var offsetX = event.pageX - $(object).offset().left;
-
 			var offsetY = event.pageY - $(object).offset().top;
+
 			//Calculate CSS Percentages
 			var percentageX = (offsetX / imageW) * 100;
-
 			var percentageY = (offsetY / imageH) * 100;
+
 			//Write calculations back to image object
 			attachment.focusPoint.x = percentageX;
 			attachment.focusPoint.y = percentageY;
