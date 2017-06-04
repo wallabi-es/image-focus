@@ -44,8 +44,8 @@
 			// Put your initialization code here
 			base.getAttachmentData();
 			base.addImageElements();
-			base.setImageDimensionData(); //Should be set after addImageElements;
-			base.addCropButton();
+			base.getImageDimensionData(); //Should be set after addImageElements;
+			base.cropButton.init();
 
 			//Events
 			base.moveFocusPointActions();
@@ -54,7 +54,7 @@
 			$('.' + css.imageFocus.button).on('click', base.sendImageCropDataByAjax);
 
 			//Set image dimension dataon window resize
-			$(window).on('resize', base.setImageDimensionData);
+			$(window).on('resize', base.getImageDimensionData);
 		};
 
 		base.getAttachmentData = function ()
@@ -86,7 +86,7 @@
 			});
 		};
 
-		base.setImageDimensionData = function ()
+		base.getImageDimensionData = function ()
 		{
 			var $image = $('.' + css.imageFocus.img);
 			base._attachment.dimension.width = $image.width();
@@ -115,7 +115,6 @@
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.clickarea + '"></div>');
 		};
 
-
 		base.moveFocusPointActions = function ()
 		{
 			var $focusPoint = $('.' + css.imageFocus.point);
@@ -125,9 +124,9 @@
 				base._focusPointState.move = true;
 
 				//Set current dimension data in case position and size of image are changed because of content changes
-				base.setImageDimensionData();
+				base.getImageDimensionData();
 				//Highlight crop button
-				base.highlightCropButton();
+				base.cropButton.highlight();
 			});
 
 			$focusPoint.on('mouseup', function ()
@@ -183,35 +182,35 @@
 		};
 
 		/**
-		 *  Button functions
+		 *  Crop Button functions
 		 */
 
-		base.addCropButton = function ()
-		{
-			var button = '<button type="button" class="' + css.button.self + ' ' + css.button.disabled + ' crop-attachment ' + css.imageFocus.button + '">' + focusPointL10n.cropButton + '</button>';
-			$(base.el).find('.attachment-actions').append(button);
-		};
+		base.cropButton = {
+			_el: false,
 
-		base.highlightCropButton = function ()
-		{
-			var $cropButton = $('.' + css.imageFocus.button);
-			$cropButton.removeClass(css.button.disabled);
-			$cropButton.text(focusPointL10n.cropButton);
-			$cropButton.addClass(css.button.primary);
-		};
+			init: function ()
+			{
+				var button = '<button type="button" class="' + css.button.self + ' ' + css.button.disabled + ' crop-attachment ' + css.imageFocus.button + '">' + focusPointL10n.cropButton + '</button>';
+				$(base.el).find('.attachment-actions').append(button);
 
-		base.activateCropButton = function ()
-		{
-			var $cropButton = $('.' + css.imageFocus.button);
-			$cropButton.removeClass(css.button.disabled);
-			$cropButton.removeClass(css.button.primary);
-		};
-
-		base.disableCropButton = function ()
-		{
-			var $cropButton = $('.' + css.imageFocus.button);
-			$cropButton.removeClass(css.button.primary);
-			$cropButton.addClass(css.button.disabled);
+				base.cropButton._el = $('.' + css.imageFocus.button);
+			},
+			highlight: function ()
+			{
+				base.cropButton._el.removeClass(css.button.disabled);
+				base.cropButton._el.text(focusPointL10n.cropButton);
+				base.cropButton._el.addClass(css.button.primary);
+			},
+			activate: function ()
+			{
+				base.cropButton._el.removeClass(css.button.disabled);
+				base.cropButton._el.removeClass(css.button.primary);
+			},
+			disable: function ()
+			{
+				base.cropButton._el.removeClass(css.button.primary);
+				base.cropButton._el.addClass(css.button.disabled);
+			}
 		};
 
 		base.sendImageCropDataByAjax = function ()
@@ -232,7 +231,7 @@
 
 					var $cropButton = $('.' + css.imageFocus.button);
 					$cropButton.text('Cropping...');
-					base.disableCropButton();
+					base.cropButton.disable();
 					base._ajaxState.crop = true;
 				}
 			}).done(function (data)
@@ -240,7 +239,7 @@
 				var $cropButton = $('.' + css.imageFocus.button);
 
 				if (data.success === false) {
-					base.activateCropButton();
+					base.cropButton.activate();
 					$cropButton.text('Please try again');
 				} else {
 					$cropButton.text('Done!');
