@@ -2,128 +2,103 @@
 {
 	"use strict";
 
-	// Create the defaults once
-	var pluginName = "imageFocus",
-		defaults = {},
-		attachment = {
-			id: false,
-			dimension: {
-				width: false,
-				height: false
-			},
-			position: {
-				x: false,
-				y: false
-			},
-			focusPoint: {
-				x: 50,
-				y: 50
-			}
+	var css = {
+		imageFocus: {
+			self: 'image-focus',
+			wrapper: 'image-focus__wrapper',
+			img: 'image-focus__img',
+			point: 'image-focus__point',
+			clickarea: 'image-focus__clickarea',
+			button: 'image-focus__button'
 		},
-		css = {
-			imageFocus: {
-				self: 'image-focus',
-				wrapper: 'image-focus__wrapper',
-				img: 'image-focus__img',
-				point: 'image-focus__point',
-				clickarea: 'image-focus__clickarea',
-				button: 'image-focus__button'
-			},
-			button: {
-				self: 'button',
-				primary: 'button-primary',
-				disabled: 'button-disabled'
-			}
-		},
-		focusPointState = {
-			move: false
-		},
-		ajaxState = {
-			crop: false
-		};
+		button: {
+			self: 'button',
+			primary: 'button-primary',
+			disabled: 'button-disabled'
+		}
+	};
 
-	// The actual plugin constructor
-	function Plugin(element, options)
-	{
-		this.element = element;
-
-		this.options = $.extend({}, defaults, options);
-
-		this._defaults = defaults;
-		this._name = pluginName;
-
-		this.init();
+	if (!$.imageFocus) {
+		$.imageFocus = {};
 	}
 
-	/**
-	 *  Add button to media library image popup
-	 */
-	Plugin.prototype = {
-		init: function ()
+	$.imageFocus.focusPoint = function (el, options)
+	{
+		// To avoid scope issues, use 'base' instead of 'this'
+		// to reference this class from internal events and functions.
+		var base = this;
+
+		// Access to jQuery and DOM versions of element
+		base.$el = $(el);
+		base.el = el;
+
+		// Add a reverse reference to the DOM object
+		base.$el.data("imageFocus.focusPoint", base);
+
+		base.init = function ()
 		{
-			this.getAttachmentData();
-			this.addImageElements();
-			this.setImageDimensionData(); //Should be set after addImageElements;
-			this.addCropButton();
+			base.options = $.extend({},
+				$.imageFocus.focusPoint.defaultOptions, options);
+
+
+			// Put your initialization code here
+			base.getAttachmentData();
+			base.addImageElements();
+			base.setImageDimensionData(); //Should be set after addImageElements;
+			base.addCropButton();
 
 			//Events
-			this.moveFocusPointActions();
+			base.moveFocusPointActions();
 
 			//Set action to button for ajax call
-			$('.' + css.imageFocus.button).on('click', this.sendImageCropDataByAjax);
+			$('.' + css.imageFocus.button).on('click', base.sendImageCropDataByAjax);
 
 			//Set image dimension dataon window resize
-			$(window).on('resize', this.setImageDimensionData);
-		},
+			$(window).on('resize', base.setImageDimensionData);
+		};
 
-		getAttachmentData: function ()
+		base.getAttachmentData = function ()
 		{
-			attachment.id = $(this.element).data('id');
+			base._attachment.id = $(base.el).data('id');
 
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
 				data: {
 					action: 'get-focuspoint',
-					attachment: attachment
+					attachment: this._attachment
 				},
 				dataType: 'json'
 			}).done(function (data)
 			{
-				// Reset the focuspoint
-				attachment.focusPoint = {
-					x: 50,
-					y: 50
-				};
-
 				// If we have database data use that
 				if (data.success === true) {
-					attachment.focusPoint = data.focusPoint
+					base._attachment.focusPoint = data.focusPoint;
 				}
 
 				// Move the focuspoint and show it
 				$('.' + css.imageFocus.point).css({
 					display: 'block',
-					left: attachment.focusPoint.x + '%',
-					top: attachment.focusPoint.y + '%'
+					left: base._attachment.focusPoint.x + '%',
+					top: base._attachment.focusPoint.y + '%'
 				});
 
 			});
-		},
+		};
 
-		setImageDimensionData: function ()
+		base.setImageDimensionData = function ()
 		{
 			var $image = $('.' + css.imageFocus.img);
-			attachment.dimension.width = $image.width();
-			attachment.dimension.height = $image.height();
-			attachment.position.x = $image.offset().left;
-			attachment.position.y = $image.offset().top;
-		},
+			base._attachment.dimension.width = $image.width();
+			base._attachment.dimension.height = $image.height();
+			base._attachment.position.x = $image.offset().left;
+			base._attachment.position.y = $image.offset().top;
+		};
 
 		/**
 		 * Add focus point
 		 */
-		addImageElements: function ()
+		base.addImageElements = function ()
 		{
 			var $imageFocusWrapper,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
@@ -138,154 +113,186 @@
 
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.point + '"></div>');
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.clickarea + '"></div>');
-		},
+		};
 
 
-		moveFocusPointActions: function ()
+		base.moveFocusPointActions = function ()
 		{
 			var $focusPoint = $('.' + css.imageFocus.point);
 
 			$focusPoint.on('mousedown', function ()
 			{
-				focusPointState.move = true;
+				base._focusPointState.move = true;
 
 				//Set current dimension data in case position and size of image are changed because of content changes
-				Plugin.prototype.setImageDimensionData();
+				base.setImageDimensionData();
 				//Highlight crop button
-				Plugin.prototype.highlightCropButton();
+				base.highlightCropButton();
 			});
 
 			$focusPoint.on('mouseup', function ()
 			{
-				focusPointState.move = false;
+				base._focusPointState.move = false;
 			});
+
 
 			$(window).on('mousemove', function (event)
 			{
-				Plugin.prototype.moveFocusPoint(event);
+				base.moveFocusPoint(event);
 			});
-		},
+		};
 
 		/**
 		 * Set focus point on move
 		 */
-		moveFocusPoint: function (event)
+		base.moveFocusPoint = function (event)
 		{
-			if (focusPointState.move === false) {
+
+			if (base._focusPointState.move === false) {
 				return false;
 			}
 
 			//Calculate FocusPoint coordinates
-			var offsetX = event.pageX - attachment.position.x;
-			var offsetY = event.pageY - attachment.position.y;
+			var offsetX = event.pageX - base._attachment.position.x;
+			var offsetY = event.pageY - base._attachment.position.y;
 
 			//Calculate and set percentages
-			attachment.focusPoint.x = (offsetX / attachment.dimension.width) * 100;
-			attachment.focusPoint.y = (offsetY / attachment.dimension.height) * 100;
+			base._attachment.focusPoint.x = (offsetX / base._attachment.dimension.width) * 100;
+			base._attachment.focusPoint.y = (offsetY / base._attachment.dimension.height) * 100;
 
-			if (attachment.focusPoint.x < 0) {
-				attachment.focusPoint.x = 0;
+			if (base._attachment.focusPoint.x < 0) {
+				base._attachment.focusPoint.x = 0;
 			} else {
-				if (attachment.focusPoint.x > 100) {
-					attachment.focusPoint.x = 100;
+				if (base._attachment.focusPoint.x > 100) {
+					base._attachment.focusPoint.x = 100;
 				}
 			}
 
-			if (attachment.focusPoint.y < 0) {
-				attachment.focusPoint.y = 0;
+			if (base._attachment.focusPoint.y < 0) {
+				base._attachment.focusPoint.y = 0;
 			} else {
-				if (attachment.focusPoint.y > 100) {
-					attachment.focusPoint.y = 100;
+				if (base._attachment.focusPoint.y > 100) {
+					base._attachment.focusPoint.y = 100;
 				}
 			}
 
 			$('.' + css.imageFocus.point).css({
-				left: attachment.focusPoint.x + '%',
-				top: attachment.focusPoint.y + '%'
+				left: base._attachment.focusPoint.x + '%',
+				top: base._attachment.focusPoint.y + '%'
 			});
-		},
+		};
 
 		/**
 		 *  Button functions
 		 */
 
-		addCropButton: function ()
+		base.addCropButton = function ()
 		{
 			var button = '<button type="button" class="' + css.button.self + ' ' + css.button.disabled + ' crop-attachment ' + css.imageFocus.button + '">' + focusPointL10n.cropButton + '</button>';
-			$(this.element).find('.attachment-actions').append(button);
-		},
+			$(base.el).find('.attachment-actions').append(button);
+		};
 
-		highlightCropButton: function ()
+		base.highlightCropButton = function ()
 		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.disabled);
 			$cropButton.text(focusPointL10n.cropButton);
 			$cropButton.addClass(css.button.primary);
-		},
+		};
 
-		activateCropButton: function ()
+		base.activateCropButton = function ()
 		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.disabled);
 			$cropButton.removeClass(css.button.primary);
-		},
+		};
 
-		disableCropButton: function ()
+		base.disableCropButton = function ()
 		{
 			var $cropButton = $('.' + css.imageFocus.button);
 			$cropButton.removeClass(css.button.primary);
 			$cropButton.addClass(css.button.disabled);
-		},
+		};
 
-		sendImageCropDataByAjax: function ()
+		base.sendImageCropDataByAjax = function ()
 		{
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					attachment: attachment
+					attachment: base._attachment
 				},
 				dataType: 'json',
 				beforeSend: function ()
 				{
-					if (ajaxState.crop === true) {
+					if (base._ajaxState.crop === true) {
 						return false;
 					}
 
 					var $cropButton = $('.' + css.imageFocus.button);
 					$cropButton.text('Cropping...');
-					Plugin.prototype.disableCropButton();
-					ajaxState.crop = true;
+					base.disableCropButton();
+					base._ajaxState.crop = true;
 				}
 			}).done(function (data)
 			{
 				var $cropButton = $('.' + css.imageFocus.button);
 
 				if (data.success === false) {
-					Plugin.prototype.activateCropButton();
+					base.activateCropButton();
 					$cropButton.text('Please try again');
 				} else {
 					$cropButton.text('Done!');
 				}
 
-				ajaxState.crop = false;
+				base._ajaxState.crop = false;
 			});
-		}
+		};
+
+		// Variables
+		base._attachment = {
+			id: false,
+			dimension: {
+				width: false,
+				height: false
+			},
+			position: {
+				x: false,
+				y: false
+			},
+			focusPoint: {
+				x: 50,
+				y: 50
+			}
+		};
+
+		base._focusPointState = {
+			move: false
+		};
+
+		base._ajaxState = {
+			crop: false
+		};
+
+		// Run initializer
+		base.init();
 	};
 
-	// A really lightweight plugin wrapper around the constructor,
-	// preventing against multiple instantiations
-	$.fn[pluginName] = function (options)
+	$.imageFocus.focusPoint.defaultOptions = {
+		myDefaultValue: ""
+	};
+
+	$.fn.imageFocus_focusPoint = function
+		(options)
 	{
 		return this.each(function ()
 		{
-			if (!$.data(this, "plugin_" + pluginName)) {
-				$.data(this, "plugin_" + pluginName,
-					new Plugin(this, options));
-			}
+			(new $.imageFocus.focusPoint(this,
+				options));
 		});
 	};
+
 }(jQuery, window, document));
 
 (function ($, window, document)
@@ -299,7 +306,7 @@
 
 			if ($detailImage.length && !$('.image-focus').length) {
 				try {
-					$attachmentDetails.imageFocus();
+					$attachmentDetails.imageFocus_focusPoint();
 				} catch (e) {
 					console.log(e);
 				}
