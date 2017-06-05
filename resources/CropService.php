@@ -98,7 +98,11 @@ class CropService
      */
     private function setFocusPoint($focusPoint)
     {
-        $this->focusPoint = $focusPoint;
+        $this->focusPoint = [50, 50];
+
+        if ($focusPoint) {
+            $this->focusPoint = $focusPoint;
+        }
 
         return $this;
     }

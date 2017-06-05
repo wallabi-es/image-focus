@@ -7,7 +7,7 @@ class ImageFocus
     public function __construct()
     {
         $this->addHooks();
-        $this->loadFocusPoint();
+        $this->loadClasses();
     }
 
     /**
@@ -26,7 +26,11 @@ class ImageFocus
         load_plugin_textdomain(IMAGEFOCUS_TEXTDOMAIN, false, IMAGEFOCUS_LANGUAGES);
     }
 
-    private function loadFocusPoint() {
+    /**
+     * Load all necessary classes
+     */
+    private function loadClasses() {
         new FocusPoint();
+        new ResizeService();
     }
 }
