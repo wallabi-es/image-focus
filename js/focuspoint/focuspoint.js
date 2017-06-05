@@ -43,8 +43,9 @@
 
 			// Put your initialization code here
 			base.getAttachmentData();
-			base.addImageElements();
-			base.getAttachmentDimensionData(); //Should be set after addImageElements;
+			base.addInterfaceElements();
+			base.getAttachmentDimensionData(); //Should be set after addInterfaceElements;
+			base.updateInterfaceBackground();
 			base.cropButton.init();
 
 			//Events
@@ -105,7 +106,7 @@
 		/**
 		 * Add focus point
 		 */
-		base.addImageElements = function ()
+		base.addInterfaceElements = function ()
 		{
 			var $imageFocusWrapper,
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
@@ -175,24 +176,39 @@
 			base._attachment.focusPoint.y = (offsetY / base._attachment.height) * 100;
 
 			if (base._attachment.focusPoint.x < 0) {
-				base._attachment.focusPoint.x = 0;
+				base._attachment.focusPoint.x = offsetX = 0;
+
 			} else {
 				if (base._attachment.focusPoint.x > 100) {
 					base._attachment.focusPoint.x = 100;
+					offsetX = base._attachment.width;
 				}
 			}
 
 			if (base._attachment.focusPoint.y < 0) {
-				base._attachment.focusPoint.y = 0;
+				base._attachment.focusPoint.y = offsetY = 0;
 			} else {
 				if (base._attachment.focusPoint.y > 100) {
 					base._attachment.focusPoint.y = 100;
+					offsetY = base._attachment.height;
 				}
 			}
 
 			$('.' + css.imageFocus.point).css({
 				left: base._attachment.focusPoint.x + '%',
 				top: base._attachment.focusPoint.y + '%'
+			});
+
+			base.updateInterfaceBackground(offsetX, offsetY);
+		};
+
+		base.updateInterfaceBackground =  function(offsetX, offsetY){
+			var $attachment = $('.' + css.imageFocus.img);
+
+			$('.'+ css.imageFocus.point).css({
+				'background-image':'url("' + $attachment.attr('src') + '")',
+				'background-size': base._attachment.width + 'px ' + base._attachment.height + 'px ',
+				'background-position': (0 - (offsetX - (base._focusInterface.width/2))) + 'px ' + (0 - (offsetY - (base._focusInterface.height/2))) + 'px '
 			});
 		};
 
