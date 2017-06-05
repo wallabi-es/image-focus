@@ -44,7 +44,7 @@
 			// Put your initialization code here
 			base.getAttachmentData();
 			base.addImageElements();
-			base.getImageDimensionData(); //Should be set after addImageElements;
+			base.getAttachmentDimensionData(); //Should be set after addImageElements;
 			base.cropButton.init();
 
 			//Events
@@ -54,7 +54,7 @@
 			$('.' + css.imageFocus.button).on('click', base.sendImageCropDataByAjax);
 
 			//Set image dimension dataon window resize
-			$(window).on('resize', base.getImageDimensionData);
+			$(window).on('resize', base.getAttachmentDimensionData);
 		};
 
 		base.getAttachmentData = function ()
@@ -86,13 +86,20 @@
 			});
 		};
 
-		base.getImageDimensionData = function ()
+		base.getAttachmentDimensionData = function ()
 		{
 			var $image = $('.' + css.imageFocus.img);
-			base._attachment.dimension.width = $image.width();
-			base._attachment.dimension.height = $image.height();
+			base._attachment.width = $image.width();
+			base._attachment.height = $image.height();
 			base._attachment.position.x = $image.offset().left;
 			base._attachment.position.y = $image.offset().top;
+		};
+
+		base.getFocusInterfaceDimensionData = function ()
+		{
+			var $imageFocusPoint = $('.' + css.imageFocus.point);
+			base._focusInterface.width = $imageFocusPoint.width();
+			base._focusInterface.height = $imageFocusPoint.height();
 		};
 
 		/**
@@ -119,19 +126,27 @@
 		{
 			var $focusPoint = $('.' + css.imageFocus.point);
 
-			$focusPoint.on('mousedown', function ()
+			$focusPoint.on('mousedown', function (event)
 			{
-				base._focusPointState.move = true;
-
+				var $this = $(this);
 				//Set current dimension data in case position and size of image are changed because of content changes
-				base.getImageDimensionData();
+				base.getAttachmentDimensionData();
+
+				//Calculate FocusPoint coordinates
+				base.getFocusInterfaceDimensionData();
+
+				base._focusInterface.clickPosition.x = event.pageX - $this.offset().left - (base._focusInterface.width / 2);
+				base._focusInterface.clickPosition.y = event.pageY - $this.offset().top - (base._focusInterface.height / 2);
+
 				//Highlight crop button
 				base.cropButton.highlight();
+
+				base._focusInterface.state.move = true;
 			});
 
-			$focusPoint.on('mouseup', function ()
+			$(window).on('mouseup', function ()
 			{
-				base._focusPointState.move = false;
+				base._focusInterface.state.move = false;
 			});
 
 
@@ -147,17 +162,17 @@
 		base.moveFocusPoint = function (event)
 		{
 
-			if (base._focusPointState.move === false) {
+			if (base._focusInterface.state.move === false) {
 				return false;
 			}
 
 			//Calculate FocusPoint coordinates
-			var offsetX = event.pageX - base._attachment.position.x;
-			var offsetY = event.pageY - base._attachment.position.y;
+			var offsetX = event.pageX - base._attachment.position.x - base._focusInterface.clickPosition.x;
+			var offsetY = event.pageY - base._attachment.position.y - base._focusInterface.clickPosition.y;
 
 			//Calculate and set percentages
-			base._attachment.focusPoint.x = (offsetX / base._attachment.dimension.width) * 100;
-			base._attachment.focusPoint.y = (offsetY / base._attachment.dimension.height) * 100;
+			base._attachment.focusPoint.x = (offsetX / base._attachment.width) * 100;
+			base._attachment.focusPoint.y = (offsetY / base._attachment.height) * 100;
 
 			if (base._attachment.focusPoint.x < 0) {
 				base._attachment.focusPoint.x = 0;
@@ -252,10 +267,8 @@
 		// Variables
 		base._attachment = {
 			id: false,
-			dimension: {
-				width: false,
-				height: false
-			},
+			width: false,
+			height: false,
 			position: {
 				x: false,
 				y: false
@@ -266,8 +279,16 @@
 			}
 		};
 
-		base._focusPointState = {
-			move: false
+		base._focusInterface = {
+			state: {
+				move: false
+			},
+			clickPosition: {
+				x: 0,
+				y: 0
+			},
+			width: 0,
+			height: 0
 		};
 
 		base._ajaxState = {
