@@ -81,9 +81,23 @@
 		 * Attachment functions
 		 */
 		base.attachment = {
+			//Variables
+			_id: false,
+			_width: false,
+			_height: false,
+			_offset: {
+				x: false,
+				y: false
+			},
+			_focusPoint: { // Written in percentage
+				x: 50,
+				y: 50
+			},
+
+			//Functions
 			getData: function ()
 			{
-				base._attachment.id = $(base.el).data('id');
+				base.attachment._id = $(base.el).data('id');
 
 				$.ajax({
 					type: 'POST',
@@ -97,14 +111,14 @@
 				{
 					// If we have database data use that
 					if (data.success === true) {
-						base._attachment.focusPoint = data.focusPoint;
+						base.attachment._focusPoint = data.focusPoint;
 					}
 
 					// Move the focuspoint and show it
 					$('.' + css.imageFocus.point).css({
 						display: 'block',
-						left: base._attachment.focusPoint.x + '%',
-						top: base._attachment.focusPoint.y + '%'
+						left: base.attachment._focusPoint.x + '%',
+						top: base.attachment._focusPoint.y + '%'
 					});
 
 				});
@@ -113,10 +127,10 @@
 			getDimensionData: function ()
 			{
 				var $image = $('.' + css.imageFocus.img);
-				base._attachment.width = $image.width();
-				base._attachment.height = $image.height();
-				base._attachment.position.x = $image.offset().left;
-				base._attachment.position.y = $image.offset().top;
+				base.attachment._width = $image.width();
+				base.attachment._height = $image.height();
+				base.attachment._offset.x = $image.offset().left;
+				base.attachment._offset.y = $image.offset().top;
 			}
 		};
 
@@ -124,8 +138,23 @@
 		 * Focus Interface functions
 		 */
 		base.focusInterface = {
+			//Variables
 			$el: false,
+			_width: 0,
+			_height: 0,
+			_offset: { // Values in pixels
+				x: 0,
+				y: 0
+			},
+			_clickPosition: { // Values in pixels
+				x: 0,
+				y: 0
+			},
+			_state: {
+				move: false
+			},
 
+			// Functions
 			init: function ()
 			{
 				base.focusInterface.$el = $('.' + css.imageFocus.point);
@@ -139,18 +168,18 @@
 					//Calculate FocusPoint coordinates
 					base.focusInterface.getDimensionData();
 
-					base._focusInterface.clickPosition.x = event.pageX - $this.offset().left - (base._focusInterface.width / 2);
-					base._focusInterface.clickPosition.y = event.pageY - $this.offset().top - (base._focusInterface.height / 2);
+					base.focusInterface._clickPosition.x = event.pageX - $this.offset().left - (base.focusInterface._width / 2);
+					base.focusInterface._clickPosition.y = event.pageY - $this.offset().top - (base.focusInterface._height / 2);
 
 					//Highlight crop button
 					base.cropButton.highlight();
 
-					base._focusInterface.state.move = true;
+					base.focusInterface._state.move = true;
 				});
 
 				$(window).on('mouseup', function ()
 				{
-					base._focusInterface.state.move = false;
+					base.focusInterface._state.move = false;
 				});
 
 
@@ -162,41 +191,41 @@
 
 			move: function (event)
 			{
-				if (base._focusInterface.state.move === false) {
+				if (base.focusInterface._state.move === false) {
 					return false;
 				}
 
 				var offset = {};
 
 				//Calculate FocusPoint coordinates
-				offset.x = event.pageX - base._attachment.position.x - base._focusInterface.clickPosition.x;
-				offset.y = event.pageY - base._attachment.position.y - base._focusInterface.clickPosition.y;
+				offset.x = event.pageX - base.attachment._offset.x - base.focusInterface._clickPosition.x;
+				offset.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
 
 				//Set boundaries of focusPoint
 				if (offset.x < 0) {
 					offset.x = 0;
 				} else {
-					if (offset.x > base._attachment.width) {
-						offset.x = base._attachment.width;
+					if (offset.x > base.attachment._width) {
+						offset.x = base.attachment._width;
 					}
 				}
 
 				if (offset.y < 0) {
 					offset.y = 0;
 				} else {
-					if (offset.y > base._attachment.height) {
-						offset.y = base._attachment.height;
+					if (offset.y > base.attachment._height) {
+						offset.y = base.attachment._height;
 					}
 				}
 
 				//Convert to percentages
 				var focusPoint = {};
-				focusPoint.x = (offset.x / base._attachment.width) * 100;
-				focusPoint.y = (offset.y / base._attachment.height) * 100;
+				focusPoint.x = (offset.x / base.attachment._width) * 100;
+				focusPoint.y = (offset.y / base.attachment._height) * 100;
 
 				// Write local variables to global
-				base._attachment.focusPoint = focusPoint;
-				base._focusInterface.offset = offset;
+				base.attachment._focusPoint = focusPoint;
+				base.focusInterface._offset = offset;
 
 				// Update styling feedback
 				base.focusInterface.update();
@@ -205,22 +234,22 @@
 			update: function ()
 			{
 				var $attachment = $('.' + css.imageFocus.img);
-				var posX = 0 - (base._focusInterface.offset.x - (base._focusInterface.width / 2));
-				var posY = 0 - (base._focusInterface.offset.y - (base._focusInterface.height / 2));
+				var posX = 0 - (base.focusInterface._offset.x - (base.focusInterface._width / 2));
+				var posY = 0 - (base.focusInterface._offset.y - (base.focusInterface._height / 2));
 
 				base.focusInterface.$el.css({
-					left: base._attachment.focusPoint.x + '%',
-					top: base._attachment.focusPoint.y + '%',
+					left: base.attachment._focusPoint.x + '%',
+					top: base.attachment._focusPoint.y + '%',
 					backgroundImage: 'url("' + $attachment.attr('src') + '")',
-					backgroundSize: base._attachment.width + 'px ' + base._attachment.height + 'px ',
+					backgroundSize: base.attachment._width + 'px ' + base.attachment._height + 'px ',
 					backgroundPosition: posX + 'px ' + posY + 'px '
 				});
 			},
 
 			getDimensionData: function ()
 			{
-				base._focusInterface.width = base.focusInterface.$el.width();
-				base._focusInterface.height = base.focusInterface.$el.height();
+				base.focusInterface._width = base.focusInterface.$el.width();
+				base.focusInterface._height = base.focusInterface.$el.height();
 			}
 		};
 
@@ -274,23 +303,19 @@
 						return false;
 					}
 
-					var $cropButton = $('.' + css.imageFocus.button);
-					$cropButton.text('Cropping...');
+					base.cropButton.$el.text('Cropping...');
 					base.cropButton.disable();
 					base._ajaxState.crop = true;
 				}
 			}).done(function (data)
 				{
-					var $cropButton = $('.' + css.imageFocus.button);
-
 					if (data.success === true) {
-						$cropButton.text('Done!');
+						base.cropButton.$el.text('Done!');
 					}
 					else if (data.success === false) {
 						base.cropButton.activate();
-						$cropButton.text('Please try again');
+						base.cropButton.$el.text('Please try again');
 					}
-
 
 					base._ajaxState.crop = false;
 				}
@@ -298,44 +323,14 @@
 		};
 
 		// Variables
-		base._attachment = {
-			id: false,
-			width: false,
-			height: false,
-			position: {
-				x: false,
-				y: false
-			},
-			focusPoint: { // Written in percentage
-				x: 50,
-				y: 50
-			}
-		};
-
-		base._focusInterface = {
-			width: 0,
-			height: 0,
-			offset: { // Written in pixels
-				x: 0,
-				y: 0
-			},
-			clickPosition: { // Written in pixels
-				x: 0,
-				y: 0
-			},
-			state: {
-				move: false
-			}
-		};
 
 		base._ajaxState = {
 			crop: false
 		};
 
-// Run initializer
+		// Run initializer
 		base.init();
-	}
-	;
+	};
 
 	$.imageFocus.focusPoint.defaultOptions = {
 		myDefaultValue: ""
