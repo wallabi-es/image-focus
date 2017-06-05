@@ -2,6 +2,12 @@
 
 namespace ImageFocus;
 
+/**
+ * The class responsible for loading WordPress functionality and other classes
+ *
+ * Class ImageFocus
+ * @package ImageFocus
+ */
 class ImageFocus
 {
     public function __construct()

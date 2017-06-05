@@ -2,6 +2,12 @@
 
 namespace ImageFocus;
 
+/**
+ * The class responsible for cropping the attachments
+ *
+ * Class CropService
+ * @package ImageFocus
+ */
 class CropService
 {
     private $attachment = [];
