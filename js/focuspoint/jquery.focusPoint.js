@@ -44,6 +44,9 @@
 			// Put your initialization code here
 			base.attachment.getData();
 			base.addInterfaceElements();
+
+			//Setup attachment
+			base.attachment.init();
 			base.attachment.getDimensionData();
 
 			//Setup focusInterface
@@ -82,6 +85,7 @@
 		 */
 		base.attachment = {
 			//Variables
+			$el: false,
 			_id: false,
 			_width: false,
 			_height: false,
@@ -95,16 +99,24 @@
 			},
 
 			//Functions
+			init: function(){
+				base.attachment.$el = $('.'+ css.imageFocus.img);
+			},
+
 			getData: function ()
 			{
 				base.attachment._id = $(base.el).data('id');
+
+				var prepData = {
+					id: base.attachment._id,
+				};
 
 				$.ajax({
 					type: 'POST',
 					url: ajaxurl,
 					data: {
 						action: 'get-focuspoint',
-						attachment: this._attachment
+						attachment: prepData
 					},
 					dataType: 'json'
 				}).done(function (data)
@@ -126,11 +138,11 @@
 
 			getDimensionData: function ()
 			{
-				var $image = $('.' + css.imageFocus.img);
-				base.attachment._width = $image.width();
-				base.attachment._height = $image.height();
-				base.attachment._offset.x = $image.offset().left;
-				base.attachment._offset.y = $image.offset().top;
+				var $attachment = base.attachment.$el;
+				base.attachment._width = $attachment.width();
+				base.attachment._height = $attachment.height();
+				base.attachment._offset.x = $attachment.offset().left;
+				base.attachment._offset.y = $attachment.offset().top;
 			}
 		};
 
@@ -289,12 +301,17 @@
 
 		base.sendImageCropDataByAjax = function ()
 		{
+			var prepData = {
+				id: base.attachment._id,
+				focusPoint: base.attachment._focusPoint
+			};
+
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					attachment: base._attachment
+					attachment: prepData
 				},
 				dataType: 'json',
 				beforeSend: function ()
