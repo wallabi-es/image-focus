@@ -81,7 +81,8 @@
 		 * Attachment functions
 		 */
 		base.attachment = {
-			getData: function(){
+			getData: function ()
+			{
 				base._attachment.id = $(base.el).data('id');
 
 				$.ajax({
@@ -109,7 +110,8 @@
 				});
 			},
 
-			getDimensionData: function(){
+			getDimensionData: function ()
+			{
 				var $image = $('.' + css.imageFocus.img);
 				base._attachment.width = $image.width();
 				base._attachment.height = $image.height();
@@ -158,7 +160,8 @@
 				});
 			},
 
-			move: function(event){
+			move: function (event)
+			{
 				if (base._focusInterface.state.move === false) {
 					return false;
 				}
@@ -214,7 +217,8 @@
 				});
 			},
 
-			getDimensionData: function(){
+			getDimensionData: function ()
+			{
 				base._focusInterface.width = base.focusInterface.$el.width();
 				base._focusInterface.height = base.focusInterface.$el.height();
 			}
@@ -276,18 +280,21 @@
 					base._ajaxState.crop = true;
 				}
 			}).done(function (data)
-			{
-				var $cropButton = $('.' + css.imageFocus.button);
+				{
+					var $cropButton = $('.' + css.imageFocus.button);
 
-				if (data.success === false) {
-					base.cropButton.activate();
-					$cropButton.text('Please try again');
-				} else {
-					$cropButton.text('Done!');
+					if (data.success === true) {
+						$cropButton.text('Done!');
+					}
+					else if (data.success === false) {
+						base.cropButton.activate();
+						$cropButton.text('Please try again');
+					}
+
+
+					base._ajaxState.crop = false;
 				}
-
-				base._ajaxState.crop = false;
-			});
+			);
 		};
 
 		// Variables
@@ -325,9 +332,10 @@
 			crop: false
 		};
 
-		// Run initializer
+// Run initializer
 		base.init();
-	};
+	}
+	;
 
 	$.imageFocus.focusPoint.defaultOptions = {
 		myDefaultValue: ""
