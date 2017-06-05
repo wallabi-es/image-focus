@@ -42,65 +42,19 @@
 
 
 			// Put your initialization code here
-			base.getAttachmentData();
+			base.attachment.getData();
 			base.addInterfaceElements();
-			base.getAttachmentDimensionData(); //Should be set after addInterfaceElements;
+			base.attachment.getDimensionData(); //Should be set after addInterfaceElements;
+
+			//Setup focusInterface
+			base.focusInterface.init();
 			base.focusInterface.update();
+
+			//Setup crop button
 			base.cropButton.init();
 
-			//Events
-			base.focusInterface.init();
-
-			//Set action to button for ajax call
-			$('.' + css.imageFocus.button).on('click', base.sendImageCropDataByAjax);
-
-			//Set image dimension dataon window resize
-			$(window).on('resize', base.getAttachmentDimensionData);
-		};
-
-		base.getAttachmentData = function ()
-		{
-			base._attachment.id = $(base.el).data('id');
-
-			$.ajax({
-				type: 'POST',
-				url: ajaxurl,
-				data: {
-					action: 'get-focuspoint',
-					attachment: this._attachment
-				},
-				dataType: 'json'
-			}).done(function (data)
-			{
-				// If we have database data use that
-				if (data.success === true) {
-					base._attachment.focusPoint = data.focusPoint;
-				}
-
-				// Move the focuspoint and show it
-				$('.' + css.imageFocus.point).css({
-					display: 'block',
-					left: base._attachment.focusPoint.x + '%',
-					top: base._attachment.focusPoint.y + '%'
-				});
-
-			});
-		};
-
-		base.getAttachmentDimensionData = function ()
-		{
-			var $image = $('.' + css.imageFocus.img);
-			base._attachment.width = $image.width();
-			base._attachment.height = $image.height();
-			base._attachment.position.x = $image.offset().left;
-			base._attachment.position.y = $image.offset().top;
-		};
-
-		base.getFocusInterfaceDimensionData = function ()
-		{
-			var $imageFocusPoint = $('.' + css.imageFocus.point);
-			base._focusInterface.width = $imageFocusPoint.width();
-			base._focusInterface.height = $imageFocusPoint.height();
+			//Set image dimension data on window resize
+			$(window).on('resize', base.attachment.getDimensionData);
 		};
 
 		/**
@@ -124,6 +78,47 @@
 		};
 
 		/**
+		 * Attachment functions
+		 */
+		base.attachment = {
+			getData: function(){
+				base._attachment.id = $(base.el).data('id');
+
+				$.ajax({
+					type: 'POST',
+					url: ajaxurl,
+					data: {
+						action: 'get-focuspoint',
+						attachment: this._attachment
+					},
+					dataType: 'json'
+				}).done(function (data)
+				{
+					// If we have database data use that
+					if (data.success === true) {
+						base._attachment.focusPoint = data.focusPoint;
+					}
+
+					// Move the focuspoint and show it
+					$('.' + css.imageFocus.point).css({
+						display: 'block',
+						left: base._attachment.focusPoint.x + '%',
+						top: base._attachment.focusPoint.y + '%'
+					});
+
+				});
+			},
+
+			getDimensionData: function(){
+				var $image = $('.' + css.imageFocus.img);
+				base._attachment.width = $image.width();
+				base._attachment.height = $image.height();
+				base._attachment.position.x = $image.offset().left;
+				base._attachment.position.y = $image.offset().top;
+			}
+		};
+
+		/**
 		 * Focus Interface functions
 		 */
 		base.focusInterface = {
@@ -137,10 +132,10 @@
 				{
 					var $this = $(this);
 					//Set current dimension data in case position and size of image are changed because of content changes
-					base.getAttachmentDimensionData();
+					base.attachment.getDimensionData();
 
 					//Calculate FocusPoint coordinates
-					base.getFocusInterfaceDimensionData();
+					base.focusInterface.getDimensionData();
 
 					base._focusInterface.clickPosition.x = event.pageX - $this.offset().left - (base._focusInterface.width / 2);
 					base._focusInterface.clickPosition.y = event.pageY - $this.offset().top - (base._focusInterface.height / 2);
@@ -217,38 +212,45 @@
 					backgroundSize: base._attachment.width + 'px ' + base._attachment.height + 'px ',
 					backgroundPosition: posX + 'px ' + posY + 'px '
 				});
+			},
+
+			getDimensionData: function(){
+				base._focusInterface.width = base.focusInterface.$el.width();
+				base._focusInterface.height = base.focusInterface.$el.height();
 			}
 		};
 
 		/**
 		 *  Crop Button functions
 		 */
-
 		base.cropButton = {
-			_el: false,
+			$el: false,
 
 			init: function ()
 			{
 				var button = '<button type="button" class="' + css.button.self + ' ' + css.button.disabled + ' crop-attachment ' + css.imageFocus.button + '">' + focusPointL10n.cropButton + '</button>';
 				$(base.el).find('.attachment-actions').append(button);
 
-				base.cropButton._el = $('.' + css.imageFocus.button);
+				base.cropButton.$el = $('.' + css.imageFocus.button);
+
+				//Set action to button for ajax call
+				base.cropButton.$el.on('click', base.sendImageCropDataByAjax);
 			},
 			highlight: function ()
 			{
-				base.cropButton._el.removeClass(css.button.disabled);
-				base.cropButton._el.text(focusPointL10n.cropButton);
-				base.cropButton._el.addClass(css.button.primary);
+				base.cropButton.$el.removeClass(css.button.disabled);
+				base.cropButton.$el.text(focusPointL10n.cropButton);
+				base.cropButton.$el.addClass(css.button.primary);
 			},
 			activate: function ()
 			{
-				base.cropButton._el.removeClass(css.button.disabled);
-				base.cropButton._el.removeClass(css.button.primary);
+				base.cropButton.$el.removeClass(css.button.disabled);
+				base.cropButton.$el.removeClass(css.button.primary);
 			},
 			disable: function ()
 			{
-				base.cropButton._el.removeClass(css.button.primary);
-				base.cropButton._el.addClass(css.button.disabled);
+				base.cropButton.$el.removeClass(css.button.primary);
+				base.cropButton.$el.addClass(css.button.disabled);
 			}
 		};
 
