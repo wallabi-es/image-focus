@@ -44,7 +44,7 @@
 			// Put your initialization code here
 			base.attachment.getData();
 			base.addInterfaceElements();
-			base.attachment.getDimensionData(); //Should be set after addInterfaceElements;
+			base.attachment.getDimensionData();
 
 			//Setup focusInterface
 			base.focusInterface.init();
