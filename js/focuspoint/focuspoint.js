@@ -45,11 +45,11 @@
 			base.getAttachmentData();
 			base.addInterfaceElements();
 			base.getAttachmentDimensionData(); //Should be set after addInterfaceElements;
-			base.updateInterfaceBackground();
+			base.focusInterface.update();
 			base.cropButton.init();
 
 			//Events
-			base.moveFocusPointActions();
+			base.focusInterface.init();
 
 			//Set action to button for ajax call
 			$('.' + css.imageFocus.button).on('click', base.sendImageCropDataByAjax);
@@ -123,93 +123,101 @@
 			$imageFocusWrapper.append('<div class="' + css.imageFocus.clickarea + '"></div>');
 		};
 
-		base.moveFocusPointActions = function ()
-		{
-			var $focusPoint = $('.' + css.imageFocus.point);
+		/**
+		 * Focus Interface functions
+		 */
+		base.focusInterface = {
+			$el: false,
 
-			$focusPoint.on('mousedown', function (event)
+			init: function ()
 			{
-				var $this = $(this);
-				//Set current dimension data in case position and size of image are changed because of content changes
-				base.getAttachmentDimensionData();
+				base.focusInterface.$el = $('.' + css.imageFocus.point);
+
+				base.focusInterface.$el.on('mousedown', function (event)
+				{
+					var $this = $(this);
+					//Set current dimension data in case position and size of image are changed because of content changes
+					base.getAttachmentDimensionData();
+
+					//Calculate FocusPoint coordinates
+					base.getFocusInterfaceDimensionData();
+
+					base._focusInterface.clickPosition.x = event.pageX - $this.offset().left - (base._focusInterface.width / 2);
+					base._focusInterface.clickPosition.y = event.pageY - $this.offset().top - (base._focusInterface.height / 2);
+
+					//Highlight crop button
+					base.cropButton.highlight();
+
+					base._focusInterface.state.move = true;
+				});
+
+				$(window).on('mouseup', function ()
+				{
+					base._focusInterface.state.move = false;
+				});
+
+
+				$(window).on('mousemove', function (event)
+				{
+					base.focusInterface.move(event);
+				});
+			},
+
+			move: function(event){
+				if (base._focusInterface.state.move === false) {
+					return false;
+				}
+
+				var offset = {};
 
 				//Calculate FocusPoint coordinates
-				base.getFocusInterfaceDimensionData();
+				offset.x = event.pageX - base._attachment.position.x - base._focusInterface.clickPosition.x;
+				offset.y = event.pageY - base._attachment.position.y - base._focusInterface.clickPosition.y;
 
-				base._focusInterface.clickPosition.x = event.pageX - $this.offset().left - (base._focusInterface.width / 2);
-				base._focusInterface.clickPosition.y = event.pageY - $this.offset().top - (base._focusInterface.height / 2);
-
-				//Highlight crop button
-				base.cropButton.highlight();
-
-				base._focusInterface.state.move = true;
-			});
-
-			$(window).on('mouseup', function ()
-			{
-				base._focusInterface.state.move = false;
-			});
-
-
-			$(window).on('mousemove', function (event)
-			{
-				base.moveFocusPoint(event);
-			});
-		};
-
-		/**
-		 * Set focus point on move
-		 */
-		base.moveFocusPoint = function (event)
-		{
-
-			if (base._focusInterface.state.move === false) {
-				return false;
-			}
-
-			//Calculate FocusPoint coordinates
-			var offsetX = event.pageX - base._attachment.position.x - base._focusInterface.clickPosition.x;
-			var offsetY = event.pageY - base._attachment.position.y - base._focusInterface.clickPosition.y;
-
-			//Calculate and set percentages
-			base._attachment.focusPoint.x = (offsetX / base._attachment.width) * 100;
-			base._attachment.focusPoint.y = (offsetY / base._attachment.height) * 100;
-
-			if (base._attachment.focusPoint.x < 0) {
-				base._attachment.focusPoint.x = offsetX = 0;
-
-			} else {
-				if (base._attachment.focusPoint.x > 100) {
-					base._attachment.focusPoint.x = 100;
-					offsetX = base._attachment.width;
+				//Set boundaries of focusPoint
+				if (offset.x < 0) {
+					offset.x = 0;
+				} else {
+					if (offset.x > base._attachment.width) {
+						offset.x = base._attachment.width;
+					}
 				}
-			}
 
-			if (base._attachment.focusPoint.y < 0) {
-				base._attachment.focusPoint.y = offsetY = 0;
-			} else {
-				if (base._attachment.focusPoint.y > 100) {
-					base._attachment.focusPoint.y = 100;
-					offsetY = base._attachment.height;
+				if (offset.y < 0) {
+					offset.y = 0;
+				} else {
+					if (offset.y > base._attachment.height) {
+						offset.y = base._attachment.height;
+					}
 				}
+
+				//Convert to percentages
+				var focusPoint = {};
+				focusPoint.x = (offset.x / base._attachment.width) * 100;
+				focusPoint.y = (offset.y / base._attachment.height) * 100;
+
+				// Write local variables to global
+				base._attachment.focusPoint = focusPoint;
+				base._focusInterface.offset = offset;
+
+				// Update styling feedback
+				base.focusInterface.update();
+			},
+
+			update: function ()
+			{
+				var $attachment = $('.' + css.imageFocus.img);
+				var posX = 0 - (base._focusInterface.offset.x - (base._focusInterface.width / 2));
+				var posY = 0 - (base._focusInterface.offset.y - (base._focusInterface.height / 2));
+
+				base.focusInterface.$el.css({
+					left: base._attachment.focusPoint.x + '%',
+					top: base._attachment.focusPoint.y + '%',
+					backgroundImage: 'url("' + $attachment.attr('src') + '")',
+					backgroundSize: base._attachment.width + 'px ' + base._attachment.height + 'px ',
+					backgroundPosition: posX + 'px ' + posY + 'px '
+				});
 			}
-
-			$('.' + css.imageFocus.point).css({
-				left: base._attachment.focusPoint.x + '%',
-				top: base._attachment.focusPoint.y + '%'
-			});
-
-			base.updateInterfaceBackground(offsetX, offsetY);
-		};
-
-		base.updateInterfaceBackground =  function(offsetX, offsetY){
-			var $attachment = $('.' + css.imageFocus.img);
-
-			$('.'+ css.imageFocus.point).css({
-				'background-image':'url("' + $attachment.attr('src') + '")',
-				'background-size': base._attachment.width + 'px ' + base._attachment.height + 'px ',
-				'background-position': (0 - (offsetX - (base._focusInterface.width/2))) + 'px ' + (0 - (offsetY - (base._focusInterface.height/2))) + 'px '
-			});
 		};
 
 		/**
@@ -289,22 +297,26 @@
 				x: false,
 				y: false
 			},
-			focusPoint: {
+			focusPoint: { // Written in percentage
 				x: 50,
 				y: 50
 			}
 		};
 
 		base._focusInterface = {
-			state: {
-				move: false
-			},
-			clickPosition: {
+			width: 0,
+			height: 0,
+			offset: { // Written in pixels
 				x: 0,
 				y: 0
 			},
-			width: 0,
-			height: 0
+			clickPosition: { // Written in pixels
+				x: 0,
+				y: 0
+			},
+			state: {
+				move: false
+			}
 		};
 
 		base._ajaxState = {
