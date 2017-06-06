@@ -18,6 +18,7 @@
 		}
 	};
 
+	// If imageFocus object does not already exist yet, than make new Object
 	if (!$.imageFocus) {
 		$.imageFocus = {};
 	}
@@ -293,7 +294,7 @@
 			},
 
 			/**
-			 * update dimension data of the focusInterface for quick access to the latest dimensions
+			 * Update dimension data of the focusInterface for quick access to the latest dimensions
 			 */
 			updateDimensionData: function ()
 			{

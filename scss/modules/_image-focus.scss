@@ -13,7 +13,7 @@
 
 		&:hover {
 			.image-focus__clickarea {
-				background: rgba(0, 0, 0, 0.3); //Transparent layer
+				background: rgba(0, 0, 0, .3); //Transparent layer
 			}
 		}
 	}
@@ -26,7 +26,6 @@
 
 		width: 100%;
 		height: 100%;
-
 	}
 
 	&__point {
@@ -39,7 +38,7 @@
 		width: 100px;
 		height: 100px;
 
-		border: 1px solid rgba(255, 255, 255, 0.5);
+		border: 1px solid rgba(255, 255, 255, .5);
 		border-radius: 50%;
 		background-repeat: no-repeat;
 
@@ -50,14 +49,13 @@
 		transform-style: preserve-3d; //Smooth movements
 		backface-visibility: hidden; //Smooth movements
 		will-change: left, top;
-
 		&:hover {
 			&::before {
 				width: 10px;
 				height: 10px;
 
 				border: 2px solid #fff;
-				background-color: #008EC2;
+				background-color: #008ec2;
 			}
 		}
 
@@ -70,8 +68,8 @@
 			width: 10px;
 			height: 10px;
 
-			border-radius: 50%;
 			border: 2px solid #fff;
+			border-radius: 50%;
 
 			transform: translate(-50%, -50%);
 		}
