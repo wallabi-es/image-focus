@@ -64,10 +64,10 @@ class ResizeService
             $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid='%s';", wp_upload_dir()['baseurl'] . '/' . $file)
         );
 
-        if (!empty($attachment[0])) {
-            return $attachment[0];
+        if (empty($attachment[0])) {
+            return false;
         }
 
-        return false;
+        return $attachment[0];
     }
 }
