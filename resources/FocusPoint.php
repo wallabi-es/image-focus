@@ -85,7 +85,7 @@ class FocusPoint
         $die = json_encode(['success' => false]);
 
         // Crop the attachment if there is a focus point
-        if (is_array($attachment['focusPoint'])) {
+        if (null !== $attachment['id'] && is_array($attachment['focusPoint'])) {
             $crop = new CropService();
             $crop->crop($attachment['id'], $attachment['focusPoint']);
 
