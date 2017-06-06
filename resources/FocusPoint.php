@@ -99,6 +99,7 @@ class FocusPoint
     /**
      * Sanitize all input that comes in trough $_POST as it might contain harmfull data.
      *
+     * @param null $postDataKey
      * @param null $postData
      * @return null
      */
