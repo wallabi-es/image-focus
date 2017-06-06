@@ -112,7 +112,7 @@
 				base.attachment._id = $(base.el).data('id');
 
 				var prepData = {
-					id: base.attachment._id,
+					id: base.attachment._id
 				};
 
 				$.ajax({
