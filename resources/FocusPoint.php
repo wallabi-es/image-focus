@@ -54,7 +54,7 @@ class FocusPoint
      */
     public function getFocusPoint()
     {
-        $attachment = $_POST['attachment'];
+        $attachment = $this->getGlobalPostData('attachment');
 
         // Get the post meta
         $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
@@ -76,8 +76,7 @@ class FocusPoint
      */
     public function initializeCrop()
     {
-        // Check if we've got all the data
-        $attachment = $_POST['attachment'];
+        $attachment = $this->getGlobalPostData('attachment');
 
         // Return false
         if (null === $attachment['focusPoint']) {
@@ -89,5 +88,39 @@ class FocusPoint
 
         // Return success
         die(json_encode(['success' => true,]));
+    }
+
+    /**
+     * Sanitize all input that comes in trough $_POST as it might contain harmfull data.
+     *
+     * @param null $postData
+     * @return null
+     */
+    private function getGlobalPostData($postDataKey = null, $postData = null)
+    {
+        // Check if we need to fill the post data with $_POST
+        if ($postData === null) {
+            $postData = $_POST;
+        }
+
+        // Skip the rest of the $_POST data if we just need a specific key
+        if ($postDataKey !== null) {
+            $postData = $postData[$postDataKey];
+        }
+
+        foreach ((array)$postData as $key => $data) {
+
+            // Call the same function if it's an array
+            if (is_array($data)) {
+                $this->getGlobalPostData(null, $data);
+
+                continue;
+            }
+
+            // Let WordPress sanitize the field.
+            $postData[$key] = sanitize_text_field($data);
+        }
+
+        return $postData;
     }
 }
