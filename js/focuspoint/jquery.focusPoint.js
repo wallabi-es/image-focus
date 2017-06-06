@@ -40,14 +40,13 @@
 			base.options = $.extend({},
 				$.imageFocus.focusPoint.defaultOptions, options);
 
-
 			// Put your initialization code here
-			base.attachment.getData();
 			base.addInterfaceElements();
 
 			//Setup attachment
 			base.attachment.init();
 			base.attachment.getDimensionData();
+			base.attachment.getData();
 
 			//Setup focusInterface
 			base.focusInterface.init();
@@ -99,8 +98,9 @@
 			},
 
 			//Functions
-			init: function(){
-				base.attachment.$el = $('.'+ css.imageFocus.img);
+			init: function ()
+			{
+				base.attachment.$el = $('.' + css.imageFocus.img);
 			},
 
 			getData: function ()
@@ -127,12 +127,14 @@
 					}
 
 					// Move the focuspoint and show it
-					$('.' + css.imageFocus.point).css({
-						display: 'block',
-						left: base.attachment._focusPoint.x + '%',
-						top: base.attachment._focusPoint.y + '%'
+					base.focusInterface.update();
+					base.focusInterface.$el.css({
+						display: 'block'
 					});
 
+					// Load actual information
+					base.focusInterface.updateDimensionData();
+					base.focusInterface.update();
 				});
 			},
 
@@ -152,9 +154,14 @@
 		base.focusInterface = {
 			//Variables
 			$el: false,
-			_width: 0,
-			_height: 0,
-			_offset: { // Values in pixels
+			_width: 0, // Values in pixels
+			_height: 0, // Values in pixels
+			_radius: 0, // Values in pixels
+			_offset: { // Center position of focusInterface relative to page, values in pixels
+				x: 0,
+				y: 0
+			},
+			_position: { // Position relative to attachment, values in pixels
 				x: 0,
 				y: 0
 			},
@@ -178,10 +185,9 @@
 					base.attachment.getDimensionData();
 
 					//Calculate FocusPoint coordinates
-					base.focusInterface.getDimensionData();
+					base.focusInterface.updateDimensionData();
 
-					base.focusInterface._clickPosition.x = event.pageX - $this.offset().left - (base.focusInterface._width / 2);
-					base.focusInterface._clickPosition.y = event.pageY - $this.offset().top - (base.focusInterface._height / 2);
+					base.focusInterface.updateClickPosition(event);
 
 					//Highlight crop button
 					base.cropButton.highlight();
@@ -199,6 +205,11 @@
 				{
 					base.focusInterface.move(event);
 				});
+
+				$(window).on('resize', function(){
+					base.focusInterface.updateDimensionData();
+					base.focusInterface.update();
+				});
 			},
 
 			move: function (event)
@@ -207,37 +218,37 @@
 					return false;
 				}
 
-				var offset = {};
+				var position = {};
 
-				//Calculate FocusPoint coordinates
-				offset.x = event.pageX - base.attachment._offset.x - base.focusInterface._clickPosition.x;
-				offset.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
+				// Calculate FocusPoint coordinates based on the current mouse position, attachment offset and the click position within the focusInterface
+				position.x = event.pageX - base.attachment._offset.x - base.focusInterface._clickPosition.x;
+				position.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
 
-				//Set boundaries of focusPoint
-				if (offset.x < 0) {
-					offset.x = 0;
+				// Make sure that the focus point does not break out of the attachment dimensions
+				if (position.x < 0) {
+					position.x = 0;
 				} else {
-					if (offset.x > base.attachment._width) {
-						offset.x = base.attachment._width;
+					if (position.x > base.attachment._width) {
+						position.x = base.attachment._width;
 					}
 				}
 
-				if (offset.y < 0) {
-					offset.y = 0;
+				if (position.y < 0) {
+					position.y = 0;
 				} else {
-					if (offset.y > base.attachment._height) {
-						offset.y = base.attachment._height;
+					if (position.y > base.attachment._height) {
+						position.y = base.attachment._height;
 					}
 				}
 
-				//Convert to percentages
+				// Convert position to percentages
 				var focusPoint = {};
-				focusPoint.x = (offset.x / base.attachment._width) * 100;
-				focusPoint.y = (offset.y / base.attachment._height) * 100;
+				focusPoint.x = (position.x / base.attachment._width) * 100;
+				focusPoint.y = (position.y / base.attachment._height) * 100;
 
-				// Write local variables to global
+				// Write local variables to global variables
 				base.attachment._focusPoint = focusPoint;
-				base.focusInterface._offset = offset;
+				base.focusInterface._position = position;
 
 				// Update styling feedback
 				base.focusInterface.update();
@@ -246,8 +257,8 @@
 			update: function ()
 			{
 				var $attachment = $('.' + css.imageFocus.img);
-				var posX = 0 - (base.focusInterface._offset.x - (base.focusInterface._width / 2));
-				var posY = 0 - (base.focusInterface._offset.y - (base.focusInterface._height / 2));
+				var posX = 0 - (base.focusInterface._position.x - base.focusInterface._radius);
+				var posY = 0 - (base.focusInterface._position.y - base.focusInterface._radius);
 
 				base.focusInterface.$el.css({
 					left: base.attachment._focusPoint.x + '%',
@@ -258,10 +269,27 @@
 				});
 			},
 
-			getDimensionData: function ()
+			updateClickPosition: function(event){
+				base.focusInterface._clickPosition.x = event.pageX - base.focusInterface._offset.x;
+				base.focusInterface._clickPosition.y = event.pageY - base.focusInterface._offset.y;
+			},
+
+			updateDimensionData: function ()
 			{
+				// Get width and height in pixels
 				base.focusInterface._width = base.focusInterface.$el.width();
 				base.focusInterface._height = base.focusInterface.$el.height();
+
+				// Calculate the radius in px of the focusInterface based on width
+				base.focusInterface._radius = base.focusInterface._width / 2;
+
+				// Write offset based on the center point of the focusInterface
+				base.focusInterface._offset.x = base.focusInterface.$el.offset().left + base.focusInterface._radius;
+				base.focusInterface._offset.y = base.focusInterface.$el.offset().top  + base.focusInterface._radius;
+
+				// Write position based on the offset of focusInterface element and the attachment
+				base.focusInterface._position.x = base.focusInterface._offset.x - base.attachment._offset.x;
+				base.focusInterface._position.y = base.focusInterface._offset.y - base.attachment._offset.y;
 			}
 		};
 
