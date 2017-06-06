@@ -100,6 +100,10 @@
 				base.attachment.$el = $('.' + css.imageFocus.img);
 
 				base.attachment.getData();
+				base.attachment.$el.load(function ()
+				{
+					base.attachment.updateDimensionData();
+				});
 			},
 
 			getData: function ()
@@ -228,18 +232,14 @@
 				// Make sure that the focus point does not break out of the attachment dimensions
 				if (position.x < 0) {
 					position.x = 0;
-				} else {
-					if (position.x > base.attachment._width) {
-						position.x = base.attachment._width;
-					}
+				} else if (position.x > base.attachment._width) {
+					position.x = base.attachment._width;
 				}
 
 				if (position.y < 0) {
 					position.y = 0;
-				} else {
-					if (position.y > base.attachment._height) {
-						position.y = base.attachment._height;
-					}
+				} else if (position.y > base.attachment._height) {
+					position.y = base.attachment._height;
 				}
 
 				// Convert position to percentages
@@ -265,7 +265,7 @@
 			{
 				base.focusInterface.$el.css({
 					left: base.attachment._focusPoint.x + '%',
-					top: base.attachment._focusPoint.y + '%',
+					top: base.attachment._focusPoint.y + '%'
 				});
 			},
 
@@ -309,17 +309,8 @@
 				base.focusInterface._offset.y = base.focusInterface.$el.offset().top + base.focusInterface._radius;
 
 				// Write position based on the calculation position of focuspoint of the attachment
-				base.focusInterface._position = base.focusInterface.calculatePosition();
-			},
-
-			calculatePosition: function ()
-			{
-				var position = {};
-
-				position.x = (base.attachment._focusPoint.x / 100) * base.attachment._width;
-				position.y = (base.attachment._focusPoint.y / 100) * base.attachment._height;
-
-				return position;
+				base.focusInterface._position.x = (base.attachment._focusPoint.x / 100) * base.attachment._width;
+				base.focusInterface._position.y = (base.attachment._focusPoint.y / 100) * base.attachment._height;
 			}
 		};
 
