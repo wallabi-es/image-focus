@@ -54,21 +54,24 @@ class FocusPoint
      */
     public function getFocusPoint()
     {
+        // Get $_POST['attachment']
         $attachment = $this->getGlobalPostData('attachment');
 
         // Get the post meta
         $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
 
-        // Return false
-        if (null === $attachment['id'] || !is_array($attachment['focusPoint'])) {
-            die(json_encode(['success' => false]));
+        $die = json_encode(['success' => false]);
+
+        // Return the focus point if there is one
+        if (null !== $attachment['id'] || is_array($attachment['focusPoint'])) {
+            $die = json_encode([
+                'success'    => true,
+                'focusPoint' => $attachment['focusPoint']
+            ]);
         }
 
-        // Return success
-        die(json_encode([
-            'success'    => true,
-            'focusPoint' => $attachment['focusPoint']
-        ]));
+        // Return the ajax call
+        die($die);
     }
 
     /**
@@ -76,18 +79,21 @@ class FocusPoint
      */
     public function initializeCrop()
     {
+        // Get $_POST['attachment']
         $attachment = $this->getGlobalPostData('attachment');
 
-        // Return false
-        if (null === $attachment['focusPoint']) {
-            die(json_encode(['success' => false]));
+        $die = json_encode(['success' => false]);
+
+        // Crop the attachment if there is a focus point
+        if (is_array($attachment['focusPoint'])) {
+            $crop = new CropService();
+            $crop->crop($attachment['id'], $attachment['focusPoint']);
+
+            $die = json_encode(['success' => true]);
         }
 
-        $crop = new CropService();
-        $crop->crop($attachment['id'], $attachment['focusPoint']);
-
-        // Return success
-        die(json_encode(['success' => true,]));
+        // Return the ajax call
+        die($die);
     }
 
     /**
