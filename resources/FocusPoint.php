@@ -24,7 +24,7 @@ class FocusPoint
      */
     public function loadScripts()
     {
-        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery']);
+        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint/focuspoint.js', ['jquery']);
         wp_localize_script('focuspoint-js', 'focusPointL10n', $this->focusPointL10n());
         wp_enqueue_script('focuspoint-js');
 
