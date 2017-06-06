@@ -45,18 +45,15 @@
 
 			//Setup attachment
 			base.attachment.init();
-			base.attachment.getDimensionData();
-			base.attachment.getData();
 
 			//Setup focusInterface
 			base.focusInterface.init();
-			base.focusInterface.update();
 
 			//Setup crop button
 			base.cropButton.init();
 
 			//Set image dimension data on window resize
-			$(window).on('resize', base.attachment.getDimensionData);
+			$(window).on('resize', base.attachment.updateDimensionData);
 		};
 
 		/**
@@ -101,6 +98,8 @@
 			init: function ()
 			{
 				base.attachment.$el = $('.' + css.imageFocus.img);
+
+				base.attachment.getData();
 			},
 
 			getData: function ()
@@ -126,19 +125,21 @@
 						base.attachment._focusPoint = data.focusPoint;
 					}
 
+					// Update dimension data
+					base.attachment.updateDimensionData();
+
 					// Move the focuspoint and show it
-					base.focusInterface.update();
+					base.focusInterface.updateStylePosition();
 					base.focusInterface.$el.css({
 						display: 'block'
 					});
 
-					// Load actual information
 					base.focusInterface.updateDimensionData();
-					base.focusInterface.update();
+					base.focusInterface.updateStyleBackground();
 				});
 			},
 
-			getDimensionData: function ()
+			updateDimensionData: function ()
 			{
 				var $attachment = base.attachment.$el;
 				base.attachment._width = $attachment.width();
@@ -180,9 +181,8 @@
 
 				base.focusInterface.$el.on('mousedown', function (event)
 				{
-					var $this = $(this);
 					//Set current dimension data in case position and size of image are changed because of content changes
-					base.attachment.getDimensionData();
+					base.attachment.updateDimensionData();
 
 					//Calculate FocusPoint coordinates
 					base.focusInterface.updateDimensionData();
@@ -206,9 +206,10 @@
 					base.focusInterface.move(event);
 				});
 
-				$(window).on('resize', function(){
+				$(window).on('resize', function ()
+				{
 					base.focusInterface.updateDimensionData();
-					base.focusInterface.update();
+					base.focusInterface.updateStyle();
 				});
 			},
 
@@ -251,29 +252,52 @@
 				base.focusInterface._position = position;
 
 				// Update styling feedback
-				base.focusInterface.update();
+				base.focusInterface.updateStyle();
 			},
 
-			update: function ()
+			updateStyle: function ()
 			{
-				var $attachment = $('.' + css.imageFocus.img);
-				var posX = 0 - (base.focusInterface._position.x - base.focusInterface._radius);
-				var posY = 0 - (base.focusInterface._position.y - base.focusInterface._radius);
+				base.focusInterface.updateStylePosition();
+				base.focusInterface.updateStyleBackground();
+			},
 
+			updateStylePosition: function ()
+			{
 				base.focusInterface.$el.css({
 					left: base.attachment._focusPoint.x + '%',
 					top: base.attachment._focusPoint.y + '%',
-					backgroundImage: 'url("' + $attachment.attr('src') + '")',
+				});
+			},
+
+			updateStyleBackground: function ()
+			{
+				var posX = 0 - (base.focusInterface._position.x - base.focusInterface._radius);
+				var posY = 0 - (base.focusInterface._position.y - base.focusInterface._radius);
+
+				console.log(
+					base.focusInterface._position.x + ' : ' + base.focusInterface._radius + ' : ' + base.attachment._width);
+
+				base.focusInterface.$el.css({
+					backgroundImage: 'url("' + base.attachment.$el.attr('src') + '")',
 					backgroundSize: base.attachment._width + 'px ' + base.attachment._height + 'px ',
 					backgroundPosition: posX + 'px ' + posY + 'px '
 				});
 			},
 
-			updateClickPosition: function(event){
+			/**
+			 * Calculation click position within the focusInterface for focalpoint calculation
+			 *
+			 * @param event
+			 */
+			updateClickPosition: function (event)
+			{
 				base.focusInterface._clickPosition.x = event.pageX - base.focusInterface._offset.x;
 				base.focusInterface._clickPosition.y = event.pageY - base.focusInterface._offset.y;
 			},
 
+			/**
+			 * update dimension data of the focusInterface for quick access to the latest dimensions
+			 */
 			updateDimensionData: function ()
 			{
 				// Get width and height in pixels
@@ -285,11 +309,20 @@
 
 				// Write offset based on the center point of the focusInterface
 				base.focusInterface._offset.x = base.focusInterface.$el.offset().left + base.focusInterface._radius;
-				base.focusInterface._offset.y = base.focusInterface.$el.offset().top  + base.focusInterface._radius;
+				base.focusInterface._offset.y = base.focusInterface.$el.offset().top + base.focusInterface._radius;
 
-				// Write position based on the offset of focusInterface element and the attachment
-				base.focusInterface._position.x = base.focusInterface._offset.x - base.attachment._offset.x;
-				base.focusInterface._position.y = base.focusInterface._offset.y - base.attachment._offset.y;
+				// Write position based on the calculation position of focuspoint of the attachment
+				base.focusInterface._position = base.focusInterface.calculatePosition();
+			},
+
+			calculatePosition: function ()
+			{
+				var position = {};
+
+				position.x = (base.attachment._focusPoint.x / 100) * base.attachment._width;
+				position.y = (base.attachment._focusPoint.y / 100) * base.attachment._height;
+
+				return position;
 			}
 		};
 
