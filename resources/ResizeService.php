@@ -33,18 +33,20 @@ class ResizeService
     public function resizeAttachments($sizes, $metadata)
     {
         // The filter doesn't pass trough the attachment's ID. So we need to get it by url
-        $attachmentId = $this->getAttachtmentIdByUrl($metadata['file']);
+        $attachmentId = $this->getAttachmentIdByUrl($metadata['file']);
 
         // Get the focus point
-        $focusPoint = get_post_meta($attachmentId, 'focus_point', true);
+        if ($attachmentId) {
+            $focusPoint = get_post_meta($attachmentId, 'focus_point', true);
 
-        // Crop the attachment trough the crop service
-        $crop = new CropService();
-        $crop->crop($attachmentId, $focusPoint);
+            // Crop the attachment trough the crop service
+            $crop = new CropService();
+            $crop->crop($attachmentId, $focusPoint);
 
-        foreach ($sizes as $size => $image) {
-            if ($image['crop'] === 1) {
-                unset($sizes[$size]);
+            foreach ($sizes as $size => $image) {
+                if ($image['crop'] === 1) {
+                    unset($sizes[$size]);
+                }
             }
         }
     }
@@ -55,13 +57,17 @@ class ResizeService
      * @param $file
      * @return mixed
      */
-    private function getAttachtmentIdByUrl($file)
+    private function getAttachmentIdByUrl($file)
     {
         global $wpdb;
         $attachment = $wpdb->get_col(
             $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid='%s';", wp_upload_dir()['baseurl'] . '/' . $file)
         );
 
-        return $attachment[0];
+        if (!empty($attachment[0])) {
+            return $attachment[0];
+        }
+
+        return false;
     }
 }
