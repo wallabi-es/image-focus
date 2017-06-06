@@ -2,11 +2,17 @@
 
 namespace ImageFocus;
 
+/**
+ * The class responsible for cropping the attachments
+ *
+ * Class CropService
+ * @package ImageFocus
+ */
 class CropService
 {
     private $attachment = [];
     private $imageSizes = [];
-    private $focusPoint = [];
+    private $focusPoint = [50, 50];
 
     /**
      * Crop the image on base of the focus point
@@ -96,7 +102,9 @@ class CropService
      */
     private function setFocusPoint($focusPoint)
     {
-        $this->focusPoint = $focusPoint;
+        if ($focusPoint) {
+            $this->focusPoint = $focusPoint;
+        }
 
         return $this;
     }

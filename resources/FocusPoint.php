@@ -2,6 +2,12 @@
 
 namespace ImageFocus;
 
+/**
+ * Class responsible for the showing of the focuspoint interface
+ *
+ * Class FocusPoint
+ * @package ImageFocus
+ */
 class FocusPoint
 {
     public function __construct()
