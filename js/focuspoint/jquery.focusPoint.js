@@ -274,9 +274,6 @@
 				var posX = 0 - (base.focusInterface._position.x - base.focusInterface._radius);
 				var posY = 0 - (base.focusInterface._position.y - base.focusInterface._radius);
 
-				console.log(
-					base.focusInterface._position.x + ' : ' + base.focusInterface._radius + ' : ' + base.attachment._width);
-
 				base.focusInterface.$el.css({
 					backgroundImage: 'url("' + base.attachment.$el.attr('src') + '")',
 					backgroundSize: base.attachment._width + 'px ' + base.attachment._height + 'px ',
