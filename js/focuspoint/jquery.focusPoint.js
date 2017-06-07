@@ -408,8 +408,7 @@
 	{
 		return this.each(function ()
 		{
-			(new $.imageFocus.focusPoint(this,
-				options));
+			(new $.imageFocus.focusPoint(this, options)); // eslint-disable-line no-new
 		});
 	};
 
