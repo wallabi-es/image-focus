@@ -320,6 +320,7 @@
 		 */
 		base.cropButton = {
 			$el: false,
+			_ajaxState: false,
 
 			init: function ()
 			{
@@ -366,13 +367,13 @@
 				dataType: 'json',
 				beforeSend: function ()
 				{
-					if (base._ajaxState.crop === true) {
+					if (base.cropButton._ajaxState === true) {
 						return false;
 					}
 
 					base.cropButton.$el.text('Cropping...');
 					base.cropButton.disable();
-					base._ajaxState.crop = true;
+					base.cropButton._ajaxState = true;
 				}
 			}).done(function (data)
 				{
@@ -384,14 +385,9 @@
 						base.cropButton.$el.text('Please try again');
 					}
 
-					base._ajaxState.crop = false;
+					base.cropButton._ajaxState = false;
 				}
 			);
-		};
-
-		// Variables
-		base._ajaxState = {
-			crop: false
 		};
 	};
 
