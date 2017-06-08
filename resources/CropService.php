@@ -174,7 +174,7 @@ class CropService
      *
      * @param $imageSize
      * @param $imageFilePath
-     * @return array
+     * @return $this
      */
     private function cropImage($imageSize, $imageFilePath)
     {
@@ -229,5 +229,7 @@ class CropService
             false,
             $imageFilePath
         );
+
+        return $this;
     }
 }
