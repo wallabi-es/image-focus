@@ -270,8 +270,8 @@
 				position.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
 
 				// Make sure that the focus point does not break out of the attachment boundaries
-				position.x = base.helper.calculateBoundaries(position.x, 0, base.attachment._width);
-				position.y = base.helper.calculateBoundaries(position.y, 0, base.attachment._height);
+				position.x = base.helper.calculateMaxRange(position.x, 0, base.attachment._width);
+				position.y = base.helper.calculateMaxRange(position.y, 0, base.attachment._height);
 
 				// Convert position to percentages
 				var focusPoint = {};
@@ -449,7 +449,7 @@
 		};
 
 		base.helper = {
-			calculateBoundaries: function (input, min, max)
+			calculateMaxRange: function (input, min, max)
 			{
 				var output = input;
 
