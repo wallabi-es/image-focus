@@ -190,8 +190,9 @@
 
 				$clickArea.on('mousedown', function (event)
 				{
-					base.focusInterface.startMove(event, true);
-					base.focusInterface.move(event); //Request one move action
+					base.focusInterface
+						.startMove(event, true)
+						.move(event); //Request one move action
 				});
 
 				base.focusInterface.$el.on('mousedown', function (event)
@@ -229,8 +230,9 @@
 
 				$(window).on('resize', function ()
 				{
-					base.focusInterface.updateDimensionData();
-					base.focusInterface.updateStyle();
+					base.focusInterface
+						.updateDimensionData()
+						.updateStyle();
 				});
 			},
 
@@ -251,6 +253,8 @@
 
 				base.focusInterface._state.move = true;
 				base.focusInterface._state.active = true;
+
+				return this;
 			},
 
 			move: function (event)
@@ -265,18 +269,9 @@
 				position.x = event.pageX - base.attachment._offset.x - base.focusInterface._clickPosition.x;
 				position.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
 
-				// Make sure that the focus point does not break out of the attachment dimensions
-				if (position.x < 0) {
-					position.x = 0;
-				} else if (position.x > base.attachment._width) {
-					position.x = base.attachment._width;
-				}
-
-				if (position.y < 0) {
-					position.y = 0;
-				} else if (position.y > base.attachment._height) {
-					position.y = base.attachment._height;
-				}
+				// Make sure that the focus point does not break out of the attachment boundaries
+				position.x = base.helper.calculateBoundaries(position.x, 0, base.attachment._width);
+				position.y = base.helper.calculateBoundaries(position.y, 0, base.attachment._height);
 
 				// Convert position to percentages
 				var focusPoint = {};
@@ -289,12 +284,16 @@
 
 				// Update styling feedback
 				base.focusInterface.updateStyle();
+
+				return this;
 			},
 
 			updateStyle: function ()
 			{
 				base.focusInterface.updateStylePosition();
 				base.focusInterface.updateStyleBackground();
+
+				return this;
 			},
 
 			updateStylePosition: function ()
@@ -303,6 +302,8 @@
 					left: base.attachment._focusPoint.x + '%',
 					top: base.attachment._focusPoint.y + '%'
 				});
+
+				return this;
 			},
 
 			updateStyleBackground: function ()
@@ -315,6 +316,8 @@
 					backgroundSize: base.attachment._width + 'px ' + base.attachment._height + 'px ',
 					backgroundPosition: posX + 'px ' + posY + 'px '
 				});
+
+				return this;
 			},
 
 			/**
@@ -385,19 +388,22 @@
 			},
 			highlight: function ()
 			{
-				base.cropButton.$el.removeClass(cssClass.button._disabled);
-				base.cropButton.$el.text(focusPointL10n.cropButton);
-				base.cropButton.$el.addClass(cssClass.button._primary);
+				base.cropButton.$el
+					.removeClass(cssClass.button._disabled)
+					.addClass(cssClass.button._primary)
+					.text(focusPointL10n.cropButton);
 			},
 			activate: function ()
 			{
-				base.cropButton.$el.removeClass(cssClass.button._disabled);
-				base.cropButton.$el.removeClass(cssClass.button._primary);
+				base.cropButton.$el
+					.removeClass(cssClass.button._disabled)
+					.removeClass(cssClass.button._primary);
 			},
 			disable: function ()
 			{
-				base.cropButton.$el.removeClass(cssClass.button._primary);
-				base.cropButton.$el.addClass(cssClass.button._disabled);
+				base.cropButton.$el
+					.removeClass(cssClass.button._primary)
+					.addClass(cssClass.button._disabled);
 			}
 		};
 
@@ -440,6 +446,21 @@
 					base.cropButton._ajaxState = false;
 				}
 			);
+		};
+
+		base.helper = {
+			calculateBoundaries: function (input, min, max)
+			{
+				var output = input;
+
+				if (input < min) {
+					output = min;
+				} else if (input > max) {
+					output = max;
+				}
+
+				return output;
+			}
 		};
 	};
 
