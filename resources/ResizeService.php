@@ -43,7 +43,7 @@ class ResizeService
             $crop = new CropService();
             $crop->crop($attachmentId, $focusPoint);
 
-            foreach ($sizes as $size => $image) {
+            foreach ((array)$sizes as $size => $image) {
                 if ($image['crop'] === 1) {
                     unset($sizes[$size]);
                 }
