@@ -21,6 +21,6 @@ README.md export-ignore
 CHANGELOG.md export-ignore
 
 .codeclimate.yml export-ignore
-.csslintrc
-.eslintignore
-.eslintrc.yml
+.csslintrc export-ignore
+.eslintignore export-ignore
+.eslintrc.yml export-ignore
