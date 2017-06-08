@@ -422,15 +422,16 @@
 					base.cropButton.disable();
 					base.cropButton._ajaxState = true;
 				}
-			}).done(function (data)
+			}).always(function (data)
 				{
-					if (data.success === true) {
-						base.cropButton.$el.text('Done!');
-					}
-					else if (data.success === false) {
+					var message = 'Done';
+
+					if (data.success !== true) {
 						base.cropButton.activate();
-						base.cropButton.$el.text('Please try again');
+						message = 'Please try again';
 					}
+
+					base.cropButton.$el.text(message);
 
 					base.cropButton._ajaxState = false;
 				}

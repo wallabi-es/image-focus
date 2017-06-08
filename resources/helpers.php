@@ -24,7 +24,7 @@ if (!function_exists('getGlobalPostData')) {
 
             // Call the same function if it's an array
             if (is_array($data)) {
-                $this->getGlobalPostData(null, $data);
+                $postData[$key] = getGlobalPostData(null, $data);
 
                 continue;
             }
