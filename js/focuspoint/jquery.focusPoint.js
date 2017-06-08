@@ -186,33 +186,27 @@
 			{
 				base.focusInterface.$el = $('.' + cssClass.imageFocus._point);
 				var $imageFocus = $('.' + cssClass._imageFocus);
+				var $clickArea = $('.' + cssClass.imageFocus._clickarea);
+
+				$clickArea.on('mousedown', function (event)
+				{
+					base.focusInterface.startMove(event, true);
+					base.focusInterface.move(event); //Request one move action
+				});
 
 				base.focusInterface.$el.on('mousedown', function (event)
 				{
-					//Set current dimension data in case position and size of image are changed because of content changes
-					base.attachment.updateDimensionData();
-
-					//Calculate FocusPoint coordinates
-					base.focusInterface.updateDimensionData();
-
-					base.focusInterface.updateClickPosition(event);
-
-					//Highlight crop button
-					base.cropButton.highlight();
-					$imageFocus.addClass('is-active');
-
-					base.focusInterface._state.move = true;
-					base.focusInterface._state.active = true;
+					base.focusInterface.startMove(event);
 				});
 
-				base.focusInterface.$el.on('mouseenter', function (event)
+				base.focusInterface.$el.on('mouseenter', function ()
 				{
 					base.focusInterface._state.hover = true;
 
 					$imageFocus.addClass('is-hover');
 				});
 
-				base.focusInterface.$el.on('mouseleave', function (event)
+				base.focusInterface.$el.on('mouseleave', function ()
 				{
 					base.focusInterface._state.hover = false;
 
@@ -238,6 +232,25 @@
 					base.focusInterface.updateDimensionData();
 					base.focusInterface.updateStyle();
 				});
+			},
+
+			startMove: function (event, reset)
+			{
+				var $imageFocus = $('.' + cssClass._imageFocus);
+				//Set current dimension data in case position and size of image are changed because of content changes
+				base.attachment.updateDimensionData();
+
+				//Calculate FocusPoint coordinates
+				base.focusInterface
+					.updateDimensionData()
+					.updateClickPosition(event, reset);
+
+				//Highlight crop button
+				base.cropButton.highlight();
+				$imageFocus.addClass('is-active');
+
+				base.focusInterface._state.move = true;
+				base.focusInterface._state.active = true;
 			},
 
 			move: function (event)
@@ -309,10 +322,20 @@
 			 *
 			 * @param event
 			 */
-			updateClickPosition: function (event)
+			updateClickPosition: function (event, reset)
 			{
-				base.focusInterface._clickPosition.x = event.pageX - base.focusInterface._offset.x;
-				base.focusInterface._clickPosition.y = event.pageY - base.focusInterface._offset.y;
+				var x = 0;
+				var y = 0;
+
+				if (reset !== true) {
+					x = event.pageX - base.focusInterface._offset.x;
+					y = event.pageY - base.focusInterface._offset.y;
+				}
+
+				base.focusInterface._clickPosition.x = x;
+				base.focusInterface._clickPosition.y = y;
+
+				return this;
 			},
 
 			/**
@@ -334,6 +357,8 @@
 				// Write position based on the calculation position of focuspoint of the attachment
 				base.focusInterface._position.x = (base.attachment._focusPoint.x / 100) * base.attachment._width;
 				base.focusInterface._position.y = (base.attachment._focusPoint.y / 100) * base.attachment._height;
+
+				return this;
 			}
 		};
 
