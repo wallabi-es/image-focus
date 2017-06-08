@@ -390,13 +390,9 @@
 		};
 
 		// Variables
-
 		base._ajaxState = {
 			crop: false
 		};
-
-		// Run initializer
-		base.init();
 	};
 
 	$.imageFocus.focusPoint.defaultOptions = {
@@ -408,7 +404,8 @@
 	{
 		return this.each(function ()
 		{
-			(new $.imageFocus.focusPoint(this, options)); // eslint-disable-line no-new
+			var imageFocusObject = new $.imageFocus.focusPoint(this, options);
+			imageFocusObject.init();
 		});
 	};
 
