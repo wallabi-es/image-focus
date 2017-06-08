@@ -321,6 +321,8 @@
 			 * Calculation click position within the focusInterface for focalpoint calculation
 			 *
 			 * @param event
+			 * @param reset
+			 * @returns {$.imageFocus.focusInterface}
 			 */
 			updateClickPosition: function (event, reset)
 			{
@@ -340,6 +342,8 @@
 
 			/**
 			 * Update dimension data of the focusInterface for quick access to the latest dimensions
+			 *
+			 * @returns {$.imageFocus.focusInterface}
 			 */
 			updateDimensionData: function ()
 			{
