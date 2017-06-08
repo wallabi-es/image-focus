@@ -2,19 +2,19 @@
 {
 	"use strict";
 
-	var css = {
+	var cssClass = {
+		_imageFocus: 'image-focus',
 		imageFocus: {
-			self: 'image-focus',
-			wrapper: 'image-focus__wrapper',
-			img: 'image-focus__img',
-			point: 'image-focus__point',
-			clickarea: 'image-focus__clickarea',
-			button: 'image-focus__button'
+			_wrapper: 'image-focus__wrapper',
+			_img: 'image-focus__img',
+			_point: 'image-focus__point',
+			_clickarea: 'image-focus__clickarea',
+			_button: 'image-focus__button'
 		},
+		_button: 'button',
 		button: {
-			self: 'button',
-			primary: 'button-primary',
-			disabled: 'button-disabled'
+			_primary: 'button-primary',
+			_disabled: 'button-disabled'
 		}
 	};
 
@@ -66,15 +66,15 @@
 				$thumbnail = $('.edit-attachment-frame .attachment-media-view .details-image');
 
 			//Add class to thumbnail image
-			$thumbnail.addClass(css.imageFocus.img);
+			$thumbnail.addClass(cssClass.imageFocus._img);
 
 			//Add a wrapper around image
 			$thumbnail.wrap(
-				'<div class="' + css.imageFocus.self + '"><div class="' + css.imageFocus.wrapper + '"></div></div>');
-			$imageFocusWrapper = $('.' + css.imageFocus.wrapper);
+				'<div class="' + cssClass._imageFocus + '"><div class="' + cssClass.imageFocus._wrapper + '"></div></div>');
+			$imageFocusWrapper = $('.' + cssClass.imageFocus._wrapper);
 
-			$imageFocusWrapper.append('<div class="' + css.imageFocus.point + '"></div>');
-			$imageFocusWrapper.append('<div class="' + css.imageFocus.clickarea + '"></div>');
+			$imageFocusWrapper.append('<div class="' + cssClass.imageFocus._point + '"></div>');
+			$imageFocusWrapper.append('<div class="' + cssClass.imageFocus._clickarea + '"></div>');
 		};
 
 		/**
@@ -98,7 +98,7 @@
 			//Functions
 			init: function ()
 			{
-				base.attachment.$el = $('.' + css.imageFocus.img);
+				base.attachment.$el = $('.' + cssClass.imageFocus._img);
 
 				base.attachment.getData();
 				base.attachment.$el.load(function ()
@@ -184,8 +184,8 @@
 			// Functions
 			init: function ()
 			{
-				base.focusInterface.$el = $('.' + css.imageFocus.point);
-				var $imageFocus = $('.' + css.imageFocus.self);
+				base.focusInterface.$el = $('.' + cssClass.imageFocus._point);
+				var $imageFocus = $('.' + cssClass._imageFocus);
 
 				base.focusInterface.$el.on('mousedown', function (event)
 				{
@@ -342,32 +342,33 @@
 		 */
 		base.cropButton = {
 			$el: false,
+			_ajaxState: false,
 
 			init: function ()
 			{
-				var button = '<button type="button" class="' + css.button.self + ' ' + css.button.disabled + ' crop-attachment ' + css.imageFocus.button + '">' + focusPointL10n.cropButton + '</button>';
+				var button = '<button type="button" class="' + cssClass._button + ' ' + cssClass.button._disabled + ' crop-attachment ' + cssClass.imageFocus._button + '">' + focusPointL10n.cropButton + '</button>';
 				$(base.el).find('.attachment-actions').append(button);
 
-				base.cropButton.$el = $('.' + css.imageFocus.button);
+				base.cropButton.$el = $('.' + cssClass.imageFocus._button);
 
 				//Set action to button for ajax call
 				base.cropButton.$el.on('click', base.sendImageCropDataByAjax);
 			},
 			highlight: function ()
 			{
-				base.cropButton.$el.removeClass(css.button.disabled);
+				base.cropButton.$el.removeClass(cssClass.button._disabled);
 				base.cropButton.$el.text(focusPointL10n.cropButton);
-				base.cropButton.$el.addClass(css.button.primary);
+				base.cropButton.$el.addClass(cssClass.button._primary);
 			},
 			activate: function ()
 			{
-				base.cropButton.$el.removeClass(css.button.disabled);
-				base.cropButton.$el.removeClass(css.button.primary);
+				base.cropButton.$el.removeClass(cssClass.button._disabled);
+				base.cropButton.$el.removeClass(cssClass.button._primary);
 			},
 			disable: function ()
 			{
-				base.cropButton.$el.removeClass(css.button.primary);
-				base.cropButton.$el.addClass(css.button.disabled);
+				base.cropButton.$el.removeClass(cssClass.button._primary);
+				base.cropButton.$el.addClass(cssClass.button._disabled);
 			}
 		};
 
@@ -388,13 +389,13 @@
 				dataType: 'json',
 				beforeSend: function ()
 				{
-					if (base._ajaxState.crop === true) {
+					if (base.cropButton._ajaxState === true) {
 						return false;
 					}
 
 					base.cropButton.$el.text('Cropping...');
 					base.cropButton.disable();
-					base._ajaxState.crop = true;
+					base.cropButton._ajaxState = true;
 				}
 			}).done(function (data)
 				{
@@ -406,19 +407,10 @@
 						base.cropButton.$el.text('Please try again');
 					}
 
-					base._ajaxState.crop = false;
+					base.cropButton._ajaxState = false;
 				}
 			);
 		};
-
-		// Variables
-
-		base._ajaxState = {
-			crop: false
-		};
-
-		// Run initializer
-		base.init();
 	};
 
 	$.imageFocus.focusPoint.defaultOptions = {
@@ -430,7 +422,8 @@
 	{
 		return this.each(function ()
 		{
-			(new $.imageFocus.focusPoint(this, options)); // eslint-disable-line no-new
+			var imageFocusObject = new $.imageFocus.focusPoint(this, options);
+			imageFocusObject.init();
 		});
 	};
 
