@@ -35,7 +35,22 @@ Want to get involved and improve Image Focus? Fork this repo and whenever you ha
 
 ## Getting ahead
 
-As WordPress and photography are continuously in development we like to take a look ahead together for what's coming. If you want to get involved developing Image Focus you can ask us if you can implement some of the features yourself.
-Our backlog is visible for public and we will take all feature requests into consideration.
+As WordPress and photography are continuously in development we like to take a look ahead together for what's coming. 
 
-You can visit our backlog at [Taigo.io](https://tree.taiga.io/project/dannyvanholten-image-focus/backlog)
+If you want to get involved developing Image Focus just let us know how you can help, or just send in your feature requests!
+
+### Image Focus
+* Reset the cropping point to the WordPress default cropping
+* Add a link to featured images to go the image focus cropping tool
+* Add a link to acf images to go the image focus cropping tool
+* Crop Previews
+* Backbone implementation
+* Support for touch devices
+
+### Image Focus Pro
+* Automatic focus point by facial detection
+* Automatic focus point by color detection
+* Zoom levels for cropping
+* Add multiple focuspoints
+* Change focuspoint per image size
+* Change entire image for an image size
