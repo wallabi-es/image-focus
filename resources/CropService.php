@@ -19,6 +19,7 @@ class CropService
      *
      * @param $attachmentId
      * @param $focusPoint
+     * @return bool
      */
     public function crop($attachmentId, $focusPoint)
     {
@@ -121,6 +122,9 @@ class CropService
         update_post_meta($this->attachment['id'], 'focus_point', $this->focusPoint);
     }
 
+    /**
+     * Crop the actual attachment
+     */
     private function cropAttachment()
     {
         // Loop trough all the image sizes connected to this attachment
