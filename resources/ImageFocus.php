@@ -37,7 +37,12 @@ class ImageFocus
      */
     private function loadClasses()
     {
-        new FocusPoint();
         new ResizeService();
+
+        if (current_user_can('upload_files') === false) {
+            return false;
+        }
+
+        new FocusPoint();
     }
 }
