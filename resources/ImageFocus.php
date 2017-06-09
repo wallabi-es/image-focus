@@ -37,6 +37,10 @@ class ImageFocus
      */
     private function loadClasses()
     {
+        /*
+         * Load the resice service even if the current user is not allowed to upload files.
+         * This is to prevent WordPress from falsely resizing images back to the default focus point.
+         */
         new ResizeService();
 
         if (current_user_can('upload_files') === false) {
