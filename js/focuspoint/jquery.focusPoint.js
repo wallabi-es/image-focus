@@ -36,6 +36,8 @@
 		// Add a reverse reference to the DOM object
 		base.$el.data("imageFocus.focusPoint", base);
 
+		var $imageFocus, $clickarea;
+
 		base.init = function ()
 		{
 			base.options = $.extend({},
@@ -75,6 +77,9 @@
 
 			$imageFocusWrapper.append('<div class="' + cssClass.imageFocus._point + '"></div>');
 			$imageFocusWrapper.append('<div class="' + cssClass.imageFocus._clickarea + '"></div>');
+
+			$imageFocus = $('.' + cssClass._imageFocus);
+			$clickarea = $('.' + cssClass.imageFocus._clickarea);
 		};
 
 		/**
@@ -185,60 +190,51 @@
 			init: function ()
 			{
 				base.focusInterface.$el = $('.' + cssClass.imageFocus._point);
-				var $imageFocus = $('.' + cssClass._imageFocus);
-				var $clickArea = $('.' + cssClass.imageFocus._clickarea);
 
-				$clickArea.on('mousedown', function (event)
-				{
-					base.focusInterface
-						.startMove(event, true)
-						.move(event); //Request one move action
-				});
+				$clickarea
+					.on('mousedown', function (event)
+					{
+						base.focusInterface
+							.startMove(event, true)
+							.move(event); //Request one move action
+					});
 
-				base.focusInterface.$el.on('mousedown', function (event)
-				{
-					base.focusInterface.startMove(event);
-				});
+				base.focusInterface.$el
+					.on('mousedown', function (event)
+					{
+						base.focusInterface.startMove(event);
+					})
+					.on('mouseenter', function ()
+					{
+						base.focusInterface.state.hover(true);
+					})
+					.on('mouseleave', function ()
+					{
+						base.focusInterface.state.hover(false);
+					});
 
-				base.focusInterface.$el.on('mouseenter', function ()
-				{
-					base.focusInterface._state.hover = true;
+				$(window)
+					.on('mouseup', function ()
+					{
+						base.focusInterface._state.move = false;
+						base.focusInterface._state.active = false;
 
-					$imageFocus.addClass('is-hover');
-				});
-
-				base.focusInterface.$el.on('mouseleave', function ()
-				{
-					base.focusInterface._state.hover = false;
-
-					$imageFocus.removeClass('is-hover');
-				});
-
-
-				$(window).on('mouseup', function ()
-				{
-					base.focusInterface._state.move = false;
-					base.focusInterface._state.active = false;
-
-					$imageFocus.removeClass('is-active');
-				});
-
-				$(window).on('mousemove', function (event)
-				{
-					base.focusInterface.move(event);
-				});
-
-				$(window).on('resize', function ()
-				{
-					base.focusInterface
-						.updateDimensionData()
-						.updateStyle();
-				});
+						$imageFocus.removeClass('is-active');
+					})
+					.on('mousemove', function (event)
+					{
+						base.focusInterface.move(event);
+					})
+					.on('resize', function ()
+					{
+						base.focusInterface
+							.updateDimensionData()
+							.updateStyle();
+					});
 			},
 
 			startMove: function (event, reset)
 			{
-				var $imageFocus = $('.' + cssClass._imageFocus);
 				//Set current dimension data in case position and size of image are changed because of content changes
 				base.attachment.updateDimensionData();
 
@@ -270,8 +266,8 @@
 				position.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
 
 				// Make sure that the focus point does not break out of the attachment boundaries
-				position.x = base.helper.calculateMaxRange(position.x, 0, base.attachment._width);
-				position.y = base.helper.calculateMaxRange(position.y, 0, base.attachment._height);
+				position.x = helper.calculateMaxRange(position.x, 0, base.attachment._width);
+				position.y = helper.calculateMaxRange(position.y, 0, base.attachment._height);
 
 				// Convert position to percentages
 				var focusPoint = {};
@@ -366,6 +362,14 @@
 				base.focusInterface._position.y = (base.attachment._focusPoint.y / 100) * base.attachment._height;
 
 				return this;
+			},
+
+			state: {
+				hover: function (value)
+				{
+					base.focusInterface._state.hover = value;
+					$imageFocus.toggleClass('is-hover', value);
+				}
 			}
 		};
 
@@ -448,19 +452,20 @@
 			);
 		};
 
-		base.helper = {
-			calculateMaxRange: function (input, min, max)
-			{
-				var output = input;
+		//Helper functions
+		var helper = {};
 
-				if (input < min) {
-					output = min;
-				} else if (input > max) {
-					output = max;
-				}
+		helper.calculateMaxRange = function (input, min, max)
+		{
+			var output = input;
 
-				return output;
+			if (input < min) {
+				output = min;
+			} else if (input > max) {
+				output = max;
 			}
+
+			return output;
 		};
 	};
 
