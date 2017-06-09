@@ -22,9 +22,11 @@ class CropService
      */
     public function crop($attachmentId, $focusPoint)
     {
-        // Set all the cropping data
-        $this->setCropData($attachmentId, $focusPoint);
-        $this->cropAttachment();
+        if (current_user_can('upload_files')) {
+            // Set all the cropping data
+            $this->setCropData($attachmentId, $focusPoint);
+            $this->cropAttachment();
+        }
     }
 
     /**

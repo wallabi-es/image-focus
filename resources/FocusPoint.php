@@ -12,7 +12,9 @@ class FocusPoint
 {
     public function __construct()
     {
-        $this->addHooks();
+        if (current_user_can('upload_files')) {
+            $this->addHooks();
+        }
     }
 
     /**

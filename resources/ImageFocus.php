@@ -35,7 +35,8 @@ class ImageFocus
     /**
      * Load all necessary classes
      */
-    private function loadClasses() {
+    private function loadClasses()
+    {
         new FocusPoint();
         new ResizeService();
     }
