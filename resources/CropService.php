@@ -12,13 +12,14 @@ class CropService
 {
     private $attachment = [];
     private $imageSizes = [];
-    private $focusPoint = [50, 50];
+    private $focusPoint = ['x' => 50, 'y' => 50];
 
     /**
      * Crop the image on base of the focus point
      *
      * @param $attachmentId
      * @param $focusPoint
+     * @return bool
      */
     public function crop($attachmentId, $focusPoint)
     {
@@ -117,6 +118,9 @@ class CropService
         update_post_meta($this->attachment['id'], 'focus_point', $this->focusPoint);
     }
 
+    /**
+     * Crop the actual attachment
+     */
     private function cropAttachment()
     {
         // Loop trough all the image sizes connected to this attachment
@@ -175,7 +179,7 @@ class CropService
      *
      * @param $imageSize
      * @param $imageFilePath
-     * @return array
+     * @return $this
      */
     private function cropImage($imageSize, $imageFilePath)
     {
@@ -230,5 +234,7 @@ class CropService
             false,
             $imageFilePath
         );
+
+        return $this;
     }
 }

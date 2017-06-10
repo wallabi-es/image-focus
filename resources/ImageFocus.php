@@ -13,7 +13,6 @@ class ImageFocus
     public function __construct()
     {
         $this->addHooks();
-        $this->loadClasses();
     }
 
     /**
@@ -22,6 +21,7 @@ class ImageFocus
     private function addHooks()
     {
         add_action('admin_init', [$this, 'loadTextDomain']);
+        add_action('admin_init', [$this, 'loadClasses']);
     }
 
     /**
@@ -35,8 +35,18 @@ class ImageFocus
     /**
      * Load all necessary classes
      */
-    private function loadClasses() {
-        new FocusPoint();
+    public function loadClasses()
+    {
+        /*
+         * Load the resice service even if the current user is not allowed to upload files.
+         * This is to prevent WordPress from falsely resizing images back to the default focus point.
+         */
         new ResizeService();
+
+        if (current_user_can('upload_files') === false) {
+            return false;
+        }
+
+        new FocusPoint();
     }
 }
