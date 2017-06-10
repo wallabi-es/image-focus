@@ -5,8 +5,6 @@ With Image Focus you can instead crop your image by focal point. You select the 
 
 This way you don't need to crop all your images size by size. It will intelligently crop all sizes by your selected focus point.
 
-Finally WordPress now has a proper image cropping plugin!
-
 ## Getting started
 
 The plugin is available from the [WordPress plugin repository](http://www.wordpress.org/plugins/image-focus)
