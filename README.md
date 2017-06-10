@@ -26,8 +26,7 @@ or if you make use of WPackagist
 
 ## Using Image Focus
 
-When you have installed and activated Image Focus you can start cropping your images.
-Whenever you upload an image to the media page of your website you can select your image and immediately start cropping.
+When you upload an image you can immediately start cropping. 
 
 ## Getting involved
 
