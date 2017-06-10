@@ -259,15 +259,22 @@
 					return false;
 				}
 
-				var position = {};
+				var mouse = {
+					x: event.pageX,
+					y: event.pageY
+				};
 
 				// Calculate FocusPoint coordinates based on the current mouse position, attachment offset and the click position within the focusInterface
-				position.x = event.pageX - base.attachment._offset.x - base.focusInterface._clickPosition.x;
-				position.y = event.pageY - base.attachment._offset.y - base.focusInterface._clickPosition.y;
+				var position = {};
+				var offset = base.attachment._offset;
+				var clickPosition = base.focusInterface._clickPosition;
+
+				position.x = mouse.x - offset.x - clickPosition.x;
+				position.y = mouse.y - offset.y - clickPosition.y;
 
 				// Make sure that the focus point does not break out of the attachment boundaries
-				position.x = helper.calculateMaxRange(position.x, 0, base.attachment._width);
-				position.y = helper.calculateMaxRange(position.y, 0, base.attachment._height);
+				position.x = helper.calc.maxRange(position.x, 0, base.attachment._width);
+				position.y = helper.calc.maxRange(position.y, 0, base.attachment._height);
 
 				// Convert position to percentages
 				var focusPoint = {};
@@ -325,16 +332,23 @@
 			 */
 			updateClickPosition: function (event, reset)
 			{
-				var x = 0;
-				var y = 0;
+				var axe = {
+					x: 0,
+					y: 0
+				};
 
 				if (reset !== true) {
-					x = event.pageX - base.focusInterface._offset.x;
-					y = event.pageY - base.focusInterface._offset.y;
+					var mouse = {
+						x: event.pageX,
+						y: event.pageY
+					};
+					var offset = base.focusInterface._offset;
+					axe = {};
+					axe.x = mouse.x - offset.x;
+					axe.y = mouse.y - offset.y;
 				}
 
-				base.focusInterface._clickPosition.x = x;
-				base.focusInterface._clickPosition.y = y;
+				base.focusInterface._clickPosition = axe;
 
 				return this;
 			},
@@ -351,15 +365,21 @@
 				base.focusInterface._height = base.focusInterface.$el.height();
 
 				// Calculate the radius in px of the focusInterface based on width
-				base.focusInterface._radius = base.focusInterface._width / 2;
+				var radius = base.focusInterface._width / 2;
+				base.focusInterface._radius = radius;
 
 				// Write offset based on the center point of the focusInterface
-				base.focusInterface._offset.x = base.focusInterface.$el.offset().left + base.focusInterface._radius;
-				base.focusInterface._offset.y = base.focusInterface.$el.offset().top + base.focusInterface._radius;
+				var offset = base.focusInterface.$el.offset();
+				base.focusInterface._offset = {
+					x: offset.left + radius,
+					y: offset.top + radius
+				};
 
 				// Write position based on the calculation position of focuspoint of the attachment
-				base.focusInterface._position.x = (base.attachment._focusPoint.x / 100) * base.attachment._width;
-				base.focusInterface._position.y = (base.attachment._focusPoint.y / 100) * base.attachment._height;
+				base.focusInterface._position = {
+					x: (base.attachment._focusPoint.x / 100) * base.attachment._width,
+					y: (base.attachment._focusPoint.y / 100) * base.attachment._height
+				};
 
 				return this;
 			},
@@ -455,17 +475,27 @@
 		//Helper functions
 		var helper = {};
 
-		helper.calculateMaxRange = function (input, min, max)
-		{
-			var output = input;
+		helper.calc = {
+			/**
+			 * Calculate the Max Range
+			 *
+			 * @param input
+			 * @param min
+			 * @param max
+			 * @returns {number}
+			 */
+			maxRange: function (input, min, max)
+			{
+				var output = input;
 
-			if (input < min) {
-				output = min;
-			} else if (input > max) {
-				output = max;
+				if (input < min) {
+					output = min;
+				} else if (input > max) {
+					output = max;
+				}
+
+				return output;
 			}
-
-			return output;
 		};
 	};
 
