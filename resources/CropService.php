@@ -12,7 +12,7 @@ class CropService
 {
     private $attachment = [];
     private $imageSizes = [];
-    private $focusPoint = [50, 50];
+    private $focusPoint = ['x' => 50, 'y' => 50];
 
     /**
      * Crop the image on base of the focus point

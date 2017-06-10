@@ -128,11 +128,20 @@
 						attachment: prepData
 					},
 					dataType: 'json'
-				}).done(function (data)
+				}).always(function (data)
 				{
 					// If we have database data use that
 					if (data.success === true) {
-						base.attachment._focusPoint = data.focusPoint;
+						try {
+							//Check if we received the correct object
+							if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
+								throw("Wrong object properties");
+							}
+
+							base.attachment._focusPoint = data.focusPoint;
+						} catch (error) {
+							console.log(error);
+						}
 					}
 
 					// Update dimension data
@@ -380,7 +389,7 @@
 					x: (base.attachment._focusPoint.x / 100) * base.attachment._width,
 					y: (base.attachment._focusPoint.y / 100) * base.attachment._height
 				};
-
+				
 				return this;
 			},
 
