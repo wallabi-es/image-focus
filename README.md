@@ -29,7 +29,7 @@ or if you make use of WPackagist
 Whenever you upload an image in the Media editor you can set a alternative focus point for that image. 
 To do that first you need to select an image and open it in the media editor.
 
-![Image Focus: default focus point](./assets/screenshot-1.png "Image Focus: default focus point" =300x)
+![Image Focus: default focus point](./assets/screenshot-1.png =250x "Image Focus: default focus point")
 
 
 ## Getting involved
