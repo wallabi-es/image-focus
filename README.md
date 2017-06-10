@@ -27,10 +27,18 @@ or if you make use of WPackagist
 ## Using Image Focus
 
 Whenever you upload an image in the Media editor you can set a alternative focus point for that image. 
-To do that first you need to select an image and open it in the media editor.
 
-![Image Focus: default focus point](./assets/screenshot-1.png =250x "Image Focus: default focus point")
+You first open an image in the media editor after which you'll find the image with the image focus overlay in it's default start.
 
+![Image Focus: default focus point](./assets/screenshot-1.png "Image Focus: default focus point")
+
+You can click and drag the focus point to anywhere on your image you find is most important. In our example these are the eyes.
+
+![Image Focus: drag & drop to our desired focus point](./assets/screenshot-2.png "Image Focus: drag & drop to our desire focus point")
+
+You can now view the result on your website. If it is not exactly how you want to it to be, you can of course edit the focus point.
+
+![Image Focus: Results](./assets/screenshot-3.png "Image Focus: Results")
 
 ## Getting involved
 
