@@ -26,7 +26,8 @@ or if you make use of WPackagist
 
 ## Using Image Focus
 
-When you upload an image you can immediately start cropping. 
+Whenever you upload an image in the Media editor you can set a alternative focus point for that image. To do that first you need to select an image
+
 
 ## Getting involved
 
