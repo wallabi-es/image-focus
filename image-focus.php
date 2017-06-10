@@ -2,7 +2,7 @@
 /*
 Plugin Name: Image Focus
 Plugin URI: https://github.com/dannyvanholten/image-focus
-Description: Crop your images precisely by setting a focuspoint.
+Description: Image Focus is an image crop plugin where you can crop your images by focal point.
 Version: 0.9
 Author: Danny van Holten, Harwin Borger
 Author URI: http://www.dannyvanholten.com/
