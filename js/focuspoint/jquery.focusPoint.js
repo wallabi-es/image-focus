@@ -128,11 +128,20 @@
 						attachment: prepData
 					},
 					dataType: 'json'
-				}).done(function (data)
+				}).always(function (data)
 				{
 					// If we have database data use that
 					if (data.success === true) {
-						base.attachment._focusPoint = data.focusPoint;
+						try {
+							//Check if we received the correct object
+							if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
+								throw("Wrong object properties");
+							}
+
+							base.attachment._focusPoint = data.focusPoint;
+						} catch (error) {
+							console.log(error);
+						}
 					}
 
 					// Update dimension data
@@ -194,15 +203,21 @@
 				$clickarea
 					.on('mousedown', function (event)
 					{
-						base.focusInterface
-							.startMove(event, true)
-							.move(event); //Request one move action
+						//On left mouse button
+						if (event.which === 1) {
+							base.focusInterface
+								.startMove(event, true)
+								.move(event); //Request one move action
+						}
 					});
 
 				base.focusInterface.$el
 					.on('mousedown', function (event)
 					{
-						base.focusInterface.startMove(event);
+						//On left mouse button
+						if (event.which === 1) {
+							base.focusInterface.startMove(event);
+						}
 					})
 					.on('mouseenter', function ()
 					{
@@ -214,12 +229,15 @@
 					});
 
 				$(window)
-					.on('mouseup', function ()
+					.on('mouseup', function (event)
 					{
-						base.focusInterface._state.move = false;
-						base.focusInterface._state.active = false;
+						//On left mouse click
+						if (event.which === 1) {
+							base.focusInterface._state.move = false;
+							base.focusInterface._state.active = false;
 
-						$imageFocus.removeClass('is-active');
+							$imageFocus.removeClass('is-active');
+						}
 					})
 					.on('mousemove', function (event)
 					{
@@ -290,7 +308,7 @@
 
 				return this;
 			},
-
+			
 			updateStyle: function ()
 			{
 				base.focusInterface.updateStylePosition();
