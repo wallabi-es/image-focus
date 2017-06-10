@@ -203,15 +203,21 @@
 				$clickarea
 					.on('mousedown', function (event)
 					{
-						base.focusInterface
-							.startMove(event, true)
-							.move(event); //Request one move action
+						//On left mouse button
+						if (event.which === 1) {
+							base.focusInterface
+								.startMove(event, true)
+								.move(event); //Request one move action
+						}
 					});
 
 				base.focusInterface.$el
 					.on('mousedown', function (event)
 					{
-						base.focusInterface.startMove(event);
+						//On left mouse button
+						if (event.which === 1) {
+							base.focusInterface.startMove(event);
+						}
 					})
 					.on('mouseenter', function ()
 					{
@@ -223,12 +229,15 @@
 					});
 
 				$(window)
-					.on('mouseup', function ()
+					.on('mouseup', function (event)
 					{
-						base.focusInterface._state.move = false;
-						base.focusInterface._state.active = false;
+						//On left mouse click
+						if (event.which === 1) {
+							base.focusInterface._state.move = false;
+							base.focusInterface._state.active = false;
 
-						$imageFocus.removeClass('is-active');
+							$imageFocus.removeClass('is-active');
+						}
 					})
 					.on('mousemove', function (event)
 					{
@@ -389,7 +398,7 @@
 					x: (base.attachment._focusPoint.x / 100) * base.attachment._width,
 					y: (base.attachment._focusPoint.y / 100) * base.attachment._height
 				};
-				
+
 				return this;
 			},
 
