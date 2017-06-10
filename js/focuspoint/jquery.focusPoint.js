@@ -308,7 +308,7 @@
 
 				return this;
 			},
-
+			
 			updateStyle: function ()
 			{
 				base.focusInterface.updateStylePosition();
