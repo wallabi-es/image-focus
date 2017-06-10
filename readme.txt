@@ -1,6 +1,6 @@
 === Image Focus ===
 Contributors: DannyvanHolten, HarwinBorger
-Donate link: http://www.dannyvanholten.com/
+Donate link: http://www.wallabi.es/
 Tags: gravityforms, gravity form, forms, form, acf, advanced custom fields, fields, custom fields
 Requires at least: 4.6
 Tested up to: 4.8
