@@ -12,6 +12,8 @@ Gruntfile.js export-ignore
 package.json export-ignore
 yarn.lock export-ignore
 
+bower.json export-ignore
+
 .gitignore export-ignore
 .gitattributes export-ignore
 .gitkeep export-ignore
@@ -21,6 +23,6 @@ README.md export-ignore
 CHANGELOG.md export-ignore
 
 .codeclimate.yml export-ignore
-.csslintrc
-.eslintignore
-.eslintrc.yml
+.csslintrc export-ignore
+.eslintignore export-ignore
+.eslintrc.yml export-ignore

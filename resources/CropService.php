@@ -2,11 +2,17 @@
 
 namespace ImageFocus;
 
+/**
+ * The class responsible for cropping the attachments
+ *
+ * Class CropService
+ * @package ImageFocus
+ */
 class CropService
 {
     private $attachment = [];
     private $imageSizes = [];
-    private $focusPoint = [];
+    private $focusPoint = [50, 50];
 
     /**
      * Crop the image on base of the focus point
@@ -42,8 +48,6 @@ class CropService
      */
     public function getImageSizes()
     {
-        global $_wp_additional_image_sizes;
-
         // Get all the default WordPress image Sizes
         foreach ((array)get_intermediate_image_sizes() as $imageSize) {
             if (in_array($imageSize, ['thumbnail', 'medium', 'medium_large', 'large'], true)
@@ -59,7 +63,7 @@ class CropService
         }
 
         // Get all the custom set image Sizes
-        foreach ((array)$_wp_additional_image_sizes as $key => $imageSize) {
+        foreach ((array)wp_get_additional_image_sizes() as $key => $imageSize) {
             if ($imageSize['crop']) {
                 $this->imageSizes[$key] = $imageSize;
                 $this->imageSizes[$key]['ratio'] = (float)$imageSize['width'] / $imageSize['height'];
@@ -98,7 +102,9 @@ class CropService
      */
     private function setFocusPoint($focusPoint)
     {
-        $this->focusPoint = $focusPoint;
+        if ($focusPoint) {
+            $this->focusPoint = $focusPoint;
+        }
 
         return $this;
     }
@@ -168,7 +174,7 @@ class CropService
      *
      * @param $imageSize
      * @param $imageFilePath
-     * @return array
+     * @return $this
      */
     private function cropImage($imageSize, $imageFilePath)
     {
@@ -223,5 +229,7 @@ class CropService
             false,
             $imageFilePath
         );
+
+        return $this;
     }
 }

@@ -30,3 +30,4 @@ exclude_paths:
 - node_modules/
 - bower_components/
 - vendor/
+- .idea/
