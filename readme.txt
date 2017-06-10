@@ -8,7 +8,7 @@ Stable tag: 0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Image Focus is an image crop plugin where you can crop your images by focal point.
+Crop images at lightspeed by adjusting focal points. Easier and faster than ever before!
 
 == Description ==
 
