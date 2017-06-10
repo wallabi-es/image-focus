@@ -10,12 +10,6 @@
 
 		display: inline-block;
 		overflow: hidden;
-
-		&:hover {
-			.image-focus__clickarea {
-				background: rgba(0, 0, 0, .3); //Transparent layer
-			}
-		}
 	}
 
 	&__clickarea {
@@ -26,6 +20,12 @@
 
 		width: 100%;
 		height: 100%;
+
+		transition: 800ms all; //No use of $curve-standard because of performance issues
+
+		&:hover {
+			background-color: rgba(#000, .1);
+		}
 	}
 
 	&__point {
@@ -38,7 +38,7 @@
 		width: 100px;
 		height: 100px;
 
-		border: 1px solid rgba(255, 255, 255, .5);
+		border: 1px solid rgba(#fff, .5);
 		border-radius: 50%;
 		background-repeat: no-repeat;
 
@@ -49,15 +49,6 @@
 		transform-style: preserve-3d; //Smooth movements
 		backface-visibility: hidden; //Smooth movements
 		will-change: left, top;
-		&:hover {
-			&::before {
-				width: 10px;
-				height: 10px;
-
-				border: 2px solid #fff;
-				background-color: #008ec2;
-			}
-		}
 
 		&::before {
 			content: '';
@@ -69,9 +60,41 @@
 			height: 10px;
 
 			border: 2px solid #fff;
+			background-color: rgba(#000, .5);
 			border-radius: 50%;
 
 			transform: translate(-50%, -50%);
+
+			transition: 200ms all $curve-standard;
+		}
+	}
+
+	/* STATE MODIFIER */
+	&.is-hover {
+		.image-focus {
+			&__point {
+				&::before {
+					background-color: #008ec2;
+				}
+			}
+
+			&__clickarea {
+				background-color: rgba(#000, .2); //Transparent layer
+			}
+		}
+	}
+
+	&.is-active {
+		.image-focus {
+			&__point {
+				&::before {
+					background-color: #f90;
+				}
+			}
+
+			&__clickarea {
+				background-color: rgba(#000, .4); //Transparent layer
+			}
 		}
 	}
 }
