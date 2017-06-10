@@ -176,13 +176,16 @@
 				y: 0
 			},
 			_state: {
-				move: false
+				move: false,
+				active: false,
+				hover: false
 			},
 
 			// Functions
 			init: function ()
 			{
 				base.focusInterface.$el = $('.' + cssClass.imageFocus._point);
+				var $imageFocus = $('.' + cssClass._imageFocus);
 
 				base.focusInterface.$el.on('mousedown', function (event)
 				{
@@ -196,15 +199,34 @@
 
 					//Highlight crop button
 					base.cropButton.highlight();
+					$imageFocus.addClass('is-active');
 
 					base.focusInterface._state.move = true;
+					base.focusInterface._state.active = true;
 				});
+
+				base.focusInterface.$el.on('mouseenter', function (event)
+				{
+					base.focusInterface._state.hover = true;
+
+					$imageFocus.addClass('is-hover');
+				});
+
+				base.focusInterface.$el.on('mouseleave', function (event)
+				{
+					base.focusInterface._state.hover = false;
+
+					$imageFocus.removeClass('is-hover');
+				});
+
 
 				$(window).on('mouseup', function ()
 				{
 					base.focusInterface._state.move = false;
-				});
+					base.focusInterface._state.active = false;
 
+					$imageFocus.removeClass('is-active');
+				});
 
 				$(window).on('mousemove', function (event)
 				{
@@ -375,15 +397,16 @@
 					base.cropButton.disable();
 					base.cropButton._ajaxState = true;
 				}
-			}).done(function (data)
+			}).always(function (data)
 				{
-					if (data.success === true) {
-						base.cropButton.$el.text('Done!');
-					}
-					else if (data.success === false) {
+					var message = 'Done';
+
+					if (data.success !== true) {
 						base.cropButton.activate();
-						base.cropButton.$el.text('Please try again');
+						message = 'Please try again';
 					}
+
+					base.cropButton.$el.text(message);
 
 					base.cropButton._ajaxState = false;
 				}
