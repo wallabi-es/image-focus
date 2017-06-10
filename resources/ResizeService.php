@@ -49,6 +49,8 @@ class ResizeService
                 }
             }
         }
+
+        return $sizes;
     }
 
     /**
