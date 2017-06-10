@@ -23,10 +23,6 @@ class CropService
      */
     public function crop($attachmentId, $focusPoint)
     {
-        if (current_user_can('upload_files') === false) {
-            return false;
-        }
-
         // Set all the cropping data
         $this->setCropData($attachmentId, $focusPoint);
         $this->cropAttachment();
