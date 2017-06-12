@@ -20,21 +20,19 @@ class ResizeService
      */
     private function addHooks()
     {
-        add_filter('intermediate_image_sizes_advanced', [$this, 'resizeAttachments'], 10, 2);
+        add_filter('wp_update_attachment_metadata', [$this, 'resizeAttachments'], 10, 2);
     }
 
     /**
-     * Catch the intermediate_image_sizes_advanced filter.
+     * Catch the wp_update_attachment_metadata filter.
      * And make sure all the resizing goes trough the ImageFocus crop service.
      *
-     * @param $sizes
-     * @param $metadata
+     * @param $data
+     * @param $attachmentId
+     * @return mixed
      */
-    public function resizeAttachments($sizes, $metadata)
+    public function resizeAttachments($data, $attachmentId)
     {
-        // The filter doesn't pass trough the attachment's ID. So we need to get it by url
-        $attachmentId = $this->getAttachmentIdByUrl($metadata['file']);
-
         // Get the focus point
         if ($attachmentId) {
             $focusPoint = get_post_meta($attachmentId, 'focus_point', true);
@@ -42,34 +40,8 @@ class ResizeService
             // Crop the attachment trough the crop service
             $crop = new CropService();
             $crop->crop($attachmentId, $focusPoint);
-
-            foreach ((array)$sizes as $size => $image) {
-                if ($image['crop'] === 1) {
-                    unset($sizes[$size]);
-                }
-            }
         }
 
-        return $sizes;
-    }
-
-    /**
-     * Get the attachment's ID by URL
-     *
-     * @param $file
-     * @return mixed
-     */
-    private function getAttachmentIdByUrl($file)
-    {
-        global $wpdb;
-        $attachment = $wpdb->get_col(
-            $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid='%s';", wp_upload_dir()['baseurl'] . '/' . $file)
-        );
-
-        if (empty($attachment[0])) {
-            return false;
-        }
-
-        return $attachment[0];
+        return $data;
     }
 }
