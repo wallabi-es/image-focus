@@ -149,14 +149,15 @@ class CropService
     private function getImageFilePath($imageSize)
     {
         // Get the path to the WordPress upload directory
-        $uploadDir = wp_upload_dir()['path'] . '/';
+        $uploadDir = wp_upload_dir()['basedir'] . '/';
 
         // Get the attachment name
-        $attachment = pathinfo($this->attachment['src'])['filename'];
+        $attachedFile = get_post_meta($this->attachment['id'], '_wp_attached_file', true);
+        $attachment = pathinfo($attachedFile)['filename'];
         $croppedAttachment = $attachment . '-' . $imageSize['width'] . 'x' . $imageSize['height'];
 
         // Add the image size to the the name of the attachment
-        $fileName = str_replace($attachment, $croppedAttachment, basename($this->attachment['src']));
+        $fileName = str_replace($attachment, $croppedAttachment, $attachedFile);
 
         return $uploadDir . $fileName;
     }
