@@ -24,7 +24,7 @@
 		transition: 800ms all; //No use of $curve-standard because of performance issues
 
 		&:hover {
-			background-color: rgba(0, 0, 0, .1);
+			background-color: rgba(#000, .1);
 		}
 	}
 

@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Image Focus
-Plugin URI: https://github.com/dannyvanholten/image-focus
-Description: Crop your images precisely by setting a focuspoint.
-Version: 0.1
-Author: Danny van Holten, Harwin Borger
-Author URI: http://www.dannyvanholten.com/
+Plugin URI: https://github.com/wallabi-es/image-focus
+Description: Image Focus is an image crop plugin where you can crop your images by focal point.
+Version: 0.9
+Author: Wallabi.es
+Author URI: http://www.wallabi.es/
 Copyright: Danny van Holten, Harwin Borger
 */
 
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 } // Exit if accessed directly
 
 // Define multiple necessary constants
-define('IMAGEFOCUS_VERSION', '0.1');
+define('IMAGEFOCUS_VERSION', '0.9');
 define('IMAGEFOCUS_TEXTDOMAIN', 'image-focus');
 define('IMAGEFOCUS_LANGUAGES', dirname(plugin_basename(__FILE__)) . '/languages/');
 

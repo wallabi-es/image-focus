@@ -5,7 +5,7 @@
     "Danny van Holten",
     "Harwin Borger"
   ],
-  "description": "Wordpress plugin to crop images",
+  "description": "Image Focus is an image crop plugin where you can crop your images by focal point.",
   "main": "",
   "license": "MIT",
   "private": true,
