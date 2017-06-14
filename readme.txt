@@ -1,7 +1,7 @@
 === Image Focus ===
 Contributors: DannyvanHolten, HarwinBorger
 Donate link: http://www.wallabi.es/
-Tags: gravityforms, gravity form, forms, form, acf, advanced custom fields, fields, custom fields
+Tags: image crop, image focus, images, crop, image editor, editor, media editor, cropping, focus point, focal point
 Requires at least: 4.6
 Tested up to: 4.8
 Stable tag: 0.9
