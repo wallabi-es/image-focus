@@ -23,6 +23,8 @@ class FocusPoint
         add_action('wp_ajax_initialize-crop', [$this, 'initializeCrop']);
         add_action('wp_ajax_get-focuspoint', [$this, 'getFocusPoint']);
         add_action('admin_enqueue_scripts', [$this, 'loadScripts']);
+        add_action("admin_footer", [$this, 'includeMustacheTemplates'], 100);
+
     }
 
     /**
@@ -30,11 +32,22 @@ class FocusPoint
      */
     public function loadScripts()
     {
-        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery']);
+//        wp_enqueue_media();
+        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint/bb.image-focus.js',
+            ['jquery', 'backbone']);
+//        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery', 'backbone']);
         wp_localize_script('focuspoint-js', 'focusPointL10n', $this->focusPointL10n());
         wp_enqueue_script('focuspoint-js');
 
         wp_enqueue_style('image-focus-css', IMAGEFOCUS_ASSETS . 'css/style.min.css');
+    }
+
+    /**
+     * Load all necessary mustache templates
+     */
+    public function includeMustacheTemplates()
+    {
+        print file_get_contents(IMAGEFOCUS_ASSETS . "js/focuspoint/templates/focuspoint.mustache");
     }
 
     /**
