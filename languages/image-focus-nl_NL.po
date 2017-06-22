@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: acf-gravityforms-addon\n"
-"POT-Creation-Date: 2017-06-22 21:36+0200\n"
-"PO-Revision-Date: 2017-06-22 21:36+0200\n"
+"POT-Creation-Date: 2017-06-22 21:45+0200\n"
+"PO-Revision-Date: 2017-06-22 21:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -21,13 +21,13 @@ msgid "Crop image"
 msgstr "Afbeelding bijsnijden"
 
 #: resources/FocusPoint.php:49
-msgid "Cropping ..."
-msgstr "Bijsnijden …"
+msgid "Cropping image ..."
+msgstr "Afbeelding aan het bijsnijden …."
 
 #: resources/FocusPoint.php:50
-msgid "Cropping done"
-msgstr "Bijsnijden voltooid"
+msgid "Image cropped"
+msgstr "Afbeelding bijgesneden"
 
 #: resources/FocusPoint.php:51
-msgid "Cropping failed. Please try again"
-msgstr "Bijsnijden mislukt. Probeer het opnieuw"
+msgid "Image crop failed. Please try again"
+msgstr "Afsnijden van de afbeelding is mislukt. Probeer het opnieuw"
