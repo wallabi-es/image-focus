@@ -19,7 +19,6 @@ class CropService
      *
      * @param $attachmentId
      * @param $focusPoint
-     * @return bool
      */
     public function crop($attachmentId, $focusPoint)
     {
@@ -132,11 +131,11 @@ class CropService
             }
 
             // Get the file path of the attachment and the delete the old image
-            $imageFilePath = $this->getImageFilePath($imageSize);
-            $this->removeOldImage($imageFilePath);
+            $imageFilePaths = $this->getImageFilePath($imageSize);
+            $this->removeOldImage($imageFilePaths);
 
             // Now execute the actual image crop
-            $this->cropImage($imageSize, $imageFilePath);
+            $this->cropImage($imageSize, $imageFilePaths);
         }
     }
 
@@ -158,19 +157,32 @@ class CropService
 
         // Add the image size to the the name of the attachment
         $fileName = str_replace($attachment, $croppedAttachment, $attachedFile);
+        $retinaFileName = str_replace($attachment, $croppedAttachment . '@2x', $attachedFile);
 
-        return $uploadDir . $fileName;
+        // Create an array with the image paths. This one is for the normal size image
+        $imageFilePaths = [
+            '1' => $uploadDir . $fileName,
+        ];
+
+        // Add the retina image if it exists (We're using 2 instead of @2x for multiplications)
+        if (file_exists($uploadDir . $retinaFileName)) {
+            $imageFilePaths['2'] = $uploadDir . $retinaFileName;
+        }
+
+        return $imageFilePaths;
     }
 
     /**
      * Remove the old attachment
      *
-     * @param $file
+     * @param $files
      */
-    private function removeOldImage($file)
+    private function removeOldImage($files)
     {
-        if (file_exists($file)) {
-            unlink($file);
+        foreach ((array)$files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
     }
 
@@ -178,10 +190,10 @@ class CropService
      * Calculate the all of the positions necessary to crop the image and crop it.
      *
      * @param $imageSize
-     * @param $imageFilePath
+     * @param $imageFilePaths
      * @return $this
      */
-    private function cropImage($imageSize, $imageFilePath)
+    private function cropImage($imageSize, $imageFilePaths)
     {
         // Gather all dimension
         $dimensions = ['x' => [], 'y' => []];
@@ -223,17 +235,20 @@ class CropService
             }
         }
 
-        // Excecute the WordPress image crop function
-        wp_crop_image($this->attachment['id'],
-            $dimensions['x']['start'],
-            $dimensions['y']['start'],
-            $dimensions['x']['end'] - $dimensions['x']['start'],
-            $dimensions['y']['end'] - $dimensions['y']['start'],
-            $imageSize['width'],
-            $imageSize['height'],
-            false,
-            $imageFilePath
-        );
+        // Loop trough all the image qualities (normal & retina)
+        foreach ($imageFilePaths as $retina => $imageFilePath) {
+            // Excecute the WordPress image crop function
+            wp_crop_image($this->attachment['id'],
+                $dimensions['x']['start'],
+                $dimensions['y']['start'],
+                $dimensions['x']['end'] - $dimensions['x']['start'],
+                $dimensions['y']['end'] - $dimensions['y']['start'],
+                $imageSize['width'] * (int)$retina,
+                $imageSize['height'] * (int)$retina,
+                false,
+                $imageFilePath
+            );
+        }
 
         return $this;
     }
