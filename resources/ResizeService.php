@@ -33,8 +33,10 @@ class ResizeService
      */
     public function resizeAttachments($data, $attachmentId)
     {
+        $metaData = get_post_meta($attachmentId, '_wp_attachment_metadata', true);
+
         // Get the focus point
-        if ($attachmentId) {
+        if (!empty($metaData)) {
             $focusPoint = get_post_meta($attachmentId, 'focus_point', true);
 
             // Crop the attachment trough the crop service
