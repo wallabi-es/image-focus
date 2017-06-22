@@ -46,6 +46,9 @@ class FocusPoint
     {
         return [
             'cropButton' => __('Crop image', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButtonProgress' => __('Cropping ...', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButtonSuccess' => __('Cropping done', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButtonFailed' => __('Cropping failed. Please try again', IMAGEFOCUS_TEXTDOMAIN),
         ];
     }
 
