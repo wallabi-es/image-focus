@@ -131,7 +131,7 @@ class CropService
             }
 
             // Get the file path of the attachment and the delete the old image
-            $imageFilePaths = $this->getImageFilePath($imageSize);
+            $imageFilePaths = $this->getImageFilePaths($imageSize);
             $this->removeOldImage($imageFilePaths);
 
             // Now execute the actual image crop
@@ -145,7 +145,7 @@ class CropService
      * @param $imageSize
      * @return mixed
      */
-    private function getImageFilePath($imageSize)
+    private function getImageFilePaths($imageSize)
     {
         // Get the path to the WordPress upload directory
         $uploadDir = wp_upload_dir()['basedir'] . '/';
