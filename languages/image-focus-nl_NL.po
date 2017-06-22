@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: acf-gravityforms-addon\n"
+"Project-Id-Version: imagef-focus\n"
 "POT-Creation-Date: 2017-06-22 21:45+0200\n"
 "PO-Revision-Date: 2017-06-22 21:46+0200\n"
 "Last-Translator: \n"
