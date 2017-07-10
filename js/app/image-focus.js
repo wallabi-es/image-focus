@@ -47,7 +47,8 @@
 		var focusInterfaceView = new IFA.Views.FocusInterface({
 			el: $thisObj.get(0),
 			$el: $thisObj,
-			model: focusInterface
+			model: focusInterface,
+			attachment: attachment
 		},{
 			$img : $detailsImage
 		});
