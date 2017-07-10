@@ -46,6 +46,7 @@
 			//Set events for rendering
 			this.render();
 			this.model.on("change", this.render, this);
+			this.attachment.on("change", this.render, this);
 
 			//Set extra events
 			this.$clickarea
@@ -70,11 +71,13 @@
 				})
 				.on('mouseenter', function ()
 				{
-					self.state.hover(true);
+					self.model._state.hover = false;
+					self.$imageFocus.toggleClass('is-hover', false); // @todo write function to listen to model._state.hover to toggleclass
 				})
 				.on('mouseleave', function ()
 				{
-					self.state.hover(false);
+					self.model._state.hover = false;
+					self.$imageFocus.toggleClass('is-hover', false); // @todo write function to listen to model._state.hover to toggleclass
 				});
 
 			$(window)
@@ -137,6 +140,7 @@
 				return false;
 			}
 
+
 			var mouse = {
 				x: event.pageX,
 				y: event.pageY
@@ -160,8 +164,8 @@
 			focusPoint.y = (position.y / this.attachment._height) * 100;
 
 			// Write local variables to global variables
-			this.attachment._focusPoint = focusPoint;
-			this.model._position = position;
+			this.attachment.set('_focusPoint', focusPoint);
+			this.model.set('_position', position);
 
 			// Update styling feedback
 			this.updateStyle();
@@ -179,6 +183,8 @@
 
 		updateStylePosition: function ()
 		{
+			console.log('updateStylePosition');
+
 			this.$el.css({
 				left: this.attachment._focusPoint.x + '%',
 				top: this.attachment._focusPoint.y + '%'
@@ -189,6 +195,7 @@
 
 		updateStyleBackground: function ()
 		{
+			console.log('updateStyleBackground');
 			var posX = 0 - (this.model._position.x - this.model._radius);
 			var posY = 0 - (this.model._position.y - this.model._radius);
 
@@ -260,14 +267,6 @@
 			};
 
 			return this;
-		},
-
-		state: {
-			hover: function (value)
-			{
-				this.model._state.hover = value;
-				this.$imageFocus.toggleClass('is-hover', value);
-			}
 		},
 
 		//Helper functions
