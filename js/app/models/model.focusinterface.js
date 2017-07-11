@@ -26,7 +26,12 @@
 		initialize: function ()
 		{
 			console.log('initialize focuspoint');
-		}
+		},
 
+		setPosition: function(attributes){
+			var position = this.get("position") || {};
+			_.extend(position, attributes);
+			this.set({'_position':position});
+		}
 	});
 })(jQuery, window);

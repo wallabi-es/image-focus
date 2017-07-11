@@ -44,8 +44,8 @@
 
 			//Set events for rendering
 			this.render();
-			//this.listenTo(this.model, 'change', this.render);
-			//this.listenTo(this.attachment, 'change:_focusPoint', this.render);
+			this.model.on('change:_position', this.updateFocusPoint, this);
+			this.attachment('change:_focusPoint', this.updateFocusPoint, this);
 
 		},
 
@@ -131,7 +131,7 @@
 				.on('resize', function ()
 				{
 					self.updateDimensionData()
-						.updateStyle();
+						.updateFocusPoint();
 				});
 		},
 
@@ -180,46 +180,32 @@
 			focusPoint.y = (position.y / this.attachment._height) * 100;
 
 			// Write local variables to global variables
-			this.attachment.set('_focusPoint', focusPoint);
-			this.model.set('_position', position);
-
-			// Update styling feedback
-			this.updateStyle();
+			this.attachment.setFocusPoint(focusPoint);
+			this.model.setPosition(position);
 
 			return this;
 		},
 
-		updateStyle: function ()
+		updateFocusPoint: function ()
 		{
-			this.updateStylePosition();
-			this.updateStyleBackground();
+			console.log('updateFocusPoint');
+			var focusPoint = this.attachment.get('_focusPoint');
+			var position = this.model.get('_position');
+			var radius = this.model.get('_radius');
+			console.log('radius');
 
-			return this;
-		},
+			var pos = {};
+			pos.x = 0 - (position.x - radius);
+			pos.y = 0 - (position.y - radius);
 
-		updateStylePosition: function ()
-		{
-			console.log('updateStylePosition');
-			console.log(this.attachment._focusPoint.x);
+			console.log(pos);
 
 			this.$focusPoint.css({
-				left: this.attachment._focusPoint.x + '%',
-				top: this.attachment._focusPoint.y + '%'
-			});
-			return this;
-		},
-
-		updateStyleBackground: function ()
-		{
-			console.log('updateStyleBackground');
-			var posX = 0 - (this.model._position.x - this.model._radius);
-			console.log(this.model._position.x + ' - ' + this.model._radius);
-			var posY = 0 - (this.model._position.y - this.model._radius);
-
-			this.$focusPoint.css({
+				left: focusPoint.x + '%',
+				top: focusPoint.y + '%',
 				backgroundImage: 'url("' + this.attachment._src + '")',
 				backgroundSize: this.attachment._width + 'px ' + this.attachment._height + 'px ',
-				backgroundPosition: posX + 'px ' + posY + 'px '
+				backgroundPosition: pos.x + 'px ' + pos.y + 'px '
 			});
 
 			return this;
@@ -268,7 +254,7 @@
 
 			// Calculate the radius in px of the focusInterface based on width
 			var radius = this.model._width / 2;
-			this.model._radius = radius;
+			this.model.set('_radius', radius);
 
 			// Write offset based on the center point of the focusInterface
 			var offset = this.$focusPoint.offset();

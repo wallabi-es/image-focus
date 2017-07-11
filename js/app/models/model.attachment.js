@@ -20,13 +20,16 @@
 
 		//Functions
 		initialize: function(options) {
-			console.log('init model attachment');
 			this.$el = options.$el;
 			this.$img = options.$img;
 			this._id = this.$el.data('id');
 			this._src = this.$img.attr('src');
+		},
 
-			console.log(this._id);
+		setFocusPoint: function(attributes){
+			var focusPoint = this.get("_focusPoint") || {};
+			_.extend(focusPoint, attributes);
+			this.set({'_focusPoint':focusPoint});
 		},
 
 		getStoredFocusPoint: function ()
@@ -57,7 +60,8 @@
 						}
 
 						//Store focuspoint and use 'set' for to trigger events
-						self.set('_focusPoint', data.focusPoint);
+//						self.set('_focusPoint', data.focusPoint);
+						self.setFocusPoint(data.focusPoint);
 					} catch (error) {
 						console.log(error);
 					}
