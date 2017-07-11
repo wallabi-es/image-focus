@@ -45,8 +45,9 @@
 			//Set events for rendering
 			this.render();
 			this.model.on('change:position', this.updateFocusPoint, this);
+			//Trigger after ajaxload
 			this.attachment.once('change:focusPoint', this.updateDimensionData, this);
-			this.attachment.on('change:focusPoint', this.updateFocusPoint, this); // @todo replace with event for ajaxLoad of data
+			this.attachment.once('change:focusPoint', this.updateFocusPoint, this);
 		},
 
 		events: {
