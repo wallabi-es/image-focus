@@ -60,8 +60,7 @@
 						}
 
 						//Store focuspoint and use 'set' for to trigger events
-//						self.set('_focusPoint', data.focusPoint);
-						self.setFocusPoint(data.focusPoint);
+						self.set({'_focusPoint':data.focusPoint});
 					} catch (error) {
 						console.log(error);
 					}

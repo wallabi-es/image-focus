@@ -45,8 +45,7 @@
 			//Set events for rendering
 			this.render();
 			this.model.on('change:_position', this.updateFocusPoint, this);
-			this.attachment('change:_focusPoint', this.updateFocusPoint, this);
-
+			this.attachment.on('change:_focusPoint', this.updateFocusPoint, this); // @todo replace with event for ajaxLoad of data
 		},
 
 		events: {
@@ -104,12 +103,12 @@
 				})
 				.on('mouseenter', function ()
 				{
-					self.model._state.hover = false;
-					self.$imageFocus.toggleClass('is-hover', false); // @todo write function to listen to model._state.hover to toggleclass
+					self.model.setState({'hover': true});
+					self.$imageFocus.toggleClass('is-hover', true); // @todo write function to listen to model._state.hover to toggleclass
 				})
 				.on('mouseleave', function ()
 				{
-					self.model._state.hover = false;
+					self.model.setState({'hover': false});
 					self.$imageFocus.toggleClass('is-hover', false); // @todo write function to listen to model._state.hover to toggleclass
 				});
 
@@ -118,8 +117,11 @@
 				{
 					//On left mouse click
 					if (event.which === 1) {
-						self.model._state.move = false;
-						self.model._state.active = false;
+
+						self.model.setState({
+							'move': false,
+							'active': false
+						});
 
 						self.$imageFocus.removeClass('is-active');
 					}
@@ -144,8 +146,10 @@
 			this.updateDimensionData()
 				.updateClickPosition(event, reset);
 
-			this.model._state.move = true;
-			this.model._state.active = true;
+			this.model.setState({
+				'move': true,
+				'active': true
+			});
 
 			return this;
 		},
@@ -153,7 +157,7 @@
 
 		move: function (event)
 		{
-			if (this.model._state.move === false) {
+			if (this.model.get('_state').move === false) {
 				return false;
 			}
 
@@ -180,25 +184,21 @@
 			focusPoint.y = (position.y / this.attachment._height) * 100;
 
 			// Write local variables to global variables
-			this.attachment.setFocusPoint(focusPoint);
-			this.model.setPosition(position);
+			this.attachment.set({'_focusPoint': focusPoint});
+			this.model.set({'_position': position});
 
 			return this;
 		},
 
 		updateFocusPoint: function ()
 		{
-			console.log('updateFocusPoint');
 			var focusPoint = this.attachment.get('_focusPoint');
 			var position = this.model.get('_position');
 			var radius = this.model.get('_radius');
-			console.log('radius');
 
 			var pos = {};
 			pos.x = 0 - (position.x - radius);
 			pos.y = 0 - (position.y - radius);
-
-			console.log(pos);
 
 			this.$focusPoint.css({
 				left: focusPoint.x + '%',

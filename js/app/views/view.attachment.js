@@ -17,7 +17,8 @@
 				self.updateDimensions();
 			});
 
-			this.model.on("change:_focusPoint", this.updateDimensions, this);
+			//Trigger once on focusPoint change, will probably be triggered on ajaxload
+			this.model.once("change:_focusPoint", this.updateDimensions, this);
 		},
 
 		updateDimensions: function ()
