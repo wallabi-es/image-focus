@@ -2,22 +2,22 @@
 {
 	IFA.Models.FocusInterface = Backbone.Model.extend({
 		defaults: {
-			_width: 0, // Values in pixels
-			_height: 0, // Values in pixels
-			_radius: 0, // Values in pixels
-			_offset: { // Center position of focusInterface relative to page, values in pixels
+			width: 0, // Values in pixels
+			height: 0, // Values in pixels
+			radius: 0, // Values in pixels
+			offset: { // Center position of focusInterface relative to page, values in pixels
 				x: 0,
 				y: 0
 			},
-			_position: { // Position relative to attachment, values in pixels
+			position: { // Position relative to attachment, values in pixels
 				x: 0,
 				y: 0
 			},
-			_clickPosition: { // Values in pixels
+			clickPosition: { // Values in pixels
 				x: 0,
 				y: 0
 			},
-			_state: {
+			state: {
 				init: false,
 				move: false,
 				active: false,
@@ -31,9 +31,9 @@
 		},
 
 		setState: function(attributes){
-			var state = this.get("_state") || {};
+			var state = this.get("state") || {};
 			_.extend(state, attributes);
-			this.set({'_state': state});
+			this.set({'state': state});
 		}
 	});
 })(jQuery, window);

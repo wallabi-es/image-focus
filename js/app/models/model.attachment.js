@@ -3,27 +3,31 @@
 	"use strict";
 
 	IFA.Models.Attachment = Backbone.Model.extend({
+		defaults: {
+			src: false,
+			id: false,
+			width: false,
+			height: false,
+			offset: {
+				x: false,
+				y: false
+			},
+			focusPoint: { // Written in percentage
+				x: 50,
+				y: 50
+			}
+		},
 		$el: false,
 		$img: false,
-		_src: false,
-		_id: false,
-		_width: false,
-		_height: false,
-		_offset: {
-			x: false,
-			y: false
-		},
-		_focusPoint: { // Written in percentage
-			x: 50,
-			y: 50
-		},
+
 
 		//Functions
-		initialize: function(options) {
+		initialize: function (options)
+		{
 			this.$el = options.$el;
 			this.$img = options.$img;
-			this._id = this.$el.data('id');
-			this._src = this.$img.attr('src');
+			this.set('id', this.$el.data('id'));
+			this.set('src', this.$img.attr('src'));
 		},
 
 		getStoredFocusPoint: function ()
@@ -32,7 +36,7 @@
 
 			var self = this;
 			var prepData = {
-				id: this._id
+				id: this.get('id')
 			};
 
 			$.ajax({
@@ -54,7 +58,7 @@
 						}
 
 						//Store focuspoint and use 'set' for to trigger events
-						self.set({'_focusPoint':data.focusPoint});
+						self.set({'focusPoint': data.focusPoint});
 					} catch (error) {
 						console.log(error);
 					}

@@ -18,7 +18,7 @@
 			});
 
 			//Trigger once on focusPoint change, will probably be triggered on ajaxload
-			this.model.once("change:_focusPoint", this.updateDimensions, this);
+			this.model.once("change:focusPoint", this.updateDimensions, this);
 		},
 
 		updateDimensions: function ()
@@ -31,9 +31,9 @@
 			};
 
 			this.model.set({
-				'_width' : $attachment.width(),
-				'_height' : $attachment.height(),
-				'_offset': offset
+				'width' : $attachment.width(),
+				'height' : $attachment.height(),
+				'offset': offset
 			});
 		},
 

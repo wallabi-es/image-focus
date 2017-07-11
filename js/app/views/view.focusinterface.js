@@ -44,9 +44,9 @@
 
 			//Set events for rendering
 			this.render();
-			this.model.on('change:_position', this.updateFocusPoint, this);
-			this.attachment.once('change:_focusPoint', this.updateDimensionData, this);
-			this.attachment.on('change:_focusPoint', this.updateFocusPoint, this); // @todo replace with event for ajaxLoad of data
+			this.model.on('change:position', this.updateFocusPoint, this);
+			this.attachment.once('change:focusPoint', this.updateDimensionData, this);
+			this.attachment.on('change:focusPoint', this.updateFocusPoint, this); // @todo replace with event for ajaxLoad of data
 		},
 
 		events: {
@@ -57,10 +57,12 @@
 		{
 			console.log('focusinterface view: render');
 			// Replace current image focus wrapper with new image focus wrapper
+			var focusPoint = this.attachment.get('focusPoint');
+
 			this.$container.html(this.template({
 				imageObject: this.imgHtml,
-				left: this.attachment._focusPoint.x,
-				top: this.attachment._focusPoint.y,
+				left: focusPoint.x,
+				top: focusPoint.y,
 				state: 'is-initialized'
 			}));
 
@@ -158,7 +160,7 @@
 
 		move: function (event)
 		{
-			if (this.model.get('_state').move === false) {
+			if (this.model.get('state').move === false) {
 				return false;
 			}
 
@@ -169,10 +171,10 @@
 
 			// Calculate FocusPoint coordinates based on the current mouse position, attachment offset and the click position within the focusInterface
 			var position = {};
-			var offset = this.attachment.get('_offset');
-			var clickPosition = this.model.get('_clickPosition');
-			var imageWidth = this.attachment.get('_width');
-			var imageHeight = this.attachment.get('_height');
+			var offset = this.attachment.get('offset');
+			var clickPosition = this.model.get('clickPosition');
+			var imageWidth = this.attachment.get('width');
+			var imageHeight = this.attachment.get('height');
 
 			position.x = mouse.x - offset.x - clickPosition.x;
 			position.y = mouse.y - offset.y - clickPosition.y;
@@ -187,19 +189,20 @@
 			focusPoint.y = (position.y / imageHeight) * 100;
 
 			// Write local variables to global variables
-			this.attachment.set({'_focusPoint': focusPoint});
-			this.model.set({'_position': position});
+			this.attachment.set({'focusPoint': focusPoint});
+			this.model.set({'position': position});
 
 			return this;
 		},
 
 		updateFocusPoint: function ()
 		{
-			var focusPoint = this.attachment.get('_focusPoint');
-			var position = this.model.get('_position');
-			var radius = this.model.get('_radius');
-			var imageWidth = this.attachment.get('_width');
-			var imageHeight = this.attachment.get('_height');
+			var focusPoint = this.attachment.get('focusPoint');
+			var position = this.model.get('position');
+			var radius = this.model.get('radius');
+			var imageWidth = this.attachment.get('width');
+			var imageHeight = this.attachment.get('height');
+			var src = this.attachment.get('src');
 
 			var pos = {};
 			pos.x = 0 - (position.x - radius);
@@ -208,7 +211,7 @@
 			this.$focusPoint.css({
 				left: focusPoint.x + '%',
 				top: focusPoint.y + '%',
-				backgroundImage: 'url("' + this.attachment._src + '")',
+				backgroundImage: 'url("' + src + '")',
 				backgroundSize: imageWidth + 'px ' + imageHeight + 'px ',
 				backgroundPosition: pos.x + 'px ' + pos.y + 'px '
 			});
@@ -235,13 +238,13 @@
 					x: event.pageX,
 					y: event.pageY
 				};
-				var offset = this.model.get('_offset');
+				var offset = this.model.get('offset');
 				axe = {};
 				axe.x = mouse.x - offset.x;
 				axe.y = mouse.y - offset.y;
 			}
 
-			this.model.set({'_clickPosition': axe});
+			this.model.set({'clickPosition': axe});
 
 			return this;
 		},
@@ -256,30 +259,30 @@
 			// @todo fix storing of variables
 
 			// Get width and height in pixels
-			this.model._width = this.$focusPoint.width();
-			this.model._height = this.$focusPoint.height();
+			this.model.width = this.$focusPoint.width();
+			this.model.height = this.$focusPoint.height();
 
 			// Calculate the radius in px of the focusInterface based on width
-			var radius = this.model._width / 2;
-			this.model.set('_radius', radius);
+			var radius = this.model.width / 2;
+			this.model.set('radius', radius);
 
 			// Write offset based on the center point of the focusInterface
 			var offset = this.$focusPoint.offset();
 			this.model.set({
-				'_offset': {
+				'offset': {
 					x: offset.left + radius,
 					y: offset.top + radius
 				}
 			});
 
-			var focusPoint = this.attachment.get('_focusPoint');
+			var focusPoint = this.attachment.get('focusPoint');
 			// Write position based on the calculation position of focuspoint of the attachment
 			var position = {
-				x: (focusPoint.x / 100) * this.attachment.get('_width'),
-				y: (focusPoint.y / 100) * this.attachment.get('_height')
+				x: (focusPoint.x / 100) * this.attachment.get('width'),
+				y: (focusPoint.y / 100) * this.attachment.get('height')
 			};
 
-			this.model.set({'_position': position});
+			this.model.set({'position': position});
 
 			return this;
 		},
