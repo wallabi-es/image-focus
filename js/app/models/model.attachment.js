@@ -26,12 +26,6 @@
 			this._src = this.$img.attr('src');
 		},
 
-		setFocusPoint: function(attributes){
-			var focusPoint = this.get("_focusPoint") || {};
-			_.extend(focusPoint, attributes);
-			this.set({'_focusPoint':focusPoint});
-		},
-
 		getStoredFocusPoint: function ()
 		{
 			console.log('getStoredFocusPoint');
@@ -65,18 +59,6 @@
 						console.log(error);
 					}
 				}
-
-//					// Update dimension data
-//					this.updateDimensionData();
-//
-//					// Move the focuspoint and show it
-//					this.focusInterface.updateStylePosition();
-//					this.focusInterface.$el.css({
-//						display: 'block'
-//					});
-//
-//					this.focusInterface.updateDimensionData();
-//					this.focusInterface.updateStyleBackground();
 			});
 		}
 	});

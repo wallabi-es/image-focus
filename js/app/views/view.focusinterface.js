@@ -72,10 +72,10 @@
 			this.$imageFocus = this.$container.find('.' + this.cssClass._imageFocus);
 			this.$clickarea = this.$container.find('.' + this.cssClass.imageFocus._clickarea);
 			this.$focusPoint = this.$container.find('.' + this.cssClass.imageFocus._point);
-			this.$img = this.$container.find('.' + this.cssClass.imageFocus._img);
+			this.attachment.$img = this.$img = this.$container.find('.' + this.cssClass.imageFocus._img);
 
 			//Rewrite img to attachment model
-			this.attachment.$img = this.$container.find('.' + this.cssClass.imageFocus._img);
+			this.attachment.$img = this.$img;
 		},
 
 		setEvents: function ()
@@ -168,20 +168,22 @@
 
 			// Calculate FocusPoint coordinates based on the current mouse position, attachment offset and the click position within the focusInterface
 			var position = {};
-			var offset = this.attachment._offset;
-			var clickPosition = this.model._clickPosition;
+			var offset = this.attachment.get('_offset');
+			var clickPosition = this.model.get('_clickPosition');
+			var imageWidth = this.attachment.get('_width');
+			var imageHeight = this.attachment.get('_height');
 
 			position.x = mouse.x - offset.x - clickPosition.x;
 			position.y = mouse.y - offset.y - clickPosition.y;
 
 			// Make sure that the focus point does not break out of the attachment boundaries
-			position.x = this.helper.calc.maxRange(position.x, 0, this.attachment._width);
-			position.y = this.helper.calc.maxRange(position.y, 0, this.attachment._height);
+			position.x = this.helper.calc.maxRange(position.x, 0, imageWidth);
+			position.y = this.helper.calc.maxRange(position.y, 0, imageHeight);
 
 			// Convert position to percentages
 			var focusPoint = {};
-			focusPoint.x = (position.x / this.attachment._width) * 100;
-			focusPoint.y = (position.y / this.attachment._height) * 100;
+			focusPoint.x = (position.x / imageWidth) * 100;
+			focusPoint.y = (position.y / imageHeight) * 100;
 
 			// Write local variables to global variables
 			this.attachment.set({'_focusPoint': focusPoint});
@@ -195,6 +197,8 @@
 			var focusPoint = this.attachment.get('_focusPoint');
 			var position = this.model.get('_position');
 			var radius = this.model.get('_radius');
+			var imageWidth = this.attachment.get('_width');
+			var imageHeight = this.attachment.get('_height');
 
 			var pos = {};
 			pos.x = 0 - (position.x - radius);
@@ -204,7 +208,7 @@
 				left: focusPoint.x + '%',
 				top: focusPoint.y + '%',
 				backgroundImage: 'url("' + this.attachment._src + '")',
-				backgroundSize: this.attachment._width + 'px ' + this.attachment._height + 'px ',
+				backgroundSize: imageWidth + 'px ' + imageHeight + 'px ',
 				backgroundPosition: pos.x + 'px ' + pos.y + 'px '
 			});
 
@@ -230,13 +234,13 @@
 					x: event.pageX,
 					y: event.pageY
 				};
-				var offset = this.model._offset;
+				var offset = this.model.get('_offset');
 				axe = {};
 				axe.x = mouse.x - offset.x;
 				axe.y = mouse.y - offset.y;
 			}
 
-			this.model._clickPosition = axe;
+			this.model.set({'_clickPosition': axe});
 
 			return this;
 		},
@@ -248,6 +252,8 @@
 		 */
 		updateDimensionData: function ()
 		{
+			// @todo fix storing of variables
+
 			// Get width and height in pixels
 			this.model._width = this.$focusPoint.width();
 			this.model._height = this.$focusPoint.height();
@@ -258,16 +264,21 @@
 
 			// Write offset based on the center point of the focusInterface
 			var offset = this.$focusPoint.offset();
-			this.model._offset = {
-				x: offset.left + radius,
-				y: offset.top + radius
+			this.model.set({
+				'_offset': {
+					x: offset.left + radius,
+					y: offset.top + radius
+				}
+			});
+
+			var focusPoint = this.attachment.get('_focusPoint');
+			// Write position based on the calculation position of focuspoint of the attachment
+			var position = {
+				x: (focusPoint.x / 100) * this.attachment.get('_width'),
+				y: (focusPoint.y / 100) * this.attachment.get('_height')
 			};
 
-			// Write position based on the calculation position of focuspoint of the attachment
-			this.model._position = {
-				x: (this.attachment._focusPoint.x / 100) * this.attachment._width,
-				y: (this.attachment._focusPoint.y / 100) * this.attachment._height
-			};
+			this.model.set({'_position': position});
 
 			return this;
 		},

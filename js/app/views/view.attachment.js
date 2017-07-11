@@ -25,10 +25,16 @@
 		{
 			console.log('attachment view: update dimensions');
 			var $attachment = this.model.$img;
-			this.model._width = $attachment.width();
-			this.model._height = $attachment.height();
-			this.model._offset.x = $attachment.offset().left;
-			this.model._offset.y = $attachment.offset().top;
+			var offset = {
+				x: $attachment.offset().left,
+				y: $attachment.offset().top
+			};
+
+			this.model.set({
+				'_width' : $attachment.width(),
+				'_height' : $attachment.height(),
+				'_offset': offset
+			});
 		},
 
 		render: function ()
