@@ -54,7 +54,6 @@
 		});
 
 		attachment.getStoredFocusPoint();
-		focusInterfaceView.render();
 
 		focusInterface.set('_state.init', true);
 	}

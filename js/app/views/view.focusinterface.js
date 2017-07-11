@@ -19,6 +19,7 @@
 		$imageFocus: false,
 		$container: false,
 		$clickarea: false,
+		$focusPoint: false,
 
 		initialize: function (properties, options)
 		{
@@ -40,15 +41,47 @@
 			// Replace the image with the template
 			this.$img.wrap('<div class="IFA-container"></div>');
 			this.$container = this.$el.find('.IFA-container');
-			this.$imageFocus = this.$el.find('.' + this.cssClass._imageFocus);
-			this.$clickarea = this.$el.find('.' + this.cssClass.imageFocus._clickarea);
 
 			//Set events for rendering
 			this.render();
-			this.model.on("change", this.render, this);
-			this.attachment.on("change", this.render, this);
+			//this.listenTo(this.model, 'change', this.render);
+			//this.listenTo(this.attachment, 'change:_focusPoint', this.render);
 
-			//Set extra events
+		},
+
+		events: {
+			// @todo move events to this section
+		},
+
+		render: function ()
+		{
+			console.log('focusinterface view: render');
+			// Replace current image focus wrapper with new image focus wrapper
+			this.$container.html(this.template({
+				imageObject: this.imgHtml,
+				left: this.attachment._focusPoint.x,
+				top: this.attachment._focusPoint.y,
+				state: 'is-initialized'
+			}));
+
+			this.setElements();
+			this.setEvents();
+		},
+
+		setElements: function ()
+		{
+			this.$imageFocus = this.$container.find('.' + this.cssClass._imageFocus);
+			this.$clickarea = this.$container.find('.' + this.cssClass.imageFocus._clickarea);
+			this.$focusPoint = this.$container.find('.' + this.cssClass.imageFocus._point);
+			this.$img = this.$container.find('.' + this.cssClass.imageFocus._img);
+
+			//Rewrite img to attachment model
+			this.attachment.$img = this.$container.find('.' + this.cssClass.imageFocus._img);
+		},
+
+		setEvents: function ()
+		{
+			var self = this;
 			this.$clickarea
 				.on('mousedown', function (event)
 				{
@@ -60,7 +93,7 @@
 					}
 				});
 
-			this.$el
+			this.$focusPoint
 				.on('mousedown', function (event)
 				{
 					console.log('interface mousedown');
@@ -102,22 +135,6 @@
 				});
 		},
 
-		events: {
-			// @todo move events to this section
-		},
-
-		render: function ()
-		{
-			console.log('focusinterface view: render');
-			// Replace current image focus wrapper with new image focus wrapper
-			this.$container.html(this.template({
-				imageObject: this.imgHtml,
-				left: this.attachment._focusPoint.x,
-				top: this.attachment._focusPoint.y,
-				state: 'is-initialized'
-			}));
-		},
-
 		startMove: function (event, reset)
 		{
 			//Set current dimension data in case position and size of image are changed because of content changes
@@ -139,7 +156,6 @@
 			if (this.model._state.move === false) {
 				return false;
 			}
-
 
 			var mouse = {
 				x: event.pageX,
@@ -184,12 +200,12 @@
 		updateStylePosition: function ()
 		{
 			console.log('updateStylePosition');
+			console.log(this.attachment._focusPoint.x);
 
-			this.$el.css({
+			this.$focusPoint.css({
 				left: this.attachment._focusPoint.x + '%',
 				top: this.attachment._focusPoint.y + '%'
 			});
-
 			return this;
 		},
 
@@ -197,10 +213,11 @@
 		{
 			console.log('updateStyleBackground');
 			var posX = 0 - (this.model._position.x - this.model._radius);
+			console.log(this.model._position.x + ' - ' + this.model._radius);
 			var posY = 0 - (this.model._position.y - this.model._radius);
 
-			this.$el.css({
-				backgroundImage: 'url("' + this.attachment.$el.attr('src') + '")',
+			this.$focusPoint.css({
+				backgroundImage: 'url("' + this.attachment._src + '")',
 				backgroundSize: this.attachment._width + 'px ' + this.attachment._height + 'px ',
 				backgroundPosition: posX + 'px ' + posY + 'px '
 			});
@@ -246,15 +263,15 @@
 		updateDimensionData: function ()
 		{
 			// Get width and height in pixels
-			this.model._width = this.$el.width();
-			this.model._height = this.$el.height();
+			this.model._width = this.$focusPoint.width();
+			this.model._height = this.$focusPoint.height();
 
 			// Calculate the radius in px of the focusInterface based on width
 			var radius = this.model._width / 2;
 			this.model._radius = radius;
 
 			// Write offset based on the center point of the focusInterface
-			var offset = this.$el.offset();
+			var offset = this.$focusPoint.offset();
 			this.model._offset = {
 				x: offset.left + radius,
 				y: offset.top + radius

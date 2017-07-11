@@ -5,6 +5,7 @@
 	IFA.Models.Attachment = Backbone.Model.extend({
 		$el: false,
 		$img: false,
+		_src: false,
 		_id: false,
 		_width: false,
 		_height: false,
@@ -23,6 +24,7 @@
 			this.$el = options.$el;
 			this.$img = options.$img;
 			this._id = this.$el.data('id');
+			this._src = this.$img.attr('src');
 
 			console.log(this._id);
 		},
