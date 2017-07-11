@@ -45,6 +45,7 @@
 			//Set events for rendering
 			this.render();
 			this.model.on('change:_position', this.updateFocusPoint, this);
+			this.attachment.once('change:_focusPoint', this.updateDimensionData, this);
 			this.attachment.on('change:_focusPoint', this.updateFocusPoint, this); // @todo replace with event for ajaxLoad of data
 		},
 
@@ -84,7 +85,6 @@
 			this.$clickarea
 				.on('mousedown', function (event)
 				{
-					console.log('click area mousedown');
 					//On left mouse button
 					if (event.which === 1) {
 						self.startMove(event, true)
@@ -95,7 +95,6 @@
 			this.$focusPoint
 				.on('mousedown', function (event)
 				{
-					console.log('interface mousedown');
 					//On left mouse button
 					if (event.which === 1) {
 						self.startMove(event);
@@ -145,6 +144,8 @@
 			//Calculate FocusPoint coordinates
 			this.updateDimensionData()
 				.updateClickPosition(event, reset);
+
+			this.$imageFocus.addClass('is-active');
 
 			this.model.setState({
 				'move': true,
