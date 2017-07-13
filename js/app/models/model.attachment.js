@@ -4,6 +4,7 @@
 
 	IFA.Models.Attachment = Backbone.Model.extend({
 		url: ajaxurl,
+		apiArgs: ['action', 'attachment'],
 
 		defaults: {
 			src: false,
@@ -19,8 +20,8 @@
 				y: 50
 			}
 		},
-		$el: false,
-		$img: false,
+		$el: false, // @todo place $el in view instead of model
+		$img: false, // @todo place $img in view instead model
 
 
 		//Functions

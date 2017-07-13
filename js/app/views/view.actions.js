@@ -39,10 +39,13 @@
 					focusPoint: self.model.get('focusPoint')
 				};
 
-				self.model.updateFocusPoint(data,{
-					succes: function(data){
+				self.model.updateFocusPoint(data);
 
-					}
+				self.model.save({
+					action: 'initialize-crop',
+					attachment: data
+				},{
+					type: 'POST'
 				});
 			});
 		},
