@@ -64,6 +64,50 @@
 					}
 				}
 			});
+		},
+
+		updateFocusPoint: function(){
+			console.log('updateFocusPoint');
+			var self = this;
+			var prepData = {
+				id: this.get('id'),
+				focusPoint: this.get('focusPoint')
+			};
+
+			console.log(prepData);
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'initialize-crop',
+					attachment: prepData
+				},
+				dataType: 'json',
+				beforeSend: function ()
+				{
+//					if (self.ajaxState === true) {
+//						return false;
+//					}
+//
+//					self.$cropButton.text('Cropping...');
+//					self.disable();
+//					self.ajaxState = true;
+				}
+			}).always(function (data)
+				{
+//					var message = 'Done';
+//
+//					if (data.success !== true) {
+//						this.activate();
+//						message = 'Please try again';
+//					}
+//
+//					this.$cropButton.text(message);
+//
+//					this.ajaxState = false;
+				}
+			);
 		}
 	});
 })(jQuery, window);

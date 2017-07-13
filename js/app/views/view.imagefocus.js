@@ -26,36 +26,43 @@
 		},
 
 		startApplication: function($object){
+			// Prepare container
 			var $detailsImage = $object.find('.details-image');
 			$object.addClass('IFA-initialized');
 
+			// Initialize attachment model
 			var attachment = new IFA.Models.Attachment({
 				$el: $object,
 				$img: $detailsImage
 			});
 
+			// Initialize attachment view
 			var attachmentView = new IFA.Views.Attachment({
 				model: attachment
 			});
 
+			// Initialize Focus Point model
 			var focusInterface = new IFA.Models.FocusInterface({});
 
+			// Initialize Focus point view
 			var focusInterfaceView = new IFA.Views.FocusInterface({
-				el: $object.get(0),
-				$el: $object,
+				el: $object,
 				model: focusInterface,
 				attachment: attachment
 			},{
 				$img : $detailsImage
 			});
 
+			// Add cropbutton
+			var actions = new IFA.Views.Actions({
+				el: $object.find('.attachment-actions'),
+				model: attachment
+			});
+
+			// Synchronize stored Focus Point
 			attachment.getStoredFocusPoint();
 
-			focusInterface.set('_state.init', true);
-		},
-
-		testApp: function(){
-			alert('image opened');
+			focusInterface.set('state.init', true);
 		}
 	});
 
