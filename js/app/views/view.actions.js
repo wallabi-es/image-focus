@@ -33,7 +33,18 @@
 			this.$cropButton = $('.' + this.cssClass.imageFocus._button);
 
 			//Set action to button for ajax call
-			console.log(this.model);
+			this.$cropButton.on('click', function(){
+				var data = {
+					id: self.model.get('id'),
+					focusPoint: self.model.get('focusPoint')
+				};
+
+				self.model.updateFocusPoint(data,{
+					succes: function(data){
+
+					}
+				});
+			});
 		},
 
 		highlight: function ()

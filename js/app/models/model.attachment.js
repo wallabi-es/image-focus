@@ -3,6 +3,8 @@
 	"use strict";
 
 	IFA.Models.Attachment = Backbone.Model.extend({
+		url: ajaxurl,
+
 		defaults: {
 			src: false,
 			id: false,
@@ -30,6 +32,9 @@
 			this.set('src', this.$img.attr('src'));
 		},
 
+		/**
+		 * @todo replace with backbone fetch function
+		 */
 		getStoredFocusPoint: function ()
 		{
 			console.log('getStoredFocusPoint');
@@ -66,22 +71,19 @@
 			});
 		},
 
-		updateFocusPoint: function(){
-			console.log('updateFocusPoint');
-			var self = this;
-			var prepData = {
-				id: this.get('id'),
-				focusPoint: this.get('focusPoint')
-			};
-
-			console.log(prepData);
+		/**
+		 *
+		 * @todo replace with backbone sync function
+		 * @param data
+		 */
+		updateFocusPoint: function(data){
 
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
 				data: {
 					action: 'initialize-crop',
-					attachment: prepData
+					attachment: data
 				},
 				dataType: 'json',
 				beforeSend: function ()
