@@ -29,7 +29,11 @@
 		{
 			this.$el = options.$el;
 			this.$img = options.$img;
-			this.set('id', this.$el.data('id'));
+
+			var id = this.$el.data('id');
+
+			this.id = id;
+			this.set('id', id);
 			this.set('src', this.$img.attr('src'));
 		},
 
@@ -44,6 +48,18 @@
 			var prepData = {
 				id: this.get('id')
 			};
+//
+//			this.fetch({
+//				url: ajaxurl+'?action=get-focuspoint',
+//				success: function (collection, response, options) {
+//					// you can pass additional options to the event you trigger here as well
+//					console.log(response);
+//				},
+//				error: function (collection, response, options) {
+//					// you can pass additional options to the event you trigger here as well
+//					console.log(response);
+//				}
+//			});
 
 			$.ajax({
 				type: 'POST',
@@ -71,46 +87,5 @@
 				}
 			});
 		},
-
-		/**
-		 *
-		 * @todo replace with backbone sync function
-		 * @param data
-		 */
-		updateFocusPoint: function(data){
-
-			$.ajax({
-				type: 'POST',
-				url: ajaxurl,
-				data: {
-					action: 'initialize-crop',
-					attachment: data
-				},
-				dataType: 'json',
-				beforeSend: function ()
-				{
-//					if (self.ajaxState === true) {
-//						return false;
-//					}
-//
-//					self.$cropButton.text('Cropping...');
-//					self.disable();
-//					self.ajaxState = true;
-				}
-			}).always(function (data)
-				{
-//					var message = 'Done';
-//
-//					if (data.success !== true) {
-//						this.activate();
-//						message = 'Please try again';
-//					}
-//
-//					this.$cropButton.text(message);
-//
-//					this.ajaxState = false;
-				}
-			);
-		}
 	});
 })(jQuery, window);

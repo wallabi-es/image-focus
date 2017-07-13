@@ -34,18 +34,8 @@
 
 			//Set action to button for ajax call
 			this.$cropButton.on('click', function(){
-				var data = {
-					id: self.model.get('id'),
-					focusPoint: self.model.get('focusPoint')
-				};
-
-				self.model.updateFocusPoint(data);
-
-				self.model.save({
-					action: 'initialize-crop',
-					attachment: data
-				},{
-					type: 'POST'
+				self.model.save({},{
+					url: ajaxurl+'?action=initialize-crop'
 				});
 			});
 		},

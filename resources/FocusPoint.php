@@ -93,7 +93,7 @@ class FocusPoint
     public function initializeCrop()
     {
         // Get $_POST['attachment']
-        $attachment = getGlobalPostData('attachment');
+        $attachment = json_decode(file_get_contents('php://input'), true);
 
         $die = json_encode(['success' => false]);
 
