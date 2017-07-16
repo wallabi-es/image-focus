@@ -105,7 +105,13 @@ class FocusPoint
             $crop = new CropService();
             $crop->crop($attachment['id'], $attachment['focusPoint']);
 
-            $die = json_encode(['success' => true]);
+            // Retrieve current saved focusPoint
+            $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
+
+            $die = json_encode([
+                'success' => true,
+                'focusPoint' => $attachment['focusPoint'],
+            ]);
         }
 
         // Return the ajax call

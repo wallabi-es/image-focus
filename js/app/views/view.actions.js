@@ -33,11 +33,48 @@
 			this.$cropButton = $('.' + this.cssClass.imageFocus._button);
 
 			//Set action to button for ajax call
-			this.$cropButton.on('click', function(){
-				self.model.save({},{
-					url: ajaxurl+'?action=initialize-crop'
+			this.$cropButton.on('click', function ()
+			{
+				self.model.save({}, {
+					url: ajaxurl + '?action=initialize-crop',
+					success: function (collection, data, options)
+					{
+						// you can pass additional options to the event you trigger here as well
+						// If we have data use that
+						if (data.success === true) {
+							try {
+								//Check if we received the correct object
+								if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
+									throw("Wrong object properties");
+								}
+
+								//Store focuspoint and use 'set' for to trigger events
+								self.model.set({'focusPointOrigin': data.focusPoint});
+							} catch (error) {
+								console.log(error);
+							}
+						}
+					},
+					error: function (collection, response, options)
+					{
+						// you can pass additional options to the event you trigger here as well
+						console.log(response);
+					}
 				});
 			});
+
+			this.model.on('change:focusPointDiffers', this.handler, this);
+		},
+
+		handler: function ()
+		{
+			var focusPointDiffers = this.model.get('focusPointDiffers');
+
+			if (focusPointDiffers === true) {
+				this.highlight();
+			}else{
+				this.disable();
+			}
 		},
 
 		highlight: function ()
@@ -58,9 +95,9 @@
 		disable: function ()
 		{
 			this.$cropButton
-				.removeClass(cssClass.button._primary)
-				.addClass(cssClass.button._disabled);
-		},
+				.removeClass(this.cssClass.button._primary)
+				.addClass(this.cssClass.button._disabled);
+		}
 	});
 
 })(jQuery, window);

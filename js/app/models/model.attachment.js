@@ -10,16 +10,21 @@
 
 		defaults: {
 			src: false,
-			width: false,
-			height: false,
+			width: false, //Numeric
+			height: false, //Numeric
 			offset: {
 				x: false,
 				y: false
 			},
-			focusPoint: { // Written in percentage
+			focusPointOrigin: { // Numeric Written in percentage
+				x: false,
+				y: false
+			},
+			focusPoint: { // Numeric Written in percentage
 				x: 50,
 				y: 50
-			}
+			},
+			focusPointDiffers: false // True of False
 		},
 		$img: false, // @todo place $img in view instead model
 
@@ -27,9 +32,16 @@
 		//Functions
 		initialize: function (options)
 		{
-			this.$img = options.$img;
+			var self = this;
+			this.$img = options.$img; // @todo place $img in view instead model
 
 			this.fetchAttachmentData();
+
+			// Events
+			this.on('change:focusPointOrigin', function ()
+			{
+				self.hasChanged(true);
+			}, this);
 		},
 
 		fetchAttachmentData: function ()
@@ -52,6 +64,7 @@
 
 							//Store focuspoint and use 'set' for to trigger events
 							self.set({'src': data.src});
+							self.set({'focusPointOrigin': data.focusPoint});
 							self.set({'focusPoint': data.focusPoint});
 						} catch (error) {
 							console.log(error);
@@ -64,6 +77,32 @@
 					console.log(response);
 				}
 			});
+		},
+
+		hasChanged: function (origin)
+		{
+			var self = this;
+			var focusPointOrigin = this.get('focusPointOrigin');
+			var focusPoint = this.get('focusPoint');
+			var focusPointDiffers = false;
+
+			if (focusPointOrigin.x !== focusPoint.x) {
+				focusPointDiffers = true;
+			}
+
+			if (focusPointOrigin.y !== focusPoint.y) {
+				focusPointDiffers = true;
+			}
+
+			this.set('focusPointDiffers', focusPointDiffers);
+
+			// If not focusPoint is not changed or focusPointOrigin is changed than try to recall hasChanged function
+			if (origin === true || focusPointDiffers === false) {
+				this.once('change:focusPoint', function ()
+				{
+					self.hasChanged(false);
+				}, this);
+			}
 		}
 	});
 })(jQuery, window);
