@@ -32,7 +32,7 @@
 
 			// Initialize attachment model
 			var attachment = new IFA.Models.Attachment({
-				$el: $object,
+				id: $object.data('id'),
 				$img: $detailsImage
 			});
 
@@ -58,9 +58,6 @@
 				el: $object.find('.attachment-actions'),
 				model: attachment
 			});
-
-			// Synchronize stored Focus Point
-			attachment.getStoredFocusPoint();
 
 			focusInterface.set('state.init', true);
 		}

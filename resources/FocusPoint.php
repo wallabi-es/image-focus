@@ -68,10 +68,12 @@ class FocusPoint
     public function getFocusPoint()
     {
         // Get $_POST['attachment']
-        $attachment = getGlobalPostData('attachment');
+        $attachment = [];
+        $attachment['id'] = $_GET['id']; //@todo secure data
 
         // Get the post meta
         $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
+        $attachment['src'] = wp_get_attachment_url($attachment['id']);
 
         $die = json_encode(['success' => false]);
 
@@ -79,7 +81,8 @@ class FocusPoint
         if (null !== $attachment['id'] || is_array($attachment['focusPoint'])) {
             $die = json_encode([
                 'success'    => true,
-                'focusPoint' => $attachment['focusPoint']
+                'focusPoint' => $attachment['focusPoint'],
+                'src' => $attachment['src']
             ]);
         }
 
