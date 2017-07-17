@@ -470,17 +470,17 @@
 						return false;
 					}
 
-					base.cropButton.$el.text('Cropping...');
+					base.cropButton.$el.text(focusPointL10n.cropButtonProgress);
 					base.cropButton.disable();
 					base.cropButton._ajaxState = true;
 				}
 			}).always(function (data)
 				{
-					var message = 'Done';
+					var message = focusPointL10n.cropButtonSuccess;
 
 					if (data.success !== true) {
 						base.cropButton.activate();
-						message = 'Please try again';
+						message = focusPointL10n.cropButtonFailed;
 					}
 
 					base.cropButton.$el.text(message);

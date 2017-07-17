@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: acf-gravityforms-addon\n"
-"POT-Creation-Date: 2017-06-02 01:29+0200\n"
-"PO-Revision-Date: 2017-06-02 01:29+0200\n"
+"Project-Id-Version: image-focus\n"
+"POT-Creation-Date: 2017-06-22 22:14+0200\n"
+"PO-Revision-Date: 2017-06-22 22:14+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -16,6 +16,18 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: resources\n"
 
-#: resources/FocusPoint.php:41
+#: resources/FocusPoint.php:48
 msgid "Crop image"
 msgstr "Afbeelding bijsnijden"
+
+#: resources/FocusPoint.php:49
+msgid "Cropping image ..."
+msgstr "Afbeelding aan het bijsnijden …"
+
+#: resources/FocusPoint.php:50
+msgid "Image cropped"
+msgstr "Afbeelding bijgesneden"
+
+#: resources/FocusPoint.php:51
+msgid "Image crop failed"
+msgstr "Bijsnijden mislukt"
