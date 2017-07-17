@@ -6,31 +6,16 @@
 		defaults: {
 			ajaxState: false
 		},
-		cssClass: {
-			_imageFocus: 'image-focus',
-			imageFocus: {
-				_wrapper: 'image-focus__wrapper',
-				_img: 'image-focus__img',
-				_point: 'image-focus__point',
-				_clickarea: 'image-focus__clickarea',
-				_button: 'image-focus__button'
-			},
-			_button: 'button',
-			button: {
-				_primary: 'button-primary',
-				_disabled: 'button-disabled'
-			}
-		},
 		$cropButton: false,
 
 
 		initialize: function (properties, options)
 		{
 			var self = this;
-			var cropButton = '<button type="button" class="' + this.cssClass._button + ' ' + this.cssClass.button._disabled + ' crop-attachment ' + this.cssClass.imageFocus._button + '">' + focusPointL10n.cropButton + '</button>';
+			var cropButton = '<button type="button" class="' + IFA.css._button + ' ' + IFA.css.button._disabled + ' crop-attachment ' + IFA.css.imageFocus._button + '">' + focusPointL10n.cropButton + '</button>';
 			this.$el.append(cropButton);
 
-			this.$cropButton = $('.' + this.cssClass.imageFocus._button);
+			this.$cropButton = $('.' + IFA.css.imageFocus._button);
 
 			//Set action to button for ajax call
 			this.$cropButton.on('click', function ()
@@ -113,23 +98,23 @@
 		highlight: function ()
 		{
 			this.$cropButton
-				.removeClass(this.cssClass.button._disabled)
-				.addClass(this.cssClass.button._primary)
+				.removeClass(IFA.css.button._disabled)
+				.addClass(IFA.css.button._primary)
 				.text(focusPointL10n.cropButton);
 		},
 
 		activate: function ()
 		{
 			this.$cropButton
-				.removeClass(this.cssClass.button._disabled)
-				.removeClass(this.cssClass.button._primary);
+				.removeClass(IFA.css.button._disabled)
+				.removeClass(IFA.css.button._primary);
 		},
 
 		disable: function ()
 		{
 			this.$cropButton
-				.removeClass(this.cssClass.button._primary)
-				.addClass(this.cssClass.button._disabled);
+				.removeClass(IFA.css.button._primary)
+				.addClass(IFA.css.button._disabled);
 		}
 	});
 

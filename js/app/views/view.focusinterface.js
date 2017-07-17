@@ -33,7 +33,7 @@
 
 			// Add image focus class to image
 			this.$img = options.$img;
-			this.$img.addClass(this.cssClass.imageFocus._img);
+			this.$img.addClass(IFA.css.imageFocus._img);
 
 			// Save the html of the image into a variable
 			this.imgHtml = this.$img.get(0).outerHTML;
@@ -73,10 +73,10 @@
 
 		setElements: function ()
 		{
-			this.$imageFocus = this.$container.find('.' + this.cssClass._imageFocus);
-			this.$clickarea = this.$container.find('.' + this.cssClass.imageFocus._clickarea);
-			this.$focusPoint = this.$container.find('.' + this.cssClass.imageFocus._point);
-			this.attachment.$img = this.$img = this.$container.find('.' + this.cssClass.imageFocus._img);
+			this.$imageFocus = this.$container.find('.' + IFA.css._imageFocus);
+			this.$clickarea = this.$container.find('.' + IFA.css.imageFocus._clickarea);
+			this.$focusPoint = this.$container.find('.' + IFA.css.imageFocus._point);
+			this.attachment.$img = this.$img = this.$container.find('.' + IFA.css.imageFocus._img);
 
 			//Rewrite img to attachment model
 			this.attachment.$img = this.$img;
