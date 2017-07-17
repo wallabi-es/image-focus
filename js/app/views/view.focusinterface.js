@@ -316,4 +316,4 @@
 
 	});
 
-})(jQuery, window);
+}(jQuery, window));

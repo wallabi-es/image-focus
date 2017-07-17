@@ -36,4 +36,4 @@
 			this.set({'state': state});
 		}
 	});
-})(jQuery, window);
+}(jQuery, window));
