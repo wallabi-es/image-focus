@@ -41,8 +41,10 @@
 			// Events
 			this.on('change:focusPointOrigin', function ()
 			{
-				self.hasChanged(true);
+				self.setDifferState(true);
 			}, this);
+
+			this.on('change:differState', this.resetAjaxState, this);
 		},
 
 		fetchAttachmentData: function ()
@@ -80,7 +82,7 @@
 			});
 		},
 
-		hasChanged: function (origin)
+		setDifferState: function (origin)
 		{
 			var self = this;
 			var focusPointOrigin = this.get('focusPointOrigin');
@@ -97,12 +99,19 @@
 
 			this.set('differState', differState);
 
-			// If not focusPoint is not changed or focusPointOrigin is changed than try to recall hasChanged function
+			// If not focusPoint is not changed or focusPointOrigin is changed than try to recall setDifferState function
 			if (origin === true || differState === false) {
 				this.once('change:focusPoint', function ()
 				{
-					self.hasChanged(false);
+					self.setDifferState(false);
 				}, this);
+			}
+		},
+
+		resetAjaxState: function ()
+		{
+			if (this.differState === true) {
+				self.model.set('ajaxState', false);
 			}
 		}
 	});

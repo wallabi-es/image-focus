@@ -35,6 +35,7 @@
 			//Set action to button for ajax call
 			this.$cropButton.on('click', function ()
 			{
+				self.model.set('ajaxState', 'cropping');
 				self.model.save({}, {
 					url: ajaxurl + '?action=initialize-crop',
 					success: function (collection, data, options)
@@ -50,20 +51,25 @@
 
 								//Store focuspoint and use 'set' for to trigger events
 								self.model.set({'focusPointOrigin': data.focusPoint});
+								self.model.set('ajaxState', 'success');
+
 							} catch (error) {
 								console.log(error);
+								self.model.set('ajaxState', 'failed');
 							}
 						}
 					},
 					error: function (collection, response, options)
 					{
 						// you can pass additional options to the event you trigger here as well
+						self.model.set('ajaxState', 'failed');
 						console.log(response);
 					}
 				});
 			});
 
 			this.model.on('change:differState', this.differStateHandler, this);
+			this.model.on('change:ajaxState', this.ajaxStateHandler, this);
 		},
 
 		differStateHandler: function ()
@@ -81,16 +87,23 @@
 		{
 			var ajaxState = this.model.get('ajaxState');
 
-			switch(ajaxState){
+			switch (ajaxState) {
 				case 'cropping':
-					this.setButtonText();
+					this.setButtonText(focusPointL10n.cropButtonProgress);
+					break;
+				case 'success':
+					this.setButtonText(focusPointL10n.cropButtonSuccess);
+					break;
+				case 'failed':
+					this.setButtonText(focusPointL10n.cropButtonFailed);
 					break;
 				default:
 					this.setButtonText(focusPointL10n.cropButton);
 			}
 		},
 
-		setButtonText: function($input){
+		setButtonText: function ($input)
+		{
 			this.$cropButton.text($input);
 		},
 
