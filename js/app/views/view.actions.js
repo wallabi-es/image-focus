@@ -90,12 +90,15 @@
 			switch (ajaxState) {
 				case 'cropping':
 					this.setButtonText(focusPointL10n.cropButtonProgress);
+					this.disable();
 					break;
 				case 'success':
 					this.setButtonText(focusPointL10n.cropButtonSuccess);
+					this.disable();
 					break;
 				case 'failed':
 					this.setButtonText(focusPointL10n.cropButtonFailed);
+					this.activate();
 					break;
 				default:
 					this.setButtonText(focusPointL10n.cropButton);
