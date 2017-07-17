@@ -3,16 +3,6 @@
 	"use strict";
 
 	IFA.Views.FocusInterface = Backbone.View.extend({
-		cssClass: {
-			_imageFocus: 'image-focus',
-			imageFocus: {
-				_wrapper: 'image-focus__wrapper',
-				_img: 'image-focus__img',
-				_point: 'image-focus__point',
-				_clickarea: 'image-focus__clickarea',
-				_button: 'image-focus__button'
-			}
-		},
 		template: false,
 		$img: false,
 		imgHtml: false,
@@ -21,6 +11,12 @@
 		$clickarea: false,
 		$focusPoint: false,
 
+		/**
+		 * Initialize
+		 *
+		 * @param properties
+		 * @param options
+		 */
 		initialize: function (properties, options)
 		{
 			console.log('focusinterface view: initialize');
@@ -50,10 +46,16 @@
 			this.attachment.once('change:focusPoint', this.updateFocusPoint, this);
 		},
 
+		/**
+		 * Events
+		 */
 		events: {
 			// @todo move events to this section
 		},
 
+		/**
+		 * Render
+		 */
 		render: function ()
 		{
 			console.log('focusinterface view: render');
@@ -71,6 +73,9 @@
 			this.setEvents();
 		},
 
+		/**
+		 * Set elements
+		 */
 		setElements: function ()
 		{
 			this.$imageFocus = this.$container.find('.' + IFA.css._imageFocus);
@@ -82,6 +87,9 @@
 			this.attachment.$img = this.$img;
 		},
 
+		/**
+		 * Set events
+		 */
 		setEvents: function ()
 		{
 			var self = this;
@@ -137,6 +145,13 @@
 				});
 		},
 
+		/**
+		 * startMove
+		 *
+		 * @param event
+		 * @param reset
+		 * @returns {IFA.Views.FocusInterface}
+		 */
 		startMove: function (event, reset)
 		{
 			//Set current dimension data in case position and size of image are changed because of content changes
@@ -156,7 +171,12 @@
 			return this;
 		},
 
-
+		/**
+		 * Move
+		 *
+		 * @param event
+		 * @returns {*}
+		 */
 		move: function (event)
 		{
 			if (this.model.get('state').move === false) {
@@ -194,6 +214,10 @@
 			return this;
 		},
 
+		/**
+		 *
+		 * @returns {IFA.Views.FocusInterface}
+		 */
 		updateFocusPoint: function ()
 		{
 			var focusPoint = this.attachment.get('focusPoint');
@@ -321,7 +345,6 @@
 				}
 			}
 		}
-
 	});
 
 }(jQuery, window));
