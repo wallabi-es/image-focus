@@ -30,9 +30,7 @@
 						if (data.success === true) {
 							try {
 								//Check if we received the correct object
-								if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
-									throw("Wrong object properties");
-								}
+								self.model.validateFocusPoint(data);
 
 								//Store focuspoint and use 'set' for to trigger events
 								self.model.set({'focusPointOrigin': data.focusPoint});

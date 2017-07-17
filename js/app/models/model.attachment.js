@@ -61,9 +61,7 @@
 					if (data.success === true) {
 						try {
 							//Check if we received the correct object
-							if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
-								throw("Wrong object properties");
-							}
+							self.validateFocusPoint(data);
 
 							//Store focuspoint and use 'set' for to trigger events
 							self.set({'src': data.src});
@@ -112,6 +110,12 @@
 		{
 			if (this.differState === true) {
 				self.model.set('ajaxState', false);
+			}
+		},
+
+		validateFocusPoint: function(data){
+			if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
+				throw("Wrong object properties");
 			}
 		}
 	});
