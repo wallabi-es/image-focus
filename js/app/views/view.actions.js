@@ -63,18 +63,35 @@
 				});
 			});
 
-			this.model.on('change:focusPointDiffers', this.handler, this);
+			this.model.on('change:differState', this.differStateHandler, this);
 		},
 
-		handler: function ()
+		differStateHandler: function ()
 		{
-			var focusPointDiffers = this.model.get('focusPointDiffers');
+			var differState = this.model.get('differState');
 
-			if (focusPointDiffers === true) {
+			if (differState === true) {
 				this.highlight();
-			}else{
+			} else {
 				this.disable();
 			}
+		},
+
+		ajaxStateHandler: function ()
+		{
+			var ajaxState = this.model.get('ajaxState');
+
+			switch(ajaxState){
+				case 'cropping':
+					this.setButtonText();
+					break;
+				default:
+					this.setButtonText(focusPointL10n.cropButton);
+			}
+		},
+
+		setButtonText: function($input){
+			this.$cropButton.text($input);
 		},
 
 		highlight: function ()

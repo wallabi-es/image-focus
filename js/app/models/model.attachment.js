@@ -24,7 +24,8 @@
 				x: 50,
 				y: 50
 			},
-			focusPointDiffers: false // True of False
+			differState: false, // True of False
+			ajaxState: false // Can be: 'cropping', 'fetching', 'done' or false
 		},
 		$img: false, // @todo place $img in view instead model
 
@@ -84,20 +85,20 @@
 			var self = this;
 			var focusPointOrigin = this.get('focusPointOrigin');
 			var focusPoint = this.get('focusPoint');
-			var focusPointDiffers = false;
+			var differState = false;
 
 			if (focusPointOrigin.x !== focusPoint.x) {
-				focusPointDiffers = true;
+				differState = true;
 			}
 
 			if (focusPointOrigin.y !== focusPoint.y) {
-				focusPointDiffers = true;
+				differState = true;
 			}
 
-			this.set('focusPointDiffers', focusPointDiffers);
+			this.set('differState', differState);
 
 			// If not focusPoint is not changed or focusPointOrigin is changed than try to recall hasChanged function
-			if (origin === true || focusPointDiffers === false) {
+			if (origin === true || differState === false) {
 				this.once('change:focusPoint', function ()
 				{
 					self.hasChanged(false);
