@@ -19,8 +19,6 @@
 		 */
 		initialize: function (properties, options)
 		{
-			console.log('focusinterface view: initialize');
-			var self = this;
 			// Set 2nd model
 			this.attachment = properties.attachment;
 
@@ -58,7 +56,6 @@
 		 */
 		render: function ()
 		{
-			console.log('focusinterface view: render');
 			// Replace current image focus wrapper with new image focus wrapper
 			var focusPoint = this.attachment.get('focusPoint');
 

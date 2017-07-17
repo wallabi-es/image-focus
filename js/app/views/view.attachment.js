@@ -9,7 +9,6 @@
 
 		initialize: function ()
 		{
-			console.log('init view attachment');
 			var self = this;
 			//Set events for rendering
 			$(window).on("resize", function ()
@@ -23,7 +22,6 @@
 
 		updateDimensions: function ()
 		{
-			console.log('attachment view: update dimensions');
 			var $attachment = this.model.$img;
 			var offset = {
 				x: $attachment.offset().left,
@@ -35,13 +33,6 @@
 				'height' : $attachment.height(),
 				'offset': offset
 			});
-		},
-
-		render: function ()
-		{
-			console.log('attachment view: render');
-
-			return this;
 		},
 
 		remove: function ()

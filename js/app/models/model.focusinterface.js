@@ -27,7 +27,7 @@
 
 		initialize: function ()
 		{
-			console.log('initialize focuspoint');
+			//Nothing yet
 		},
 
 		setState: function(attributes){
