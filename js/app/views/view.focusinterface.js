@@ -105,11 +105,11 @@
 				})
 				.on('mouseenter', function ()
 				{
-					self.toggleHover(true);
+					self.toggleHoverState(true);
 				})
 				.on('mouseleave', function ()
 				{
-					self.toggleHover(false);
+					self.toggleHoverState(false);
 				});
 
 			$(window)
@@ -286,7 +286,12 @@
 			return this;
 		},
 
-		toggleHover: function(state){
+		/**
+		 * toggleHoverStateState
+		 *
+		 * @param state
+		 */
+		toggleHoverState: function(state){
 			self.model.setState({'hover': state});
 			self.$imageFocus.toggleClass('is-hover', state); // @todo write function to listen to model._state.hover to toggleclass
 		},
