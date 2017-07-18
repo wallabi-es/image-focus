@@ -39,9 +39,16 @@
 			//Set events for rendering
 			this.render();
 			this.model.on('change:position', this.updateFocusPoint, this);
+
 			//Trigger after ajaxload
 			this.attachment.once('change:focusPoint', this.updateDimensionData, this);
 			this.attachment.once('change:focusPoint', this.updateFocusPoint, this);
+
+			// Set events for states
+			this.setStateEvent('hoverState','is-hover');
+			this.setStateEvent('activeState','is-active');
+			this.setStateEvent('moveState','is-move');
+			this.setStateEvent('initState','is-initialized');
 		},
 
 		/**
@@ -110,11 +117,11 @@
 				})
 				.on('mouseenter', function ()
 				{
-					self.toggleHoverState(true);
+					self.model.set('hoverState', true);
 				})
 				.on('mouseleave', function ()
 				{
-					self.toggleHoverState(false);
+					self.model.set('hoverState', false);
 				});
 
 			$(window)
@@ -122,13 +129,10 @@
 				{
 					//On left mouse click
 					if (event.which === 1) {
-
 						self.model.set({
 							'moveState': false,
 							'activeState': false
 						});
-
-						self.$imageFocus.removeClass('is-active');
 					}
 				})
 				.on('mousemove', function (event)
@@ -157,8 +161,6 @@
 			//Calculate FocusPoint coordinates
 			this.updateDimensionData()
 				.updateClickPosition(event, reset);
-
-			this.$imageFocus.addClass('is-active');
 
 			this.model.set({
 				'moveState': true,
@@ -306,16 +308,30 @@
 		},
 
 		/**
-		 * toggleHoverStateState
+		 * setStateEvent
 		 *
-		 * @param state
+		 * @param stateObject
+		 * @param stateClass
 		 */
-		toggleHoverState: function (state)
-		{
-			this.model.set({'hoverState': state});
-			this.$imageFocus.toggleClass('is-hover', state); // @todo write function to listen to model._state.hover to toggleclass
-		}
+		setStateEvent: function(stateObject,stateClass){
+			var self = this;
+			this.model.on('change:'+stateObject, function ()
+			{
+				self.toggleClassState(stateObject, stateClass);
+			});
+		},
 
+		/**
+		 * toggleClassState
+		 *
+		 * @param stateObject
+		 * @param stateClass
+		 */
+		toggleClassState: function (stateObject, stateClass)
+		{
+			var state = this.model.get(stateObject);
+			this.$imageFocus.toggleClass(stateClass, state);
+		}
 	});
 
 }(jQuery, window));
