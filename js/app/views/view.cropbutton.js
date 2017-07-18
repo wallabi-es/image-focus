@@ -2,7 +2,7 @@
 {
 	"use strict";
 
-	IFA.Views.Actions = Backbone.View.extend({
+	IFA.Views.Cropbutton = Backbone.View.extend({
 		defaults: {
 			ajaxState: false
 		},

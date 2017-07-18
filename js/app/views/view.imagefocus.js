@@ -54,7 +54,7 @@
 			});
 
 			// Add cropbutton
-			var actions = new IFA.Views.Actions({
+			var cropButton = new IFA.Views.Cropbutton({
 				el: $object.find('.attachment-actions'),
 				model: attachment
 			});

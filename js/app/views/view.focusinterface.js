@@ -313,8 +313,8 @@
 		 * @param state
 		 */
 		toggleHoverState: function(state){
-			self.model.setState({'hover': state});
-			self.$imageFocus.toggleClass('is-hover', state); // @todo write function to listen to model._state.hover to toggleclass
+			this.model.setState({'hover': state});
+			this.$imageFocus.toggleClass('is-hover', state); // @todo write function to listen to model._state.hover to toggleclass
 		},
 
 		//Helper functions

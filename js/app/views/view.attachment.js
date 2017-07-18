@@ -3,23 +3,23 @@
 	"use strict";
 
 	IFA.Views.Attachment = Backbone.View.extend({
-		events: {
-			"resize": "updateDimensions"
-		},
-
+		/**
+		 * Initialize attachment view
+		 */
 		initialize: function ()
 		{
-			var self = this;
 			//Set events for rendering
-			$(window).on("resize", function ()
-			{
-				self.updateDimensions();
-			});
+			$(window).on("resize", _.bind(this.updateDimensions, this));
 
 			//Trigger once on focusPoint change, will probably be triggered on ajaxload
 			this.model.once("change:focusPoint", this.updateDimensions, this);
 		},
 
+		/**
+		 * updateDimensions
+		 *
+		 * @description update width and height of the attachment image. Width and Height are used for focuspoint calculations
+		 */
 		updateDimensions: function ()
 		{
 			var $attachment = this.model.$img;
@@ -29,16 +29,10 @@
 			};
 
 			this.model.set({
-				'width' : $attachment.width(),
-				'height' : $attachment.height(),
+				'width': $attachment.width(),
+				'height': $attachment.height(),
 				'offset': offset
 			});
-		},
-
-		remove: function ()
-		{
-			$(window).off("resize", this.updateDimensions);
-			Backbone.View.prototype.remove.apply(this, arguments);
 		}
 	});
 
