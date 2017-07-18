@@ -27,7 +27,7 @@ class EditService
     private function addHooks()
     {
         add_filter('wp_save_image_editor_file', [$this, 'editFocusPoint'], 10, 5);
-        add_filter('wp_update_attachment_metadata', [$this, 'resizeAttachments'], 10, 2);
+        add_filter('wp_update_attachment_metadata', [$this, 'updateAttachments'], 10, 2);
     }
 
     /**
@@ -145,7 +145,7 @@ class EditService
      * @param $attachmentId
      * @return mixed
      */
-    public function resizeAttachments($data, $attachmentId)
+    public function updateAttachments($data, $attachmentId)
     {
         $this->attachmentId = $attachmentId;
         $this->getFocusPoint();
