@@ -137,32 +137,6 @@ class EditService
         return $filename;
     }
 
-//    /**
-//     * Get the attachment's ID by URL
-//     *
-//     * @param $filename
-//     * @return mixed
-//     */
-//    private function getAttachmentIdByUrl($filename)
-//    {
-//        // Get the filename and substract the basedir
-//        $filename = str_replace(wp_upload_dir()['basedir'] . '/', '', $filename);
-//        $filename = preg_replace('(-[0-9]*x[0-9]*\.)', '.', $filename);
-//
-//        // Search for a postId within the database that matches our attached file
-//        global $wpdb;
-//        $attachmentId = $wpdb->get_col(
-//            $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key='_wp_attached_file' AND meta_value='%s';",
-//                $filename)
-//        );
-//
-//        if (!empty($attachmentId[0])) {
-//            $this->attachmentId = $attachmentId[0];
-//        }
-//
-//        return $this;
-//    }
-
     /**
      * Catch the wp_update_attachment_metadata filter.
      * And make sure all the resizing goes trough the ImageFocus crop service.
@@ -194,18 +168,6 @@ class EditService
         if ($focusPoint) {
             $this->focusPoint = $focusPoint;
         }
-
-        return $this;
-    }
-
-    /**
-     * Put the focuspoint in the post meta of the attachment post
-     *
-     * @return $this
-     */
-    private function saveFocusPointToDB()
-    {
-        update_post_meta($this->attachmentId, 'focus_point', $this->focusPoint);
 
         return $this;
     }

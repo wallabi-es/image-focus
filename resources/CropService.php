@@ -19,6 +19,7 @@ class CropService
      *
      * @param $attachmentId
      * @param $focusPoint
+     * @return bool
      */
     public function crop($attachmentId, $focusPoint)
     {
@@ -83,7 +84,6 @@ class CropService
     {
         $attachment = wp_get_attachment_image_src($attachmentId, 'full');
 
-
         $this->attachment = [
             'id'     => $attachmentId,
             'src'    => (string)$attachment[0],
@@ -127,16 +127,16 @@ class CropService
         foreach ($this->imageSizes as $imageSize) {
 
             // Stop this iteration if the attachment is too small to be cropped for this image size
-            if ($imageSize['width'] >= $this->attachment['width'] || $imageSize['height'] >= $this->attachment['height']) {
+            if ($imageSize['width'] > $this->attachment['width'] || $imageSize['height'] > $this->attachment['height']) {
                 continue;
             }
 
             // Get the file path of the attachment and the delete the old image
-            $imageFilePaths = $this->getImageFilePaths($imageSize);
-            $this->removeOldImage($imageFilePaths);
+            $imageFilePath = $this->getImageFilePath($imageSize);
+            $this->removeOldImage($imageFilePath);
 
             // Now execute the actual image crop
-            $this->cropImage($imageSize, $imageFilePaths);
+            $this->cropImage($imageSize, $imageFilePath);
         }
     }
 
@@ -146,7 +146,7 @@ class CropService
      * @param $imageSize
      * @return mixed
      */
-    private function getImageFilePaths($imageSize)
+    private function getImageFilePath($imageSize)
     {
         // Get the path to the WordPress upload directory
         $uploadDir = wp_upload_dir()['basedir'] . '/';
@@ -158,32 +158,19 @@ class CropService
 
         // Add the image size to the the name of the attachment
         $fileName = str_replace($attachment, $croppedAttachment, $attachedFile);
-        $retinaFileName = str_replace($attachment, $croppedAttachment . '@2x', $attachedFile);
 
-        // Create an array with the image paths. This one is for the normal size image
-        $imageFilePaths = [
-            '1' => $uploadDir . $fileName,
-        ];
-
-        // Add the retina image if it exists (We're using 2 instead of @2x for multiplications)
-        if (file_exists($uploadDir . $retinaFileName)) {
-            $imageFilePaths['2'] = $uploadDir . $retinaFileName;
-        }
-
-        return $imageFilePaths;
+        return $uploadDir . $fileName;
     }
 
     /**
      * Remove the old attachment
      *
-     * @param $files
+     * @param $file
      */
-    private function removeOldImage($files)
+    private function removeOldImage($file)
     {
-        foreach ((array)$files as $file) {
-            if (file_exists($file)) {
-                unlink($file);
-            }
+        if (file_exists($file)) {
+            unlink($file);
         }
     }
 
@@ -191,10 +178,10 @@ class CropService
      * Calculate the all of the positions necessary to crop the image and crop it.
      *
      * @param $imageSize
-     * @param $imageFilePaths
+     * @param $imageFilePath
      * @return $this
      */
-    private function cropImage($imageSize, $imageFilePaths)
+    private function cropImage($imageSize, $imageFilePath)
     {
         // Gather all dimension
         $dimensions = ['x' => [], 'y' => []];
@@ -236,20 +223,17 @@ class CropService
             }
         }
 
-        // Loop trough all the image qualities (normal & retina)
-        foreach ($imageFilePaths as $retina => $imageFilePath) {
-            // Excecute the WordPress image crop function
-            wp_crop_image($this->attachment['id'],
-                $dimensions['x']['start'],
-                $dimensions['y']['start'],
-                $dimensions['x']['end'] - $dimensions['x']['start'],
-                $dimensions['y']['end'] - $dimensions['y']['start'],
-                $imageSize['width'] * (int)$retina,
-                $imageSize['height'] * (int)$retina,
-                false,
-                $imageFilePath
-            );
-        }
+        // Excecute the WordPress image crop function
+        wp_crop_image($this->attachment['id'],
+            $dimensions['x']['start'],
+            $dimensions['y']['start'],
+            $dimensions['x']['end'] - $dimensions['x']['start'],
+            $dimensions['y']['end'] - $dimensions['y']['start'],
+            $imageSize['width'],
+            $imageSize['height'],
+            false,
+            $imageFilePath
+        );
 
         return $this;
     }
