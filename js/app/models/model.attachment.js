@@ -3,11 +3,12 @@
 	"use strict";
 
 	IFA.Models.Attachment = Backbone.Model.extend({
+		/**
+		 * Variables
+		 */
 		url: ajaxurl,
 		apiArgs: ['action'],
-
 		id: false,
-
 		defaults: {
 			src: false,
 			width: false, //Numeric
@@ -29,8 +30,11 @@
 		},
 		$img: false, // @todo place $img in view instead model
 
-
-		//Functions
+		/**
+		 * Initialize model
+		 *
+		 * @param options
+		 */
 		initialize: function (options)
 		{
 			var self = this;
@@ -47,6 +51,11 @@
 			this.on('change:differState', this.resetAjaxState, this);
 		},
 
+		/**
+		 * fetchAttachmentData
+		 *
+		 * @description used once to load the initial focuspoint data
+		 */
 		fetchAttachmentData: function ()
 		{
 			var self = this;
@@ -56,8 +65,6 @@
 				data: $.param({id: this.id}),
 				success: function (collection, data, options)
 				{
-					// you can pass additional options to the event you trigger here as well
-					// If we have data use that
 					if (data.success === true) {
 						try {
 							//Check if we received the correct object
@@ -80,6 +87,13 @@
 			});
 		},
 
+		/**
+		 * setDifferState
+		 *
+		 * @description when the focus 'focusPoint' differs from 'focusPointOrigin' the differState variable will
+		 * be set on true
+		 * @param origin
+		 */
 		setDifferState: function (origin)
 		{
 			var self = this;
@@ -97,7 +111,7 @@
 
 			this.set('differState', differState);
 
-			// If not focusPoint is not changed or focusPointOrigin is changed than try to recall setDifferState function
+			// If the focusPoint is not changed or focusPointOrigin is changed than try to recall setDifferState function
 			if (origin === true || differState === false) {
 				this.once('change:focusPoint', function ()
 				{
@@ -106,6 +120,12 @@
 			}
 		},
 
+		/**
+		 * resetAjaxState
+		 *
+		 * @description if the differState is set on true than put ajaxState on false. This has as purpose to highlight
+		 * the crop button
+		 */
 		resetAjaxState: function ()
 		{
 			if (this.differState === true) {
@@ -113,7 +133,14 @@
 			}
 		},
 
-		validateFocusPoint: function(data){
+		/**
+		 * validateFocusPoint
+		 *
+		 * @description if the the focuspoint doesn't match the given the requirements than throw an error
+		 * @param data
+		 */
+		validateFocusPoint: function (data)
+		{
 			if (!data.focusPoint.hasOwnProperty('x') || !data.focusPoint.hasOwnProperty('y')) {
 				throw("Wrong object properties");
 			}
