@@ -49,6 +49,10 @@
 		transform-style: preserve-3d; //Smooth movements
 		backface-visibility: hidden; //Smooth movements
 		will-change: left, top;
+		.is-initialized & {
+			display: block;
+		}
+
 		&::before {
 			content: '';
 			position: absolute;

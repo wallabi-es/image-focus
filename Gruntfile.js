@@ -31,7 +31,9 @@ module.exports = function (grunt)
 
 		uglify: {
 			options: {
-				preserveComments: false
+				preserveComments: false,
+				sourceMap: true,
+				beautify: true
 			},
 			plugins: {
 				files: [
@@ -47,7 +49,8 @@ module.exports = function (grunt)
 			dist: {
 				files: {
 					'<%= dir.js %>/focuspoint.min.js': [
-						'<%= dir.js %>/focuspoint/*.js'
+						'<%= dir.js %>/app/**/*.js',
+						'!<%= dir.js %>/app/jquery.focusPoint.js'
 					]
 				}
 			}

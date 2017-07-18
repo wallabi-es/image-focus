@@ -23,6 +23,8 @@ class FocusPoint
         add_action('wp_ajax_initialize-crop', [$this, 'initializeCrop']);
         add_action('wp_ajax_get-focuspoint', [$this, 'getFocusPoint']);
         add_action('admin_enqueue_scripts', [$this, 'loadScripts']);
+        add_action("admin_footer", [$this, 'includeMustacheTemplates'], 100);
+
     }
 
     /**
@@ -30,11 +32,22 @@ class FocusPoint
      */
     public function loadScripts()
     {
-        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery']);
+//        wp_enqueue_media();
+//        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint/bb.image-focus.js',
+//            ['jquery', 'backbone']);
+        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery', 'backbone']);
         wp_localize_script('focuspoint-js', 'focusPointL10n', $this->focusPointL10n());
         wp_enqueue_script('focuspoint-js');
 
         wp_enqueue_style('image-focus-css', IMAGEFOCUS_ASSETS . 'css/style.min.css');
+    }
+
+    /**
+     * Load all necessary mustache templates
+     */
+    public function includeMustacheTemplates()
+    {
+        print file_get_contents(IMAGEFOCUS_ASSETS . "js/app/templates/focuspoint.mustache");
     }
 
     /**
@@ -58,10 +71,12 @@ class FocusPoint
     public function getFocusPoint()
     {
         // Get $_POST['attachment']
-        $attachment = getGlobalPostData('attachment');
+        $attachment = [];
+        $attachment['id'] = $_GET['id']; //@todo secure data
 
         // Get the post meta
         $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
+        $attachment['src'] = wp_get_attachment_url($attachment['id']);
 
         $die = json_encode(['success' => false]);
 
@@ -69,7 +84,8 @@ class FocusPoint
         if (null !== $attachment['id'] || is_array($attachment['focusPoint'])) {
             $die = json_encode([
                 'success'    => true,
-                'focusPoint' => $attachment['focusPoint']
+                'focusPoint' => $attachment['focusPoint'],
+                'src' => $attachment['src']
             ]);
         }
 
@@ -83,7 +99,7 @@ class FocusPoint
     public function initializeCrop()
     {
         // Get $_POST['attachment']
-        $attachment = getGlobalPostData('attachment');
+        $attachment = json_decode(file_get_contents('php://input'), true);
 
         $die = json_encode(['success' => false]);
 
@@ -92,7 +108,13 @@ class FocusPoint
             $crop = new CropService();
             $crop->crop($attachment['id'], $attachment['focusPoint']);
 
-            $die = json_encode(['success' => true]);
+            // Retrieve current saved focusPoint
+            $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
+
+            $die = json_encode([
+                'success' => true,
+                'focusPoint' => $attachment['focusPoint'],
+            ]);
         }
 
         // Return the ajax call
