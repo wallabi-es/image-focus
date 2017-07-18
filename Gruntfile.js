@@ -51,6 +51,9 @@ module.exports = function (grunt)
 					'<%= dir.js %>/focuspoint.min.js': [
 						'<%= dir.js %>/app/**/*.js',
 						'!<%= dir.js %>/app/jquery.focusPoint.js'
+					],
+					'<%= dir.js %>/acf.min.js': [
+						'<%= dir.js %>/acf/**/*.js'
 					]
 				}
 			}

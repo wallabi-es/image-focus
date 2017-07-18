@@ -3,11 +3,18 @@
 namespace ImageFocus;
 
 /**
- * The class responsible for loading WordPress functionality and other classes
+ *
  *
  * Class ImageFocus
  * @package ImageFocus
  */
+/**
+ * The class responsible for entering the correct buttons in the FeaturedImage block & ACF image blocks
+ *
+ * Class FeaturedImage
+ * @package ImageFocus
+ */
+
 class FeaturedImage
 {
     public function __construct()
@@ -21,9 +28,21 @@ class FeaturedImage
     private function addHooks()
     {
         add_action('admin_post_thumbnail_html', [$this, 'editFeaturedImage'], 1, 3);
+        add_action('admin_enqueue_scripts', [$this, 'loadScripts'], 10);
     }
 
     /**
+     * Enqueues all necessary CSS and Scripts
+     */
+    public function loadScripts()
+    {
+        wp_enqueue_script('acf-js', IMAGEFOCUS_ASSETS . 'js/acf.min.js', ['jquery']);
+        wp_enqueue_style('image-focus-css', IMAGEFOCUS_ASSETS . 'css/style.min.css');
+    }
+
+    /**
+     * Edit the featured image metabox to our likings
+     *
      * @param $content
      * @param $postId
      * @param $thumbnailId
