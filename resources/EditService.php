@@ -88,12 +88,12 @@ class EditService
     private function rotateFocusPoint($degrees)
     {
         // Depending on the direction of the rotation we need to switch the axis
-        $x = (int)$degrees > 0 ? 'y' : 'x';
-        $y = (int)$degrees > 0 ? 'x' : 'y';
+        $axisX = (int)$degrees > 0 ? 'y' : 'x';
+        $axisY = (int)$degrees > 0 ? 'x' : 'y';
 
         // Rotate the focuspoint
-        $rotatedFocusPoint[$x] = (($this->focusPoint[$y] - 50) * -1) + 50;
-        $rotatedFocusPoint[$y] = $this->focusPoint[$x];
+        $rotatedFocusPoint[$axisX] = (($this->focusPoint[$axisY] - 50) * -1) + 50;
+        $rotatedFocusPoint[$axisY] = $this->focusPoint[$axisX];
 
         $this->focusPoint = $rotatedFocusPoint;
 
