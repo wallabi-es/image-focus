@@ -1,0 +1,70 @@
+.image-focus-actions {
+	position: relative;
+
+	&:hover,
+	&:focus,
+	&:active {
+		.image-focus-actions__bar {
+			opacity: 1;
+		}
+	}
+
+	&__bar {
+		opacity: 0;
+		transition: opacity .2s $curve-standard;
+		text-align: right;
+		box-sizing: border-box;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		padding: 10px 10px 30px 10px;
+
+		background: -moz-linear-gradient(top, rgba($black, 0.75) 0%, rgba($black, 0) 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(top, rgba($black, 0.75) 0%, rgba($black, 0) 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to bottom, rgba($black, 0.75) 0%, rgba($black, 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$black}', endColorstr='#{$black}', GradientType=0); /* IE6-9 */
+	}
+
+	&__item {
+		cursor: pointer;
+		position: relative;
+		border-radius: 50%;
+		background-color: $black;
+
+		color: $white;
+		font-size: 14px;
+		height: 1.5rem;
+		width: 1.5rem;
+		display: inline-block;
+		margin-left: 2px;
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: $white;
+			background-color: $primary;
+		}
+
+		&::before {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		&.dashicons-image-crop {
+			font-size: 12px;
+		}
+
+		@media screen and (max-width: 782px) {
+			font-size: 16px;
+			height: 1.75rem;
+			width: 1.75rem;
+
+			&.dashicons-image-crop {
+				font-size: 14px;
+			}
+		}
+	}
+}
