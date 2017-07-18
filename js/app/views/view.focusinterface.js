@@ -123,9 +123,9 @@
 					//On left mouse click
 					if (event.which === 1) {
 
-						self.model.setState({
-							'move': false,
-							'active': false
+						self.model.set({
+							'moveState': false,
+							'activeState': false
 						});
 
 						self.$imageFocus.removeClass('is-active');
@@ -152,7 +152,7 @@
 		startMove: function (event, reset)
 		{
 			//Set current dimension data in case position and size of image are changed because of content changes
-			//attachment.updateDimensionData();
+			//attachment.updateDimensionData(); @todo talk with attachment view
 
 			//Calculate FocusPoint coordinates
 			this.updateDimensionData()
@@ -160,9 +160,9 @@
 
 			this.$imageFocus.addClass('is-active');
 
-			this.model.setState({
-				'move': true,
-				'active': true
+			this.model.set({
+				'moveState': true,
+				'activeState': true
 			});
 
 			return this;
@@ -176,7 +176,7 @@
 		 */
 		move: function (event)
 		{
-			if (this.model.get('state').move === false) {
+			if (this.model.get('moveState') === false) {
 				return false;
 			}
 
@@ -276,8 +276,6 @@
 		 */
 		updateDimensionData: function ()
 		{
-			// @todo fix storing of variables
-
 			// Get width and height in pixels
 			this.model.width = this.$focusPoint.width();
 			this.model.height = this.$focusPoint.height();
@@ -314,7 +312,7 @@
 		 */
 		toggleHoverState: function (state)
 		{
-			this.model.setState({'hover': state});
+			this.model.set({'hoverState': state});
 			this.$imageFocus.toggleClass('is-hover', state); // @todo write function to listen to model._state.hover to toggleclass
 		}
 

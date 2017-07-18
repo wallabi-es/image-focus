@@ -30,21 +30,24 @@
 			var $detailsImage = $object.find('.details-image');
 			$object.addClass('IFA-initialized');
 
-			// Initialize attachment model
+			/**
+			 * Initialize models
+ 			 */
 			var attachment = new IFA.Models.Attachment({
 				id: $object.data('id'),
 				$img: $detailsImage
 			});
 
-			// Initialize attachment view
-			var attachmentView = new IFA.Views.Attachment({
-				model: attachment
-			});
-
-			// Initialize Focus Point model
 			var focusInterface = new IFA.Models.FocusInterface({});
 
-			// Initialize Focus point view
+			/**
+			 * Initialize views
+			 */
+			var attachmentView = new IFA.Views.Attachment({
+				model: attachment,
+				focusInterface: focusInterface
+			});
+
 			var focusInterfaceView = new IFA.Views.FocusInterface({
 				el: $object,
 				model: focusInterface,
@@ -53,7 +56,6 @@
 				$img : $detailsImage
 			});
 
-			// Add cropbutton
 			var cropButton = new IFA.Views.Cropbutton({
 				el: $object.find('.attachment-actions'),
 				model: attachment

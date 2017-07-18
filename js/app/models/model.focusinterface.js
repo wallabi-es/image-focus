@@ -17,23 +17,15 @@
 				x: 0,
 				y: 0
 			},
-			state: {
-				init: false,
-				move: false,
-				active: false,
-				hover: false
-			}
+			initState: false,
+			moveState: false,
+			activeState: false,
+			hoverState: false
 		},
 
 		initialize: function ()
 		{
 			//Nothing yet
-		},
-
-		setState: function(attributes){
-			var state = this.get("state") || {};
-			_.extend(state, attributes);
-			this.set({'state': state});
 		}
 	});
 }(jQuery, window));

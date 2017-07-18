@@ -6,13 +6,20 @@
 		/**
 		 * Initialize attachment view
 		 */
-		initialize: function ()
+		initialize: function (properties, options)
 		{
+			// Set 2nd model
+			this.focusInterface = properties.focusInterface;
+
 			//Set events for rendering
 			$(window).on("resize", _.bind(this.updateDimensions, this));
 
-			//Trigger once on focusPoint change, will probably be triggered on ajaxload
+			//Trigger once on focusPointOrigin change, called straight after an ajax call
 			this.model.once("change:focusPoint", this.updateDimensions, this);
+			this.model.on("change:focusPointOrigin", this.updateDimensions, this);
+
+			// Trigger also on focusInterface activeState changes to minimum display errors
+			this.focusInterface.on('change:activeState',this.updateDimensions, this);
 		},
 
 		/**
@@ -22,15 +29,15 @@
 		 */
 		updateDimensions: function ()
 		{
-			var $attachment = this.model.$img;
+			var $img = this.model.$img;
 			var offset = {
-				x: $attachment.offset().left,
-				y: $attachment.offset().top
+				x: $img.offset().left,
+				y: $img.offset().top
 			};
 
 			this.model.set({
-				'width': $attachment.width(),
-				'height': $attachment.height(),
+				'width': $img.width(),
+				'height': $img.height(),
 				'offset': offset
 			});
 		}
