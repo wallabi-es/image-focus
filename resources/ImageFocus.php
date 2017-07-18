@@ -38,7 +38,7 @@ class ImageFocus
     public function loadClasses()
     {
         /*
-         * Load the resice service even if the current user is not allowed to upload files.
+         * Load the resize service even if the current user is not allowed to upload files.
          * This is to prevent WordPress from falsely resizing images back to the default focus point.
          */
         new ResizeService();
@@ -47,6 +47,7 @@ class ImageFocus
             return false;
         }
 
+        new FeaturedImage();
         new FocusPoint();
     }
 }
