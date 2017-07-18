@@ -75,6 +75,8 @@
 
 			this.setElements();
 			this.setEvents();
+
+			this.model.set('initState', true);
 		},
 
 		/**
