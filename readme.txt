@@ -53,8 +53,6 @@ or if you make use of WPackagist
 
 == Changelog ==
 
-=0.9=
-Added
-* The repo is set up
+You can check out the changelog at [the Image focus GitHub repository](https://github.com/wallabi-es/image-focus/blob/master/CHANGELOG.md)
 
 == Upgrade Notice ==
