@@ -20,6 +20,20 @@
 				_primary: 'button-primary',
 				_disabled: 'button-disabled'
 			}
+		},
+		CalcService: {
+			/**
+			 * Calculate the Min/Max Range
+			 *
+			 * @param input
+			 * @param min
+			 * @param max
+			 * @returns {number}
+			 */
+			minMaxRange: function (input, min, max)
+			{
+				return (Math.min(max, Math.max(min, input)));
+			}
 		}
 	};
 

@@ -196,8 +196,8 @@
 			position.y = mouse.y - offset.y - clickPosition.y;
 
 			// Make sure that the focus point does not break out of the attachment boundaries
-			position.x = this.helper.calc.maxRange(position.x, 0, imageWidth);
-			position.y = this.helper.calc.maxRange(position.y, 0, imageHeight);
+			position.x = IFA.CalcService.minMaxRange(position.x, 0, imageWidth);
+			position.y = IFA.CalcService.minMaxRange(position.y, 0, imageHeight);
 
 			// Convert position to percentages
 			var focusPoint = {};
@@ -312,36 +312,12 @@
 		 *
 		 * @param state
 		 */
-		toggleHoverState: function(state){
+		toggleHoverState: function (state)
+		{
 			this.model.setState({'hover': state});
 			this.$imageFocus.toggleClass('is-hover', state); // @todo write function to listen to model._state.hover to toggleclass
-		},
-
-		//Helper functions
-		helper: {
-			calc: {
-				/**
-				 * Calculate the Max Range
-				 *
-				 * @param input
-				 * @param min
-				 * @param max
-				 * @returns {number}
-				 */
-				maxRange: function (input, min, max)
-				{
-					var output = input;
-
-					if (input < min) {
-						output = min;
-					} else if (input > max) {
-						output = max;
-					}
-
-					return output;
-				}
-			}
 		}
+
 	});
 
 }(jQuery, window));
