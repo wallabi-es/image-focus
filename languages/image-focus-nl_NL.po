@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: image-focus\n"
 "POT-Creation-Date: 2017-06-22 22:14+0200\n"
-"PO-Revision-Date: 2017-06-22 22:14+0200\n"
+"PO-Revision-Date: 2017-07-18 13:31+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -31,3 +31,7 @@ msgstr "Afbeelding bijgesneden"
 #: resources/FocusPoint.php:51
 msgid "Image crop failed"
 msgstr "Bijsnijden mislukt"
+
+#: resources/FeaturedImage.php:68
+msgid "Click the buttons in the image to crop, change or remove the image."
+msgstr "Klik op de knoppen in de afbeelding om deze te bijsnijden, wijzigen of te verwijderen."
