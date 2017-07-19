@@ -46,9 +46,6 @@ class FocusPoint
     {
         return [
             'cropButton' => __('Crop image', IMAGEFOCUS_TEXTDOMAIN),
-            'cropButtonProgress' => __('Cropping image ...', IMAGEFOCUS_TEXTDOMAIN),
-            'cropButtonSuccess' => __('Image cropped', IMAGEFOCUS_TEXTDOMAIN),
-            'cropButtonFailed' => __('Image crop failed', IMAGEFOCUS_TEXTDOMAIN),
         ];
     }
 
@@ -58,7 +55,7 @@ class FocusPoint
     public function getFocusPoint()
     {
         // Get $_POST['attachment']
-        $attachment = getGlobalPostData('attachment');
+        $attachment = getSuperData('attachment');
 
         // Get the post meta
         $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
@@ -83,7 +80,7 @@ class FocusPoint
     public function initializeCrop()
     {
         // Get $_POST['attachment']
-        $attachment = getGlobalPostData('attachment');
+        $attachment = getSuperData('attachment');
 
         $die = json_encode(['success' => false]);
 

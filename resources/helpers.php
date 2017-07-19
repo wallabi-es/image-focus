@@ -7,8 +7,8 @@
  * @param null $postData
  * @return null
  */
-if (!function_exists('getGlobalPostData')) {
-    function getGlobalPostData($postDataKey = null, $postData = null)
+if (!function_exists('getSuperData')) {
+    function getSuperData($postDataKey = null, $postData = null)
     {
         // Check if we need to fill the post data with $_POST
         if ($postData === null) {
@@ -24,7 +24,7 @@ if (!function_exists('getGlobalPostData')) {
 
             // Call the same function if it's an array
             if (is_array($data)) {
-                $postData[$key] = getGlobalPostData(null, $data);
+                $postData[$key] = getSuperData(null, $data);
 
                 continue;
             }
