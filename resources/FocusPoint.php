@@ -22,8 +22,8 @@ class FocusPoint
     {
         add_action('wp_ajax_initialize-crop', [$this, 'initializeCrop']);
         add_action('wp_ajax_get-focuspoint', [$this, 'getFocusPoint']);
-        add_action('admin_enqueue_scripts', [$this, 'loadScripts']);
-        add_action("admin_footer", [$this, 'includeMustacheTemplates'], 100);
+        add_action('admin_enqueue_scripts', [$this, 'loadScripts'], 10);
+        add_action('admin_footer', [$this, 'includeMustacheTemplates'], 100);
 
     }
 

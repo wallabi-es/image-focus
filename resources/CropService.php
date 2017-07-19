@@ -127,7 +127,7 @@ class CropService
         foreach ($this->imageSizes as $imageSize) {
 
             // Stop this iteration if the attachment is too small to be cropped for this image size
-            if ($imageSize['width'] >= $this->attachment['width'] || $imageSize['height'] >= $this->attachment['height']) {
+            if ($imageSize['width'] > $this->attachment['width'] || $imageSize['height'] > $this->attachment['height']) {
                 continue;
             }
 
