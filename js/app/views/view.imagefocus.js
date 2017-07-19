@@ -39,6 +39,7 @@
 			});
 
 			var focusInterface = new IFA.Models.FocusInterface({});
+			var cropButton = new IFA.Models.CropButton();
 
 			/**
 			 * Initialize views
@@ -56,9 +57,10 @@
 				$img : $detailsImage
 			});
 
-			var cropButton = new IFA.Views.Cropbutton({
+			var cropButtonView = new IFA.Views.Cropbutton({
 				el: $object.find('.attachment-actions'),
-				model: attachment
+				model: cropButton,
+				attachment: attachment
 			});
 
 			focusInterface.set('state.init', true);

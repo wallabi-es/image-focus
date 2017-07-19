@@ -88,6 +88,42 @@
 		},
 
 		/**
+		 * saveAttachmentData
+		 */
+		saveAttachmentData: function(){
+			var self  = this;
+			this.set('ajaxState', 'cropping');
+			this.save({}, {
+				url: ajaxurl + '?action=initialize-crop',
+				success: function (collection, data, options)
+				{
+					// you can pass additional options to the event you trigger here as well
+					// If we have data use that
+					if (data.success === true) {
+						try {
+							//Check if we received the correct object
+							self.validateFocusPoint(data);
+
+							//Store focuspoint and use 'set' for to trigger events
+							self.set({'focusPointOrigin': data.focusPoint});
+							self.set('ajaxState', 'success');
+
+						} catch (error) {
+							console.log(error);
+							self.set('ajaxState', 'failed');
+						}
+					}
+				},
+				error: function (collection, response, options)
+				{
+					// you can pass additional options to the event you trigger here as well
+					self.set('ajaxState', 'failed');
+					console.log(response);
+				}
+			});
+		},
+
+		/**
 		 * setDifferState
 		 *
 		 * @description when the focus 'focusPoint' differs from 'focusPointOrigin' the differState variable will
