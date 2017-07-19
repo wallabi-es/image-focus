@@ -18,28 +18,13 @@ With Image Focus you can instead crop your image by focal point. You select the 
 
 This way you don't need to crop all your images size by size. It will intelligently crop all sizes by your selected focus point.
 
-Any documentation can be found on: [Image Focus GitHub Repository.](https://github.com/DannyvanHolten/image-focus)
+= Getting started =
 
-= Image Focus Roadmap =
+Image focus is as easy as it can be. To help you get started we have a simple 3 step system which should help you going!
 
-As WordPress and photography are continuously in development we like to take a look ahead together for what's coming.
-
-If you want to get involved developing Image Focus just let us know how you can help, or just send in your feature requests!
-
-* Reset the cropping point to the WordPress default cropping
-* Add a link to featured images to go the image focus cropping tool
-* Add a link to acf images to go the image focus cropping tool
-* Crop Previews
-* Backbone implementation
-* Support for touch devices
-
-Image Focus Pro
-* Automatic focus point by facial detection
-* Automatic focus point by color detection
-* Zoom levels for cropping
-* Add multiple focuspoints
-* Change focuspoint per image size
-* Change entire image for an image size
+1. Open the media library and select an image you want to crop by focal point.
+2. Click & drag the focal point to wherever you need it to be.
+3. Press the cropping button, and you're all set. Your images are now cropped by focal point!
 
 == Installation ==
 
@@ -62,14 +47,12 @@ or if you make use of WPackagist
 
 == Screenshots ==
 
-1. The image opened in the media editor with the image focus overlay in it's default start.
-2. You can click and drag the focus point to anywhere on your image you find is most important.
+1. Open the media library and select an image you want to crop by focal point.
+2. Click & drag the focal point to wherever you need it to be.
 3. A comparison of the WordPress default crop vs the Image Focus Crop
 
 == Changelog ==
 
-=0.9=
-Added
-* The repo is set up
+You can check out the changelog at [the Image focus GitHub repository](https://github.com/wallabi-es/image-focus/blob/master/CHANGELOG.md)
 
 == Upgrade Notice ==
