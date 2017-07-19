@@ -45,6 +45,21 @@ or if you make use of WPackagist
 
 == Frequently Asked Questions ==
 
+= Does Image focus support other plug-ins =
+
+Image focus is a plug-in that will have a lot of support for other plugins as it respects the WordPress actions & filters.
+It sometimes occurs that a certain plugin needs extra support. We've listed the plugins we actively support for you.
+
+* Advanced Custom Fields
+* WP Retina 2x
+* Regenerate Thumbnails
+* Smush It
+
+On the roadmap (to be tested)
+
+* TinyPNG
+* Imagify
+
 == Screenshots ==
 
 1. Open the media library and select an image you want to crop by focal point.
