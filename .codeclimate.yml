@@ -32,3 +32,5 @@ exclude_paths:
 - vendor/
 - .idea/
 - build/
+- "js/app/jquery.focusPoint.js"
+- "js/*.min.js"
