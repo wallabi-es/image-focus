@@ -32,9 +32,6 @@ class FocusPoint
      */
     public function loadScripts()
     {
-//        wp_enqueue_media();
-//        wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint/bb.image-focus.js',
-//            ['jquery', 'backbone']);
         wp_enqueue_script('focuspoint-js', IMAGEFOCUS_ASSETS . 'js/focuspoint.min.js', ['jquery', 'backbone']);
         wp_localize_script('focuspoint-js', 'focusPointL10n', $this->focusPointL10n());
         wp_enqueue_script('focuspoint-js');
@@ -58,10 +55,11 @@ class FocusPoint
     private function focusPointL10n()
     {
         return [
-            'cropButton' => __('Crop image', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButton'         => __('Crop image', IMAGEFOCUS_TEXTDOMAIN),
             'cropButtonProgress' => __('Cropping image ...', IMAGEFOCUS_TEXTDOMAIN),
-            'cropButtonSuccess' => __('Image cropped', IMAGEFOCUS_TEXTDOMAIN),
-            'cropButtonFailed' => __('Image crop failed', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButtonSuccess'  => __('Image cropped', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButtonFailed'   => __('Image crop failed', IMAGEFOCUS_TEXTDOMAIN),
+            'cropButtonFetching' => __('Retrieving focuspoint', IMAGEFOCUS_TEXTDOMAIN)
         ];
     }
 
@@ -80,12 +78,16 @@ class FocusPoint
 
         $die = json_encode(['success' => false]);
 
+        if (!array_key_exists('x', $attachment['focusPoint'])) {
+            $attachment['focusPoint'] = ['x' => 50, 'y' => 50];
+        }
+
         // Return the focus point if there is one
         if (null !== $attachment['id'] || is_array($attachment['focusPoint'])) {
             $die = json_encode([
                 'success'    => true,
                 'focusPoint' => $attachment['focusPoint'],
-                'src' => $attachment['src']
+                'src'        => $attachment['src']
             ]);
         }
 
@@ -112,7 +114,7 @@ class FocusPoint
             $attachment['focusPoint'] = get_post_meta($attachment['id'], 'focus_point', true);
 
             $die = json_encode([
-                'success' => true,
+                'success'    => true,
                 'focusPoint' => $attachment['focusPoint'],
             ]);
         }

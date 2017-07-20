@@ -29,7 +29,7 @@
 			this.model.on('change:text', this.render, this);
 
 			// Update button
-			this.render();
+			this.ajaxStateHandler().differStateHandler().render();
 		},
 
 		render: function ()
@@ -41,6 +41,8 @@
 			this.$cropButton.toggleClass(IFA.css.button._disabled, disableState);
 			this.$cropButton.toggleClass(IFA.css.button._primary, highlightState);
 			this.$cropButton.text(text);
+
+			return this;
 		},
 
 		differStateHandler: function ()
@@ -53,6 +55,8 @@
 			} else {
 				this.disable();
 			}
+
+			return this;
 		},
 
 		ajaxStateHandler: function ()
@@ -68,6 +72,10 @@
 					this.model.set('text', focusPointL10n.cropButtonSuccess);
 					this.disable();
 					break;
+				case 'fetching':
+					this.model.set('text', focusPointL10n.cropButtonFetching);
+					this.disable();
+					break;
 				case 'failed':
 					this.model.set('text', focusPointL10n.cropButtonFailed);
 					this.activate();
@@ -75,6 +83,8 @@
 				default:
 					this.model.set('text', focusPointL10n.cropButton);
 			}
+
+			return this;
 		},
 
 		highlight: function ()

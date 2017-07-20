@@ -49,6 +49,9 @@
 			}, this);
 
 			this.on('change:differState', this.resetAjaxState, this);
+
+			// Trigger once to handle situation where no data is given after fetching
+			self.setDifferState();
 		},
 
 		/**
@@ -59,6 +62,8 @@
 		fetchAttachmentData: function ()
 		{
 			var self = this;
+
+			this.set('ajaxState', 'fetching');
 
 			this.fetch({
 				url: ajaxurl + '?action=get-focuspoint',
@@ -71,18 +76,22 @@
 							self.validateFocusPoint(data);
 
 							//Store focuspoint and use 'set' for to trigger events
-							self.set({'src': data.src});
-							self.set({'focusPointOrigin': data.focusPoint});
-							self.set({'focusPoint': data.focusPoint});
+							self.set({
+								'src': data.src,
+								'focusPointOrigin': data.focusPoint,
+								'focusPoint': data.focusPoint
+							});
 						} catch (error) {
 							console.log(error);
 						}
 					}
+					self.set('ajaxState', false);
 				},
 				error: function (collection, response, options)
 				{
 					// you can pass additional options to the event you trigger here as well
 					console.log(response);
+					self.set('ajaxState', false);
 				}
 			});
 		},
@@ -117,8 +126,8 @@
 				error: function (collection, response, options)
 				{
 					// you can pass additional options to the event you trigger here as well
-					self.set('ajaxState', 'failed');
 					console.log(response);
+					self.set('ajaxState', 'failed');
 				}
 			});
 		},
@@ -165,7 +174,7 @@
 		resetAjaxState: function ()
 		{
 			if (this.differState === true) {
-				self.model.set('ajaxState', false);
+				this.model.set('ajaxState', false);
 			}
 		},
 

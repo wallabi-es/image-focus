@@ -44,6 +44,9 @@
 			this.attachment.once('change:focusPoint', this.updateDimensionData, this);
 			this.attachment.once('change:focusPoint', this.updateFocusPoint, this);
 
+			// Avoid calculation errors when no data is given by triggering updateDimensionData on ajaxState changes
+			this.attachment.on('change:ajaxState', this.updateDimensionData, this);
+
 			// Set events for states
 			this.setStateEvent('hoverState','is-hover');
 			this.setStateEvent('activeState','is-active');
@@ -298,6 +301,7 @@
 			});
 
 			var focusPoint = this.attachment.get('focusPoint');
+
 			// Write position based on the calculation position of focuspoint of the attachment
 			var position = {
 				x: (focusPoint.x / 100) * this.attachment.get('width'),
