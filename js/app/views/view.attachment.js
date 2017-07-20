@@ -17,9 +17,10 @@
 			//Trigger once on focusPointOrigin change, called straight after an ajax call
 			this.model.once("change:focusPoint", this.updateDimensions, this);
 			this.model.on("change:focusPointOrigin", this.updateDimensions, this);
+			this.model.on("change:ajaxState", this.updateDimensions, this);
 
 			// Trigger also on focusInterface activeState changes to minimum display errors
-			this.focusInterface.on('change:activeState',this.updateDimensions, this);
+			this.focusInterface.on('change:activeState', this.updateDimensions, this);
 		},
 
 		/**

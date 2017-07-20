@@ -32,8 +32,8 @@ module.exports = function (grunt)
 		uglify: {
 			options: {
 				preserveComments: false,
-				sourceMap: true,
-				beautify: true
+				sourceMap: false,
+				beautify: false
 			},
 			plugins: {
 				files: [
