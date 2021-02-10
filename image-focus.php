@@ -28,3 +28,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 // Initiate the field!
 new ImageFocus();
+
+
+/**
+ * FIX FOR Wordpress > 5.23
+ * Restore data attribute with attachment_id for Image Focus plugin.
+ */
+add_action( 'wp_enqueue_media', 'imagefocus_media_hotfix' );
+function imagefocus_media_hotfix() {
+    if ( is_admin() ) {
+        wp_add_inline_script( 'media-views', 'wp.media.view.Attachment.Details=wp.media.view.Attachment.Details.extend({attributes:function(){return{"data-id":this.model.get("id")}}});' );
+    }
+}
